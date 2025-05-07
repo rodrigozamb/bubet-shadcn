@@ -19,13 +19,17 @@ export function DropdownConfig() {
       <DropdownMenuContent className="w-40">
         <DropdownMenuLabel className="flex justify-center">Menu</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <div className="p-1">
+        <div className="p-1 cursor-pointer">
           Ver perfil
         </div>
-        <div className="p-1">
+        <div className="p-1 cursor-pointer">
           Configurações
         </div>
-        <div className="p-1">
+        <div className="p-1 cursor-pointer">
+          Enviar feedback
+        </div>
+        <DropdownMenuSeparator />
+        <div className="text-center p-1 cursor-pointer">
           Sair
         </div>
       </DropdownMenuContent>

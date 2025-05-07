@@ -208,11 +208,11 @@ export function PageCarroussel(){
               {/* Main title */}
               <div className="flex justify-center">
                 <span className="ml-20 pb-5 text-4xl font-semibold">{isCompetitor ? 'Baterias' : 'Torneios'}</span>
-                <DialogTrigger>
-                  <span className="ml-3 flex justify-center content-center items-center cursor-pointer">
-                      ver todos
+                  <span className="ml-3 flex justify-center content-center items-center">
+                    <DialogTrigger className="cursor-pointer">
+                      <p>ver todos</p>
+                    </DialogTrigger>
                   </span>
-                </DialogTrigger>
               </div>
               
               <DialogContent className="w-250 h-150">
