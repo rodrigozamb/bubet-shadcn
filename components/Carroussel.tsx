@@ -3,6 +3,7 @@
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
 import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -12,7 +13,17 @@ import {
 } from "@/components/ui/carousel"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 
-export function Carroussel() {
+interface CarrousselItem{
+  id: string
+  name: string
+  logo: string
+} 
+
+interface CarrousselProps{
+  items: CarrousselItem[]
+}
+
+export function Carroussel({ items }:CarrousselProps) {
 
   return (
     <Carousel 
@@ -31,7 +42,7 @@ export function Carroussel() {
         }}
     >
       <CarouselContent className="-ml-1 cursor-pointer">
-        {Array.from({ length: 5 }).map((_, index) => (
+        {items.map((item, index) => (
           <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/4 ">
             <div className="p-1">
               <Card 
@@ -44,13 +55,13 @@ export function Carroussel() {
                   <Tooltip>
                     <TooltipTrigger>
 
-                    <CardContent className="flex items-center justify-center p-6 cursor-pointer">
-                      <span  className="text-2xl font-semibold cursor-pointer">{index + 1}</span>
+                    <CardContent className="flex items-center justify-center h-30 cursor-pointer">
+                      <Image alt={item.id} src={item.logo} width={100} height={100} />
                     </CardContent>
                       
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Bateria Computaria</p>
+                      <p>{item.name}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

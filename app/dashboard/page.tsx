@@ -2,10 +2,9 @@ import { BetsList } from "@/components/BetsList";
 import { Header } from "@/components/Header";
 import { PageCarroussel } from "@/components/PageCarroussel";
 
-// TELA INICIAL
-export default function Home() {
+export default function Dashboard() {
   return (
-    <div>
+    <div className="flex flex-col h-screen justify-between bg-gray-300">
       <div>
         <Header />
       </div>

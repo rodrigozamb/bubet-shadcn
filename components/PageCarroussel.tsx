@@ -10,30 +10,37 @@ import { Input } from "./ui/input";
 
 const event_data =[
   {
-      "name":"Bateria Bandida",
+    "id":"1",
+      "name":"Principal Balatucada",
       "logo":"/logos/Bandida Logo.png"
   },
   {
+    "id":"2",
       "name":"Bateria C7",
       "logo":"/logos/Bateria C7 Logo.png"
   },
   {
+    "id":"3",
       "name":"BaterECA",
       "logo":"/logos/BaterECA logo.png"
   },
   {
+    "id":"4",
       "name":"UFUteria",
       "logo":"/logos/UFUteria logo.png"
   },
   {
+    "id":"5",
       "name":"Rateria",
       "logo":"/logos/Rateria Logo.png"
   },
   {
+    "id":"6",
       "name":"Meritissima",
       "logo":"/logos/Meritissima-logo.png"
   },
   {
+    "id":"7",
       "name":"Psicolata",
       "logo":"/logos/Logo Psicolata.png"
   }
@@ -41,58 +48,72 @@ const event_data =[
 
 const comp_data =[
   {
+    "id":"1",
       "name":"Bateria Mercenária",
       "logo":"/logos/Mercenária Logo.png"
   },
   {
+    "id":"2",
       "name":"Bateria C7",
       "logo":"/logos/Bateria C7 Logo.png"
   },
   {
+    "id":"3",
       "name":"BaterECA",
       "logo":"/logos/BaterECA logo.png"
   },
   {
+    "id":"4",
       "name":"UFUteria",
       "logo":"/logos/UFUteria logo.png"
   },
   {
+    "id":"5",
       "name":"Rateria",
       "logo":"/logos/Rateria Logo.png"
   },
   {
+    "id":"6",
       "name":"Meritissima",
       "logo":"/logos/Meritissima-logo.png"
   },
   {
+    "id":"7",
       "name":"Psicolata",
       "logo":"/logos/Logo Psicolata.png"
   },
   {
+    "id":"8",
     "name":"Bateria Mercenária",
     "logo":"/logos/Mercenária Logo.png"
   },
   {
+    "id":"9",
     "name":"Bateria Mercenária",
     "logo":"/logos/Mercenária Logo.png"
   },
   {
+    "id":"10",
     "name":"Bateria Mercenária",
     "logo":"/logos/Mercenária Logo.png"
   },
   {
+    "id":"11",
     "name":"Bateria Mercenária",
     "logo":"/logos/Mercenária Logo.png"
   },
   {
+    "id":"12",
     "name":"Bateria Mercenária",
     "logo":"/logos/Mercenária Logo.png"
   },
   {
+    "id":"13",
     "name":"Bateria Mercenária",
     "logo":"/logos/Mercenária Logo.png"
   },
   {
+    "id":"14",
     "name":"Bateria Mercenária",
     "logo":"/logos/Mercenária Logo.png"
   }
@@ -100,9 +121,9 @@ const comp_data =[
 
 export function PageCarroussel(){
 
-      const [isCompetitor,setIsCompetitor] = useState<boolean>(true)
+      const [isCompetitor,setIsCompetitor] = useState<boolean>(false)
       const [competitorColor, setCompetitorColor] = useState<string>('gray')
-      const [eventColor, setEventColor] = useState<string>('white')
+      const [eventColor, setEventColor] = useState<string>('black')
       const [searchTerm, setSearchTerm] = useState("");
 
       const allCompetitors = comp_data.filter((item) =>
@@ -115,16 +136,17 @@ export function PageCarroussel(){
       const handleClickComp = () => {
         setIsCompetitor(true)
         setEventColor('gray')
-        setCompetitorColor('white')
+        setCompetitorColor('black')
       }
       const handleClickEvent = () => {
         setIsCompetitor(false)
-        setEventColor('white')
+        setEventColor('black')
         setCompetitorColor('gray')
       }
+      
       return (
         <Dialog>
-          <div className="content-center justify-center items-center h-82 w-screen bg-gray-500" >
+          <div className="content-center justify-center items-center h-auto w-screen" >
             <div>
               {/* Select Category */}
               <div
@@ -155,7 +177,7 @@ export function PageCarroussel(){
                   position: 'absolute',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  color: 'white',
+                  color: 'gray',
                 }} 
                 >
                   |
@@ -176,52 +198,69 @@ export function PageCarroussel(){
 
               {/* Main title */}
               <div className="flex justify-center">
-                <span className="ml-20 pb-3 text-4xl">{isCompetitor ? 'Baterias' : 'Torneios'}</span>
+                <span className="ml-20 pb-5 text-4xl font-semibold">{isCompetitor ? 'Baterias' : 'Torneios'}</span>
                 <DialogTrigger>
-                  <span className="ml-3 justify-center content-center cursor-pointer">
-                    ver todos
+                  <span className="ml-3 flex justify-center content-center items-center cursor-pointer">
+                      ver todos
                   </span>
                 </DialogTrigger>
               </div>
               
               <DialogContent className="w-250 h-150">
+                
                 <DialogHeader>
                   <DialogTitle>
-                    <span className="flex justify-center">{isCompetitor ? "Todas as Baterias":"Todas as competições"}</span>
+                    <span className="flex justify-center">{isCompetitor ? "Todas as Baterias":"Todas os torneios"}</span>
                   </DialogTitle>
                 </DialogHeader>
+                
                 <div className="flex justify-center">
                   <Input className="w-80 m-3" type="search" placeholder="Pesquise aqui...." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                 </div>
                                 
-                <div className="overflow-y-auto ">
+                <div className="overflow-y-auto h-100">
 
                     {
                       isCompetitor ? 
-                        allCompetitors.map((competitor, i) => (
+                        allCompetitors.length > 0 ?
+                          allCompetitors.map((competitor, i) => (
 
-                            <div className="flex items-center h-15" key={i}>
-                                <Image className="m-3" src={competitor.logo} alt={competitor.name} width={40} height={40}/>
-                                {competitor.name}
+                              <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i}>
+                                  <Image className="m-3" src={competitor.logo} alt={competitor.name} width={60} height={60}/>
+                                  <p className="font-medium text-md">{competitor.name}</p>
+                                  
+                              </div>
+
+                          ))
+                        :
+                          <div className="flex justify-center text-md font-bold mt-15">
+                            <p>Nenhum resultado encontrado</p>
+                            
+                          </div>
+                      :
+                        allEvents.length > 0 ?
+
+                          allEvents.map((event, i) => (
+
+                            <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i}>
+                                <Image className="m-3" src={event.logo} alt={event.name} width={60} height={60}/>
+                                <p className="font-medium text-md">{event.name}</p>
                             </div>
 
-                        ))
+                          ))
                         :
-                        allEvents.map((event, i) => (
-
-                          <div className="flex items-center h-15" key={i}>
-                              <Image className="m-3" src={event.logo} alt={event.name} width={40} height={40}/>
-                              {event.name}
+                          <div className="flex justify-center text-md font-bold mt-15">
+                            <p>Nenhum resultado encontrado</p>
                           </div>
 
-                      ))
+
 
                     }
                 </div>
               </DialogContent>
 
               <div className="flex justify-center">
-                <Carroussel/>
+                <Carroussel items={ isCompetitor ? comp_data : event_data }/>
               </div>
             </div>
           </div>
