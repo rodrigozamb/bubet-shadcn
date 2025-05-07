@@ -1,5 +1,6 @@
 "use client"
  
+import { useRouter } from 'next/navigation'
 
 import {
     Table,
@@ -63,6 +64,9 @@ const data = [
 ]
 
 export function BetsList(){
+
+    const router = useRouter()
+
     return(
         <div className="h-120 w-screen justify-end items-end align-bottom bg-gray-800 px-5 py-2" >
             <div className="text-2xl m-2 text-white font-bold">Apostas</div>
@@ -94,7 +98,7 @@ export function BetsList(){
                             className="cursor-pointer" 
                             key={item.id} 
                             onClick={() => {
-                                console.log(`Aposta ${item.id} clicked`);
+                                router.push(`/events/${item.id}`)
                               }}
                         >
                             <TableCell className="font-medium pl-5">

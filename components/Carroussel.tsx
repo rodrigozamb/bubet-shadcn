@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
+import { useRouter } from 'next/navigation'
 
 interface CarrousselItem{
   id: string
@@ -21,9 +22,12 @@ interface CarrousselItem{
 
 interface CarrousselProps{
   items: CarrousselItem[]
+  isCompetitor: boolean
 }
 
-export function Carroussel({ items }:CarrousselProps) {
+export function Carroussel({ items, isCompetitor }:CarrousselProps) {
+
+  const router = useRouter()
 
   return (
     <Carousel 
@@ -48,7 +52,10 @@ export function Carroussel({ items }:CarrousselProps) {
               <Card 
                 className="cursor-pointer" 
                 onClick={() => {
-                    console.log(`Card ${index + 1} clicked`);
+                    isCompetitor ?
+                      router.push(`/profile/${item.id}`)
+                    :
+                      router.push(`/events/${item.id}`)
                   }}
               >
                 <TooltipProvider>

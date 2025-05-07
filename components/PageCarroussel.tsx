@@ -2,11 +2,12 @@
 "use client"
  
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Carroussel } from "./Carroussel";
 import { Dialog, DialogHeader, DialogTitle, DialogTrigger, DialogContent } from "./ui/dialog";
 import Image from "next/image";
 import { Input } from "./ui/input";
+import { useRouter } from "next/navigation"
 
 const event_data =[
   {
@@ -121,6 +122,8 @@ const comp_data =[
 
 export function PageCarroussel(){
 
+      const router = useRouter()
+
       const [isCompetitor,setIsCompetitor] = useState<boolean>(false)
       const [competitorColor, setCompetitorColor] = useState<string>('gray')
       const [eventColor, setEventColor] = useState<string>('black')
@@ -143,6 +146,12 @@ export function PageCarroussel(){
         setEventColor('black')
         setCompetitorColor('gray')
       }
+
+      useEffect(()=>{
+        setIsCompetitor(false)
+        setEventColor('black')
+        setCompetitorColor('gray')
+      },[])
       
       return (
         <Dialog>
@@ -225,7 +234,7 @@ export function PageCarroussel(){
                         allCompetitors.length > 0 ?
                           allCompetitors.map((competitor, i) => (
 
-                              <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i}>
+                              <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/profile/${competitor.id}`)}}>
                                   <Image className="m-3" src={competitor.logo} alt={competitor.name} width={60} height={60}/>
                                   <p className="font-medium text-md">{competitor.name}</p>
                                   
@@ -242,7 +251,7 @@ export function PageCarroussel(){
 
                           allEvents.map((event, i) => (
 
-                            <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i}>
+                            <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/events/${event.id}`)}}>
                                 <Image className="m-3" src={event.logo} alt={event.name} width={60} height={60}/>
                                 <p className="font-medium text-md">{event.name}</p>
                             </div>
@@ -260,7 +269,7 @@ export function PageCarroussel(){
               </DialogContent>
 
               <div className="flex justify-center">
-                <Carroussel items={ isCompetitor ? comp_data : event_data }/>
+                <Carroussel items={ isCompetitor ? comp_data : event_data } isCompetitor={isCompetitor}/>
               </div>
             </div>
           </div>
