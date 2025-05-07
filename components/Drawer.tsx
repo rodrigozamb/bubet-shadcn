@@ -84,7 +84,7 @@ export function BetDrawer() {
               <div className="flex flex-col justify-center items-center pl-10">
                 <Button className="cursor-pointer w-56 h-15 text-xl flex bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:opacity-90 transition-opacity duration-200"> Fazer Aposta</Button>  
                 <DrawerClose asChild>
-                  <Button className="cursor-pointer" variant="outline">Cancelar</Button>
+                  <Button className="cursor-pointer mt-10 bg-gray-200 font-medium" variant="outline">Cancelar</Button>
                 </DrawerClose>
               </div>
             </div>

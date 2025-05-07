@@ -66,7 +66,7 @@ export function Podium(){
 
                             {
                                 data.map((competitor, i) => (
-                                    <Link className="flex items-center h-15" key={i} href={`/profile/${competitor.id}`}>
+                                    <Link className="flex items-center h-15 hover:bg-gray-100" key={i} href={`/profile/${competitor.id}`}>
                                         { i < 3 ? <span className="font-black text-lg ml-3">{i+1}º - </span> : <span className="ml-3">{i+1}º - </span>}
                                         <Image className="m-3" src={competitor.logo} alt={competitor.name} width={40} height={40}/>
                                         {competitor.name}
