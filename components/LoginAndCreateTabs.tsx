@@ -54,7 +54,7 @@ export function LoginAndCreateTabs() {
     
   return (
     <>
-      <div className="flex flex-col w-[250px] justify-center items-center align-middle">
+      <div className="flex flex-col justify-center items-center align-middle">
         <div>
           <div className="my-4 text-white font-extrabold text-3xl text-center">
             Crie uma conta ou faça login
