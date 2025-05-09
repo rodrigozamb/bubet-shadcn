@@ -1,8 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { Minus, Plus } from "lucide-react"
-import { Bar, BarChart, ResponsiveContainer } from "recharts"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,47 +15,6 @@ import {
 } from "@/components/ui/drawer"
 import { KanbanBoard } from "./board/KanbanBoard"
 
-const data = [
-  {
-    goal: 400,
-  },
-  {
-    goal: 300,
-  },
-  {
-    goal: 200,
-  },
-  {
-    goal: 300,
-  },
-  {
-    goal: 200,
-  },
-  {
-    goal: 278,
-  },
-  {
-    goal: 189,
-  },
-  {
-    goal: 239,
-  },
-  {
-    goal: 300,
-  },
-  {
-    goal: 200,
-  },
-  {
-    goal: 278,
-  },
-  {
-    goal: 189,
-  },
-  {
-    goal: 349,
-  },
-]
 
 export function BetDrawer() {
   const [goal, setGoal] = React.useState(350)

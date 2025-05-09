@@ -3,6 +3,13 @@
 import { LoginAndCreateTabs } from "@/components/LoginAndCreateTabs";
 import Image from "next/image";
 import BUBetlogo from "@/public/BUlogo1.png"
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "BUbet | Login ",
+  description: "Faça suas apostas!",
+};
+
 
 export default function Home() {
     return (
