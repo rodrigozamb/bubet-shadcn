@@ -10,7 +10,7 @@
 // //   avatar: z.any().refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
 // //   "Only .jpg, .jpeg, .png formats are supported.")
 // // })
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -28,6 +28,14 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { AuthContext } from "@/context/AuthContext"
+import { useForm, SubmitHandler } from "react-hook-form"
+import { toast, Bounce } from 'react-toastify'
+
+type FormInputs = {
+  email: string
+  password: string
+}
 
 export function LoginAndCreateTabs() {
 
@@ -35,7 +43,58 @@ export function LoginAndCreateTabs() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [avatar, setAvatar] = useState<File | null>(null);
+
+    const{ register, handleSubmit } = useForm<FormInputs>()
+    const { signIn } = useContext(AuthContext)
     
+  // Function to handle form submission
+  const handleSignIn = async () => {
+    setEmail('')
+    setPassword('')
+    console.log("VAI FAZER LOGIN")
+    console.log(email, password)
+    try {
+      await signIn({ email, password })
+      toast.success('Login feito com successo', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
+    }
+  }
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
     
@@ -89,6 +148,7 @@ export function LoginAndCreateTabs() {
                   <Input 
                     id="password"
                     type="password"
+                    value={password}
                     placeholder="Ex: Bateria123"
                     onChange={(e)=>setPassword(e.target.value)}
                   />
@@ -97,7 +157,7 @@ export function LoginAndCreateTabs() {
               <CardFooter className="flex items-center justify-center" >
                 <Button 
                     className="bg-blue-800 font-bold h-12 w-28 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition"
-                    onClick={handleLogin}
+                    onClick={handleSignIn}
                 >
                     Entrar
                 </Button>
