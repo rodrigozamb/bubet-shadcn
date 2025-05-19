@@ -204,12 +204,15 @@ export function KanbanBoard() {
 
       if (oldColumnId !== newColumnId) {
         setCompetitors((competitors) => {
-          return competitors.map((competitor) =>
+          const cp =  competitors.map((competitor) =>
             competitor.id === activeId && newColumnId ? { ...competitor, columnId: newColumnId } : competitor
           );
+          console.log(cp)
+          return cp
         });
       }
     }
+    //onUpdateBets(bets)
   };
 
   const onDragOver = (event: DragOverEvent) => {

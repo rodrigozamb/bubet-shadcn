@@ -10,63 +10,27 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-   
-const data = [
-    {
-      id:1,
-      ends_at: "2025-02-08T06:52:18+00:00",
-      event: "Paid",
-      podium: ["Bateria S/A", "UFScar", "Computaria"],
-      points: 120,
-    },
-    {
-      id:2,
-      ends_at: "2026-02-08T06:52:18+00:00",
-      event: "Pending",
-      podium: ["Bateria S/A", "UFScar", "Computaria"],
-      points: 158,
-    },
-    {
-      id:3,
-      ends_at: "2025-02-08T06:52:18+00:00",
-      event: "Unpaid",
-      podium: ["Batorada Vaca Magra", "UFScar", "Computaria"],
-      points: 147,
-    },
-    {
-      id:4,
-      ends_at: "2025-03-08T06:52:18+00:00",
-      event: "Paid",
-      podium: ["Bateria S/A", "UFScar", "Computaria"],
-      points: 200,
-    },
-    {
-      id:5,
-      ends_at: "2025-03-08T06:52:18+00:00",
-      event: "Paid",
-      podium: ["Bateria S/A", "UFScar", "Computaria"],
-      points: 500,
-    },
-    {
-      id:6,
-      ends_at: "2025-03-08T06:52:18+00:00",
-      event: "Pending",
-      podium: ["Bateria S/A", "UFScar", "Computaria"],
-      points: 12,
-    },
-    {
-      id:7,
-      ends_at: "2025-03-08T06:52:18+00:00",
-      event: "Unpaid",
-      podium: ["Bateria S/A", "UFScar", "Computaria"],
-      points: 150,
-    },
-]
+interface BetProps{
+  id: string,
+  points: string,
+  bets:{
+    name:string,
+  }[],
+  event:{
+    id: string,
+    name:string,
+    ends_at: string,
+  },
+}
 
-export function BetsList(){
+interface BetListProps{
+  bets:BetProps[]
+}
+
+export function BetsList({ bets }:BetListProps){
 
     const router = useRouter()
-
+    console.log(bets)
     return(
         <div className="h-120 w-screen justify-end items-end align-bottom bg-gray-800 px-5 py-2" >
             <div className="text-2xl m-2 text-white font-bold">Apostas</div>
@@ -93,29 +57,30 @@ export function BetsList(){
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data.map((item) => (
+                        {bets.map((item, idx) => (
                         <TableRow 
                             className="cursor-pointer" 
-                            key={item.id} 
+                            key={idx} 
                             onClick={() => {
-                                router.push(`/events/${item.id}`)
+                                router.push(`/events/${item.event.id}`)
                               }}
                         >
+                            
                             <TableCell className="font-medium pl-5">
-                            {new Date(item.ends_at) > new Date() ? <div className="w-8 h-8 bg-red-500 rounded-full border-black border-1"></div> : <div className="w-8 h-8 bg-green-500 rounded-full border-black border-1"></div>}
+                            {new Date(item.event.ends_at) > new Date() ? <div className="w-8 h-8 bg-red-500 rounded-full border-black border-1"></div> : <div className="w-8 h-8 bg-green-500 rounded-full border-black border-1"></div>}
                             </TableCell>
                               
                               <TableCell>
                                 <div className="flex justify-center content-center items-center text-white font-bold">
-                                  {item.event}
+                                  {item.event.name}
                                 </div>
                               </TableCell>
                            
                             <TableCell>
                               <div className="flex justify-center content-center font-medium">
-                                <span className="text-gray-900 bg-[#FFD700] rounded-full p-1.25 mx-2">{item.podium[0]}</span>
-                                <span className="text-gray-900 bg-[#C0C0C0] rounded-full p-1 mx-2">{item.podium[1]}</span>
-                                <span className="text-gray-900 bg-[#cd7f32] rounded-full p-1 mx-2">{item.podium[2]}</span>
+                                <span className="text-gray-900 bg-[#FFD700] rounded-full p-1.25 mx-2">{item.bets[0].name}</span>
+                                <span className="text-gray-900 bg-[#C0C0C0] rounded-full p-1 mx-2">{item.bets[1].name}</span>
+                                <span className="text-gray-900 bg-[#cd7f32] rounded-full p-1 mx-2">{item.bets[2].name}</span>
                               </div>
                                 
                             </TableCell>

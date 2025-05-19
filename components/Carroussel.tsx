@@ -17,7 +17,8 @@ import { useRouter } from 'next/navigation'
 interface CarrousselItem{
   id: string
   name: string
-  logo: string
+  profile_url?: string
+  banner?: string
 } 
 
 interface CarrousselProps{
@@ -63,7 +64,7 @@ export function Carroussel({ items, isCompetitor }:CarrousselProps) {
                     <TooltipTrigger>
 
                     <CardContent className="flex items-center justify-center h-30 cursor-pointer">
-                      <Image alt={item.id} src={item.logo} width={100} height={100} />
+                      <Image alt={item.id} src={ isCompetitor ?  item.profile_url! : item.banner! } width={100} height={100} />
                     </CardContent>
                       
                     </TooltipTrigger>

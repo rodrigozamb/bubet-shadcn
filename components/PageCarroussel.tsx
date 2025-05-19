@@ -9,118 +9,24 @@ import Image from "next/image";
 import { Input } from "./ui/input";
 import { useRouter } from "next/navigation"
 
-const event_data =[
-  {
-    "id":"1",
-      "name":"Principal Balatucada",
-      "logo":"/logos/Bandida Logo.png"
-  },
-  {
-    "id":"2",
-      "name":"Bateria C7",
-      "logo":"/logos/Bateria C7 Logo.png"
-  },
-  {
-    "id":"3",
-      "name":"BaterECA",
-      "logo":"/logos/BaterECA logo.png"
-  },
-  {
-    "id":"4",
-      "name":"UFUteria",
-      "logo":"/logos/UFUteria logo.png"
-  },
-  {
-    "id":"5",
-      "name":"Rateria",
-      "logo":"/logos/Rateria Logo.png"
-  },
-  {
-    "id":"6",
-      "name":"Meritissima",
-      "logo":"/logos/Meritissima-logo.png"
-  },
-  {
-    "id":"7",
-      "name":"Psicolata",
-      "logo":"/logos/Logo Psicolata.png"
-  }
-]
 
-const comp_data =[
-  {
-    "id":"1",
-      "name":"Bateria Mercenária",
-      "logo":"/logos/Mercenária Logo.png"
-  },
-  {
-    "id":"2",
-      "name":"Bateria C7",
-      "logo":"/logos/Bateria C7 Logo.png"
-  },
-  {
-    "id":"3",
-      "name":"BaterECA",
-      "logo":"/logos/BaterECA logo.png"
-  },
-  {
-    "id":"4",
-      "name":"UFUteria",
-      "logo":"/logos/UFUteria logo.png"
-  },
-  {
-    "id":"5",
-      "name":"Rateria",
-      "logo":"/logos/Rateria Logo.png"
-  },
-  {
-    "id":"6",
-      "name":"Meritissima",
-      "logo":"/logos/Meritissima-logo.png"
-  },
-  {
-    "id":"7",
-      "name":"Psicolata",
-      "logo":"/logos/Logo Psicolata.png"
-  },
-  {
-    "id":"8",
-    "name":"Bateria Mercenária",
-    "logo":"/logos/Mercenária Logo.png"
-  },
-  {
-    "id":"9",
-    "name":"Bateria Mercenária",
-    "logo":"/logos/Mercenária Logo.png"
-  },
-  {
-    "id":"10",
-    "name":"Bateria Mercenária",
-    "logo":"/logos/Mercenária Logo.png"
-  },
-  {
-    "id":"11",
-    "name":"Bateria Mercenária",
-    "logo":"/logos/Mercenária Logo.png"
-  },
-  {
-    "id":"12",
-    "name":"Bateria Mercenária",
-    "logo":"/logos/Mercenária Logo.png"
-  },
-  {
-    "id":"13",
-    "name":"Bateria Mercenária",
-    "logo":"/logos/Mercenária Logo.png"
-  },
-  {
-    "id":"14",
-    "name":"Bateria Mercenária",
-    "logo":"/logos/Mercenária Logo.png"
-  }
-]
+interface EventProps{
+  id:string,
+  name:string,
+  banner: string
+}
 
-export function PageCarroussel(){
+interface CompetitorProps{
+  id:string,
+  name:string,
+  profile_url: string
+}
+interface PageCarrousselProps{
+  events:EventProps[]
+  competitors:CompetitorProps[]
+}
+
+export function PageCarroussel({ competitors, events }:PageCarrousselProps){
 
       const router = useRouter()
 
@@ -128,12 +34,12 @@ export function PageCarroussel(){
       const [competitorColor, setCompetitorColor] = useState<string>('gray')
       const [eventColor, setEventColor] = useState<string>('black')
       const [searchTerm, setSearchTerm] = useState("");
-
-      const allCompetitors = comp_data.filter((item) =>
+  
+      const allCompetitors = competitors.filter((item:{name: string}) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
-      const allEvents = event_data.filter((item) =>
+      const allEvents = events.filter((item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       const handleClickComp = () => {
@@ -235,7 +141,7 @@ export function PageCarroussel(){
                           allCompetitors.map((competitor, i) => (
 
                               <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/profile/${competitor.id}`)}}>
-                                  <Image className="m-3" src={competitor.logo} alt={competitor.name} width={60} height={60}/>
+                                  <Image className="m-3" src={competitor.profile_url} alt={competitor.name} width={60} height={60}/>
                                   <p className="font-medium text-md">{competitor.name}</p>
                                   
                               </div>
@@ -252,7 +158,7 @@ export function PageCarroussel(){
                           allEvents.map((event, i) => (
 
                             <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/events/${event.id}`)}}>
-                                <Image className="m-3" src={event.logo} alt={event.name} width={60} height={60}/>
+                                <Image className="m-3" src={event.banner} alt={event.name} width={60} height={60}/>
                                 <p className="font-medium text-md">{event.name}</p>
                             </div>
 
@@ -269,7 +175,7 @@ export function PageCarroussel(){
               </DialogContent>
 
               <div className="flex justify-center">
-                <Carroussel items={ isCompetitor ? comp_data : event_data } isCompetitor={isCompetitor}/>
+                <Carroussel items={ isCompetitor ? competitors : events } isCompetitor={isCompetitor}/>
               </div>
             </div>
           </div>

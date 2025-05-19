@@ -31,6 +31,7 @@ import {
 import { AuthContext } from "@/context/AuthContext"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { toast, Bounce } from 'react-toastify'
+import { api } from "@/services/api"
 
 type FormInputs = {
   email: string
@@ -40,19 +41,17 @@ type FormInputs = {
 export function LoginAndCreateTabs() {
 
     
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [avatar, setAvatar] = useState<File | null>(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [avatar, setAvatar] = useState<File | null>(null);
 
-    const{ register, handleSubmit } = useForm<FormInputs>()
-    const { signIn } = useContext(AuthContext)
+  const { signIn } = useContext(AuthContext)
     
   // Function to handle form submission
   const handleSignIn = async () => {
     setEmail('')
     setPassword('')
-    console.log("VAI FAZER LOGIN")
-    console.log(email, password)
     try {
       await signIn({ email, password })
       toast.success('Login feito com successo', {
@@ -95,21 +94,34 @@ export function LoginAndCreateTabs() {
     }
   }
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+  
+      if (file) {
+        setAvatar(file);
+      }
+  };
+  
+  const handleCreate = async () => {
     
-        if (file) {
-          setAvatar(file);
-        }
-    };
+    const formData = new FormData()
+    formData.append("username",name)
+    formData.append("name",name)
+    formData.append("email",email)
+    formData.append("password",password)
+    formData.append("profile",avatar!)
 
-    const handleLogin = async () => {
-        console.log("Logging in with:", { email, password });
+    setName("")
+    setPassword("")
+    setEmail("")
+    setAvatar(null)
+
+    try{
+      const req = await api.post(`/users`,formData)
+    }catch(err:any){
+      console.log(err)
     }
-    
-    const handleCreate= async () => {
-        console.log("Creating in with:", { email, password });
-    }
+  }
     
   return (
     <>
@@ -174,6 +186,17 @@ export function LoginAndCreateTabs() {
               </CardHeader>
               <CardContent className="space-y-5">
                 <div className="space-y-3">
+                  <Label className="flex items-center justify-center" htmlFor="email">Nome</Label>
+                  <Input 
+                    id="name"
+                    value={name}
+                    type="text"
+                    placeholder="Seu nome"
+                    onChange={(e)=>setName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-3">
                   <Label className="flex items-center justify-center" htmlFor="email">Email</Label>
                   <Input 
                     id="email"
@@ -181,6 +204,7 @@ export function LoginAndCreateTabs() {
                     type="text"
                     placeholder="Seu melhor email"
                     onChange={(e)=>setEmail(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="space-y-3">
@@ -190,6 +214,7 @@ export function LoginAndCreateTabs() {
                     type="password" 
                     placeholder="Sua melhor senha"
                     onChange={(e)=>setPassword(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="space-y-3">
@@ -198,6 +223,7 @@ export function LoginAndCreateTabs() {
                     id="avatar" 
                     type="file"
                     onChange={handleFileChange}
+                    required
                   />
                 </div>
               </CardContent>

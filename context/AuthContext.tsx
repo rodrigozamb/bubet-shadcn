@@ -16,6 +16,7 @@ type User = {
   name: string
   email: string
   profile_url: string
+  id: string
 }
 
 type SignInData = {
@@ -62,15 +63,6 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
     const res = await api.get('/users/profile', { withCredentials: true })
 
     setUser(res.data.user)
-
-    router.push('/dashboard')
-  }
-
-  async function createNewUser({ email, password }: SignInData) {
-    const token = await signInRequest({
-      email,
-      password,
-    })
 
     router.push('/dashboard')
   }

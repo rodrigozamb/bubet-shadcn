@@ -13,20 +13,50 @@ import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { useState } from "react"
 import { Button } from "./ui/button"
+import { AuthContext } from "@/context/AuthContext"
+import { api } from "@/services/api"
+import Cookies from 'js-cookie'
+import { useRouter } from "next/navigation"
+
 export function DropdownConfig() {
 
+  const router = useRouter()
+  const { user } = React.useContext(AuthContext)
   const [feedbackText, setFeedBackText] = useState<string>("")
-  const [avatar, setAvatar] = useState<File | null>(null);
+  const [feedbackImage, setFeedbackImage] = useState<File | null>(null);
     
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
   
       if (file) {
-        setAvatar(file);
+        setFeedbackImage(file);
       }
   };
+
+
+  const handleLogout = () =>{
+    Cookies.remove('bubet.token')
+    router.push('/login')
+  }
+
   const handleSendFeedback = async () => {
-    console.log("Sending feedback:", { feedbackText });
+    
+    const formData = new FormData()
+    formData.append("content",feedbackText)
+    formData.append("userId",user!.id)
+    if(feedbackImage && feedbackImage){
+      formData.append("image",feedbackImage)
+    }
+
+    setFeedBackText('')
+    setFeedbackImage(null)
+
+    try{
+      await api.post(`/feedbacks`, formData)
+    } catch(err: any){
+      console.log(err)
+    }
+    
 }
 
   return (
@@ -37,10 +67,10 @@ export function DropdownConfig() {
       <DropdownMenuContent className="w-40">
         <DropdownMenuLabel className="flex justify-center">Menu</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <div className="p-1 cursor-pointer hover:bg-gray-100">
+        <div className="p-1 cursor-not-allowed hover:bg-gray-100">
           Ver perfil
         </div>
-        <div className="p-1 cursor-pointer hover:bg-gray-100">
+        <div className="p-1 cursor-not-allowed hover:bg-gray-100">
           Configurações
         </div>
         <div className="p-1 hover:bg-gray-100">
@@ -65,9 +95,9 @@ export function DropdownConfig() {
                       className="h-30"
                       required
                     />
-                    <Label className="flex items-center justify-center my-5"  htmlFor="avatar">Imagem*</Label>
+                    <Label className="flex items-center justify-center my-5"  htmlFor="feedbackImage">Imagem*</Label>
                     <Input
-                      id="avatar" 
+                      id="feedbackImage" 
                       type="file"
                       onChange={handleFileChange}
                     />
@@ -83,7 +113,10 @@ export function DropdownConfig() {
           </Dialog>
         </div>
         <DropdownMenuSeparator />
-        <div className="text-center p-1 cursor-pointer hover:bg-red-100">
+        <div 
+          className="text-center p-1 cursor-pointer hover:bg-red-100"
+          onClick={handleLogout}
+        >
           Sair
         </div>
       </DropdownMenuContent>
