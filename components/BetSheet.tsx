@@ -5,6 +5,7 @@ import { SelectCompetitor } from "./SelectCompetitor";
 import React, { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { useParams, useRouter } from "next/navigation";
+import { Bounce, toast } from "react-toastify";
 
 interface Competitor{
   id: string,
@@ -72,8 +73,44 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
     try{
       const res = await api.post(`/bets/${id}`,{bets: bet_body})
       const req = await api.post(`/estandartes/${id}`,{data: ests})
-    } catch(err: any){
-      console.log(err)
+
+      toast.success('Aposta feita com sucesso!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+    } catch(error: any){
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
     }finally{
       router.push(`/events/${id}`)
     }

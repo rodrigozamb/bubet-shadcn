@@ -17,6 +17,7 @@ import { AuthContext } from "@/context/AuthContext"
 import { api } from "@/services/api"
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation"
+import { Bounce, toast } from "react-toastify"
 
 interface UpdataUserDataProps{
   name?:string
@@ -61,6 +62,21 @@ export function DropdownConfig() {
 
   const handleSendFeedback = async () => {
     
+    if(feedbackText == "" && !feedbackImage ){
+      toast.info('Preencha pelo menos um campo.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      return
+    }
+
     const formData = new FormData()
     formData.append("content",feedbackText)
     formData.append("userId",user!.id)
@@ -73,13 +89,62 @@ export function DropdownConfig() {
 
     try{
       await api.post(`/feedbacks`, formData)
-    } catch(err: any){
-      console.log(err)
+      toast.success('Seu feedback foi enviado. Obrigado ajudar a melhorar a BUBet! 💙💙💙', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+    } catch(error: any){
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
     }
 }
 
   const handleUpdateUserData = async () => {
     
+    if(name == undefined && password == undefined && email == undefined){
+      toast.info('Preencha pelo menos um campo.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      return
+    }
 
     let data:UpdataUserDataProps = {}
     data.name = name
@@ -94,9 +159,43 @@ export function DropdownConfig() {
 
     try{
       const res = await api.put(`/users/profile`, data)
-      console.log(res.data)
-    } catch(err: any){
-      console.log(err)
+      toast.success('Suas informações foram atualizadas!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+    } catch(error: any){
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
     }
 }
 
