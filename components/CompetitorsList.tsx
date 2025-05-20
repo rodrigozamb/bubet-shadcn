@@ -39,7 +39,7 @@ export function CompetitorsList({ competitors }:CompetitorsListProps){
                 {
                     competitors.map((competitor, i) => (
                         <div key={i} className="p-2 bg-gray-100 rounded cursor-pointer">
-                            <Link href={`/profile/${competitor.id}`} className="flex justify-start content-center">
+                            <Link href={`/competitors/${competitor.id}`} className="flex justify-start content-center">
                                 <Image src={competitor.profile_url} alt={competitor.id} width={40} height={40}/>
                                 <span className="content-center ml-3 truncate">
                                     {competitor.name}

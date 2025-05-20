@@ -140,7 +140,7 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
                         allCompetitors.length > 0 ?
                           allCompetitors.map((competitor, i) => (
 
-                              <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/profile/${competitor.id}`)}}>
+                              <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/competitors/${competitor.id}`)}}>
                                   <Image className="m-3" src={competitor.profile_url} alt={competitor.name} width={60} height={60}/>
                                   <p className="font-medium text-md">{competitor.name}</p>
                                   

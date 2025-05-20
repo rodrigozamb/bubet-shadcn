@@ -2,6 +2,7 @@
 
 import { CompetitorPage } from "@/components/CompetitorPage";
 import { Header } from "@/components/Header";
+import { ProfilePage } from "@/components/ProfilePage";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import axios from "axios";
@@ -13,73 +14,71 @@ import { useContext, useEffect, useState } from "react";
 interface UserData{
   id: string
   name:string
-  description: string
   created_at: string
   profile_url:string
+  position: string
 } 
 
-interface StatsData{
-  first: number
-  second: number
-  third: number
-  others: number
-  all: number
-} 
+interface EventProps{
+  id: string
+  name: string
+  banner: string
+}
+
+interface BetProps{
+  name: string
+}
+interface UserBetProps{
+  bets:BetProps[]
+  points: string
+  event: EventProps
+  created_at: string
+}
+
+interface ProfileUserPageProps{
+  user_bets: UserBetProps[]
+}
 
 //Tela do competidor
-export default function ProfilePage() {
+export default function ProfileUserPage() {
 
   useContext(AuthContext)
 
-  const [competitor, setCompetitor] = useState<UserData | null >(null)
-  const [stats, setStats] = useState<StatsData | null >(null)
+  const [profile, setProfile] = useState<UserData | null >(null)
+  const [user_bets, setUserBets] = useState<UserBetProps[] >([])
   const [loading, setLoading] = useState<boolean>(true)
 
   const params = useParams<{id: string}>()
   const { id } = params
 
   useEffect(() => {
-
-      api.get(`/competitors/${id}`, { withCredentials: true })
+      api.get(`/users/profile/${id}`, { withCredentials: true })
       .then((res) => {
-        setCompetitor(res.data)
-        api.get(`/competitors/stats/${id}`, { withCredentials: true })
+        setProfile(res.data.user)
+
+        api.get(`/bets/user/${id}`, { withCredentials: true })
         .then((res) => {
-          setStats(res.data)
-        }).then(()=>{
-          setLoading(false)
+          setUserBets(res.data)
         })
+      })
+      .finally(()=>{
+        setLoading(false)
       })  
   }, [])
 
-  if(loading){
+  if(loading || !profile){
     return null
   }
-
+  
   return (
       <div className="flex flex-col h-screen bg-gray-100">
         <div>
           <Header />
         </div>
-        <div className="flex h-screen ">
-          <CompetitorPage 
-            competitor={ 
-              {
-                name:competitor! && competitor.name, 
-                avatar:competitor!.profile_url,
-                description:competitor!.description
-              } 
-            }
-            
-            stats={
-              {
-                first: stats!.first,
-                second: stats!.second,
-                third: stats!.third,
-                others: stats!.others
-              }
-            }
-          
+        <div className="flex justify-center items-center h-screen ">
+          <ProfilePage  
+            profile={profile}
+            bets={user_bets}
           />
         </div>
       </div>

@@ -69,10 +69,6 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
     
     const bet_body = data.map((cp:any) => cp.id)
     
-    console.log(bet_body.length)
-    console.log(bet_body)
-    console.log(id)
-
     try{
       const res = await api.post(`/bets/${id}`,{bets: bet_body})
       const req = await api.post(`/estandartes/${id}`,{data: ests})

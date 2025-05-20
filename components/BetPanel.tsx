@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "./ui/input"
 import { useState } from "react"
 import { BetSheet } from "./BetSheet"
+import { useRouter } from "next/navigation"
 
 
 interface BetsPanelProps{
@@ -45,7 +46,7 @@ interface BetsPanelProps{
 export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPanelProps){
 
     const [searchTerm, setSearchTerm] = useState("");
-
+    const router = useRouter()
     const apostas = allBets.filter((item) =>
       item.user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -132,7 +133,7 @@ export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPane
                                         apostas.length > 0 ? 
                                             apostas.map((bet, index)=>(
                                                 <div className="flex w-130 h-18 border-2 border-gray-800 justify-between bg-amber-200 px-3 m" key={index}>
-                                                    <div className="flex justify-center items-center">
+                                                    <div className="flex justify-center items-center cursor-pointer" onClick={()=>{ router.push(`/profile/${bet.user.id}`) }}>
                                                         <Image className="flex justify-center items-center rounded-full border-1 border-[#000000]" alt={bet.user.name} src={bet.user.profile_url} height={45} width={45}/>
                                                         <span className="flex justify-center items-center ml-3">{bet.user.name}</span>
                                                     </div>

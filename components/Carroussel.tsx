@@ -54,7 +54,7 @@ export function Carroussel({ items, isCompetitor }:CarrousselProps) {
                 className="cursor-pointer" 
                 onClick={() => {
                     isCompetitor ?
-                      router.push(`/profile/${item.id}`)
+                      router.push(`/competitors/${item.id}`)
                     :
                       router.push(`/events/${item.id}`)
                   }}
