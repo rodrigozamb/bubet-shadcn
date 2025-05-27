@@ -65,6 +65,10 @@ export default function Dashboard() {
   }
 
   return (
+    <>
+      <title>BUBet | Dashboard</title>
+      <meta name="dashboard" content="Faça sua aposta!"/>
+
       <div className="flex flex-col h-screen justify-between bg-gray-300">
         <div>
           <Header />
@@ -72,5 +76,6 @@ export default function Dashboard() {
         <PageCarroussel competitors={competitors} events={events}/>
         <BetsList bets={bets}/>
       </div>
+    </>
   );
 }

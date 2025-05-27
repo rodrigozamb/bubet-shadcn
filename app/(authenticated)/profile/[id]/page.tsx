@@ -7,6 +7,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import axios from "axios";
 import type { Metadata } from "next";
+import Head from "next/head";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -69,8 +70,13 @@ export default function ProfileUserPage() {
   if(loading || !profile){
     return null
   }
-  
+  const tit = `Perfil | ${profile.name}`
+  console.log(tit)
   return (
+    <>
+      <title>{tit}</title>
+      <meta key="profile-page" name="profile" content="Conheça essa pessoa!"/>
+      
       <div className="flex flex-col h-screen bg-gray-100">
         <div>
           <Header />
@@ -82,5 +88,6 @@ export default function ProfileUserPage() {
           />
         </div>
       </div>
+    </>
   );
 }

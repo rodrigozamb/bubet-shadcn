@@ -71,8 +71,8 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
     const bet_body = data.map((cp:any) => cp.id)
     
     try{
-      const res = await api.post(`/bets/${id}`,{bets: bet_body})
-      const req = await api.post(`/estandartes/${id}`,{data: ests})
+      const bet_res = await api.post(`/bets/${id}`,{bets: bet_body})
+      const req = await api.post(`/estandartes/${id}/${bet_res.data.id}`,{data: ests})
 
       toast.success('Aposta feita com sucesso!', {
         position: 'top-right',

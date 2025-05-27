@@ -121,30 +121,34 @@ export default function Home() {
   if(isloading || !event){
     return null
   }
-
-  console.log('Banners Types')
-  console.log(bannersTypes)
+  const tit = `Evento | ${event.name}`
 
   return (
-    <div className="h-screen flex flex-col">
-      <div>
-        <Header />
-      </div>
-      <div className="flex flex-1 justify-center">
+    <>
+
+      <title>{tit}</title>
+      <meta name="event" content="Conheça o evento!"/>
+      
+      <div className="h-screen flex flex-col">
         <div>
-            <InfoPanel 
-              name={event!.name} 
-              date={event!.date.split("T")[0].split("-")[2]+"/"+event!.date.split("T")[0].split("-")[1]+"/"+event!.date.split("T")[0].split("-")[0]} 
-              local={event!.local}
-              time={event!.starts_at.substring(11,16)+' - '+event!.ends_at.substring(11,16)}
-            />
-            <BetPanel allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } />
+          <Header />
         </div>
-        <div className="flex mx-4 flex-col">
-          <Podium ranking={results}/>
-          <CompetitorsList competitors={ competitors }/>
+        <div className="flex flex-1 justify-center">
+          <div>
+              <InfoPanel 
+                name={event!.name} 
+                date={event!.date.split("T")[0].split("-")[2]+"/"+event!.date.split("T")[0].split("-")[1]+"/"+event!.date.split("T")[0].split("-")[0]} 
+                local={event!.local}
+                time={event!.starts_at.substring(11,16)+' - '+event!.ends_at.substring(11,16)}
+              />
+              <BetPanel allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } />
+          </div>
+          <div className="flex mx-4 flex-col">
+            <Podium ranking={results}/>
+            <CompetitorsList competitors={ competitors }/>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

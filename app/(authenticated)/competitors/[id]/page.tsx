@@ -52,11 +52,16 @@ export default function ProfilePage() {
       })  
   }, [])
 
-  if(loading){
+  if(loading || !competitor){
     return null
   }
-
+  const tit = `Competidor | ${competitor.name}`
   return (
+    <>
+      
+      <title>{tit}</title>
+      <meta name="competitor" content="Conheça o competidor!"/>
+
       <div className="flex flex-col h-screen bg-gray-100">
         <div>
           <Header />
@@ -65,9 +70,9 @@ export default function ProfilePage() {
           <CompetitorPage 
             competitor={ 
               {
-                name:competitor! && competitor.name, 
-                avatar:competitor!.profile_url,
-                description:competitor!.description
+                name:competitor && competitor.name, 
+                avatar:competitor.profile_url,
+                description:competitor.description
               } 
             }
             
@@ -83,5 +88,6 @@ export default function ProfilePage() {
           />
         </div>
       </div>
+    </>
   );
 }
