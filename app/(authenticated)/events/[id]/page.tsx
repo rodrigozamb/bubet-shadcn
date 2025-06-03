@@ -20,7 +20,12 @@ interface EventData{
     starts_at: string,
     ends_at: string,
     created_at: string,
-    local: string
+    local: string,
+    judges:{
+      id: string,
+      nickname: string,
+      avatar: string
+    }[]
 }
 
 interface UserBetData{
@@ -49,7 +54,8 @@ interface defaultBet{
 interface ResultProps{
   id: string,
   name: string,
-  logo: string
+  profile_url: string
+  score: string
 }
 
 interface CompetitorProps{
@@ -93,8 +99,13 @@ export default function Home() {
           
           api.get(`/results/${id}`,{withCredentials: true})
           .then((res)=>{
-            const ranking = res.data.map((cmp: { competitorId: string, eventId:string , competitor:ResultProps })=>{
-              return cmp.competitor
+            const ranking = res.data.map((cmp: { competitorId: string, eventId:string , score: string ,competitor:ResultProps })=>{
+              return {
+                id: cmp.competitor.id,
+                name:cmp.competitor.name,
+                profile_url: cmp.competitor.profile_url,
+                score: cmp.score
+              }
             })
             setResults(ranking)
 
@@ -122,7 +133,7 @@ export default function Home() {
     return null
   }
   const tit = `Evento | ${event.name}`
-
+  console.log(event)
   return (
     <>
 
@@ -133,13 +144,14 @@ export default function Home() {
         <div>
           <Header />
         </div>
-        <div className="flex flex-1 justify-center">
+        <div className="flex items-center justify-center">
           <div>
               <InfoPanel 
                 name={event!.name} 
                 date={event!.date.split("T")[0].split("-")[2]+"/"+event!.date.split("T")[0].split("-")[1]+"/"+event!.date.split("T")[0].split("-")[0]} 
                 local={event!.local}
                 time={event!.starts_at.substring(11,16)+' - '+event!.ends_at.substring(11,16)}
+                judges={event.judges}
               />
               <BetPanel allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } />
           </div>

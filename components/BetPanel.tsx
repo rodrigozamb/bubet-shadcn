@@ -15,6 +15,14 @@ interface BetsPanelProps{
         bets: {
             name: string
         }[],
+        estandartes:{
+            competitor:{
+                name: string
+            },
+            bannerType:{
+                name: string
+            }
+        }[],
         points: string,
     } | null
     allBets:{
@@ -28,6 +36,14 @@ interface BetsPanelProps{
         bets: [{
             name: string
         }],
+        estandartes:{
+            competitor:{
+                name: string
+            },
+            bannerType:{
+                name: string
+            }
+        }[],
         created_at: string,
         points: string
     }[],
@@ -43,6 +59,22 @@ interface BetsPanelProps{
     
 }
 
+const colors1 = ["#FF0000","#00FF00","#0000FF","#FFFF00","#00FFFF","#FF00FF","#FFA500","#800080","#8B4513","#808080"]
+
+const colors = [
+  "#FFCCCC", // Vermelho pastel
+  "#CCFFCC", // Verde pastel
+  "#CCCCFF", // Azul pastel
+  "#FFFFCC", // Amarelo pastel
+  "#CCFFFF", // Ciano pastel
+  "#FFCCFF", // Magenta pastel
+  "#FFE0B3", // Laranja pastel
+  "#E0CCFF", // Roxo pastel
+  "#D2B48C", // Marrom claro pastel (tom claro de Tan)
+  "#E0E0E0"  // Cinza bem claro
+];
+
+
 export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPanelProps){
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -53,18 +85,19 @@ export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPane
 
     return (
 
-        <div className="flex justify-center bg-gray-300  rounded-3xl py-5">
+        <div className="flex justify-center bg-blue-900  rounded-3xl py-5">
 
             <div className="content-center">
                 
-                <div className="flex justify-center h-52">
+                <div className="flex justify-center">
                     <div className= "">
-                        <div className="flex justify-center text-3xl mb-2 text-black font-bold">Sua aposta</div>
+                        <div className="flex justify-center text-3xl mb-2 text-white font-bold">Sua aposta</div>
 
                         {
 
                             userBet ? 
-                                <div className="flex justify-center items-center h-35 max-h-35 bg-zinc-100 rounded-3xl w-230">
+                            <div className="flex flex-col justify-center items-center py-5 bg-zinc-100 rounded-3xl w-230">
+                                <div className="flex ">
                                     <div>
                                         <div className="flex justify-center font-bold text-xl mb-3">
                                             <div className="flex justify-center items-center mx-5">
@@ -104,7 +137,36 @@ export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPane
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
+                                
+                                <div className="">
+                                    <span className="flex justify-center font-bold text-xl text-center">
+                                        Estandartes
+                                    </span>
+                                    <div className="grid grid-cols-5 px-2" >
+                                        {
+                                            userBet.estandartes.map((estandarte, index) => (
+                                                <div 
+                                                    className="flex flex-col text-center m-1 rounded-2xl" 
+                                                    style={
+                                                        {
+                                                            backgroundColor: colors[index], 
+                                                            border:"1px solid" ,
+                                                            borderColor: colors1[index] 
+                                                        }
+                                                    }  
+                                                    key={index+4}>
+                                                        <span className="font-bold my-1" >{estandarte.bannerType.name.split("Estandarte de")[1]}</span>
+                                                        <span className="mb-2">{estandarte.competitor.name}</span>
+                                                        
+                                                        
+                                                </div>    
+                                            ))
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                                 : 
                                 <div className="flex justify-center items-center h-30 max-h-30">
                                     <BetSheet competitors={ competitors } estandartes={ estandartes }/>
@@ -115,7 +177,7 @@ export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPane
                 </div>
 
                 <div className="flex flex-col justify-center">
-                    <span className="text-center text-3xl text-black font-bold mb-2">Todas apostas</span>
+                    <span className="text-center text-3xl text-white font-bold my-4">Todas apostas</span>
                     <Dialog>
                         <div className="flex justify-center items-center">
                             <DialogTrigger asChild>

@@ -47,12 +47,13 @@ interface PodiumProps{
     ranking:{
         id: string,
         name: string,
-        logo: string
+        profile_url: string
+        score: string
     }[]
 }
 
 export function Podium({ ranking }: PodiumProps){
-
+    console.log(ranking)
     return (
 
         <div className="h-68 my-5">
@@ -76,10 +77,13 @@ export function Podium({ ranking }: PodiumProps){
                             {
                                 ranking.length > 0 ?
                                     ranking.map((competitor, i) => (
-                                        <Link className="flex items-center h-15 hover:bg-gray-100" key={i} href={`/competitors/${competitor.id}`}>
-                                            { i < 3 ? <span className="font-black text-lg ml-3">{i+1}º - </span> : <span className="ml-3">{i+1}º - </span>}
-                                            <Image className="m-3" src={competitor.logo} alt={competitor.name} width={40} height={40}/>
-                                            {competitor.name}
+                                        <Link className="flex items-center justify-between h-15 hover:bg-gray-100" key={i} href={`/competitors/${competitor.id}`}>
+                                            <div className="flex items-center">
+                                                { i < 3 ? <span className="font-black text-lg ml-3">{i+1}º - </span> : <span className="ml-3">{i+1}º - </span>}
+                                                <Image className="m-3" src={competitor.profile_url} alt={competitor.name} width={40} height={40}/>
+                                                {competitor.name}
+                                            </div>
+                                            <span className="flex mr-5 font-medium">{competitor.score}</span>
                                         </Link>
                                     ))
                                 :
@@ -103,19 +107,22 @@ export function Podium({ ranking }: PodiumProps){
                             <div className="flex content-center items-center mx-5 translate-y-1/6">
                                 <div>
                                     <span className="flex justify-center mb-1">2º Lugar</span>
-                                    <Image className="" src={ranking[1].logo} alt={ranking[1].name} width={80} height={80}/>
+                                    <Image className="" src={ranking[1].profile_url} alt={ranking[1].name} width={80} height={80}/>
+                                    <span className="flex justify-center text-center">{ranking[1].score}</span>
                                 </div>
                             </div>
                             <div className="flex content-center items-center mx-5">
                                 <div>
                                     <span className="flex justify-center  mb-1">Campeão</span>
-                                    <Image className="" src={ranking[0].logo} alt={ranking[0].name} width={80} height={80}/>
+                                    <Image className="" src={ranking[0].profile_url} alt={ranking[0].name} width={80} height={80}/>
+                                    <span className="flex justify-center text-center">{ranking[0].score}</span>
                                 </div>
                             </div>
                             <div className="flex content-center items-center mx-5 translate-y-1/4">
                                 <div>
                                     <span className="flex justify-center mb-1">3º Lugar</span>
-                                    <Image className="" src={ranking[2].logo} alt={ranking[2].name} width={80} height={80}/>
+                                    <Image className="" src={ranking[2].profile_url} alt={ranking[2].name} width={80} height={80}/>
+                                    <span className="flex justify-center text-center">{ranking[2].score}</span>
                                 </div>    
                             </div>
                         </div>

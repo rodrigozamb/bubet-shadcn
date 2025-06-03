@@ -68,6 +68,37 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
 
   const handleSubmit = async ( data: any, ests: any) =>{
     
+    if( ests.length != estandartes.length ){
+      toast.info('Você precisa escolhar um competidor para cada estandarte', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      return
+    }
+
+    if( selectedCount != competitors.length ){
+      toast.info('Você precisa escolher uma  posição para todos os participantes', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      return
+    }
+
+
     const bet_body = data.map((cp:any) => cp.id)
     
     try{

@@ -88,7 +88,7 @@ export function NavigationMenuLandingPage() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-blue-950 text-amber-50 font-bold text-md" >Components</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="bg-blue-950 text-amber-50 font-bold text-md" >Como apostar</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
               {components.map((component) => (
