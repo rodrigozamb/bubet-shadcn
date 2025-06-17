@@ -49,6 +49,15 @@ interface PodiumProps{
         name: string,
         profile_url: string
         score: string
+        competitor:{
+            id:string,
+            name: string,
+            description: string,
+            profile_url: string
+        }
+        estandartes: {
+            name:string
+        }[]
     }[]
 }
 
@@ -67,7 +76,7 @@ export function Podium({ ranking }: PodiumProps){
                             <span className="text-center text-sm cursor-pointer">ver todos</span>
                         </DialogTrigger>
                     </div>
-                    <DialogContent className="w-250 h-100">
+                    <DialogContent className="w-200 h-[450px]">
                         <DialogHeader>
                             <DialogTitle className="flex justify-center"> Ranking Geral </DialogTitle>
                         </DialogHeader>
@@ -77,14 +86,44 @@ export function Podium({ ranking }: PodiumProps){
                             {
                                 ranking.length > 0 ?
                                     ranking.map((competitor, i) => (
-                                        <Link className="flex items-center justify-between h-15 hover:bg-gray-100" key={i} href={`/competitors/${competitor.id}`}>
-                                            <div className="flex items-center">
-                                                { i < 3 ? <span className="font-black text-lg ml-3">{i+1}º - </span> : <span className="ml-3">{i+1}º - </span>}
-                                                <Image className="m-3" src={competitor.profile_url} alt={competitor.name} width={40} height={40}/>
-                                                {competitor.name}
-                                            </div>
-                                            <span className="flex mr-5 font-medium">{competitor.score}</span>
-                                        </Link>
+                                        <div key={i} className="hover:bg-gray-100">
+                                            <Link className="flex items-center justify-between h-15 hover:bg-gray-100 my-1" key={i} href={`/competitors/${competitor.id}`}>
+                                                <div className="flex items-center">
+                                                    { i < 3 ? <span className="font-black text-lg ml-3">{i+1}º - </span> : <span className="ml-3">{i+1}º - </span>}
+                                                    <Image className="m-3" src={competitor.profile_url} alt={competitor.name} width={40} height={40}/>
+                                                    {competitor.name}
+                                                </div>
+                                                <span className="flex mr-5 font-medium">{competitor.score}</span>
+                                            </Link>
+                                            {
+                                                competitor.estandartes.length > 0 ? 
+                                                
+                                                    (
+                                                        <>
+                                                            <span className="flex justify-center font-bold mb-2">Estandartes</span>
+                                                            <div className="grid grid-cols-5 justify-center ml-15 pb-3">
+                                                                {
+                                                                    competitor.estandartes.map((estandarte, idx) => (
+
+                                                                        <div key={idx}>
+                                                                            <span className="mx-1">
+                                                                                {estandarte.name.split("Estandarte de")[1]}
+                                                                            </span>
+
+                                                                        </div>
+
+                                                                    ))
+
+                                                                }
+                                                            </div>
+                                                        </>
+                                                    )
+                                                :
+                                                    <div></div>    
+                                            }
+                                            
+                                        </div>
+
                                     ))
                                 :
                                     <div className="flex justify-center items-center content-center h-60">

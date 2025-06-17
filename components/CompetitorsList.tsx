@@ -21,7 +21,7 @@ export function CompetitorsList({ competitors }:CompetitorsListProps){
                 <span className="flex justify-center text-xl font-bold text-white mb-4 ">Participantes</span>
                 
                 <div className="content-center h-56 overflow-auto">
-                    <div className="flex justify-center content-center">
+                    <div className="flex justify-center content-center text-white font-semibold">
                         Nenhum participante cadastrado
                     </div>
                 </div>

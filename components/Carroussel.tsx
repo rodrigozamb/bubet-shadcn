@@ -64,7 +64,7 @@ export function Carroussel({ items, isCompetitor }:CarrousselProps) {
                     <TooltipTrigger>
 
                     <CardContent className="flex items-center justify-center h-30 cursor-pointer">
-                      <Image alt={item.id} src={ isCompetitor ?  item.profile_url! : item.banner! } width={100} height={100} />
+                      <Image alt={item.name} src={ isCompetitor ?  item.profile_url! : item.banner! } width={100} height={100} />
                     </CardContent>
                       
                     </TooltipTrigger>

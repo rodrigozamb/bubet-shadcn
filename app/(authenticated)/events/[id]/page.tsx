@@ -55,13 +55,18 @@ interface ResultProps{
   id: string,
   name: string,
   profile_url: string
-  score: string
+  score: string,
+  competitor: CompetitorProps,
+  estandartes: {
+    name: string
+  }[]
 }
 
 interface CompetitorProps{
   id: string,
   name: string,
-  profile_url: string
+  profile_url: string,
+  description: string
 }
 
 interface BannersTypesProps{
@@ -99,12 +104,13 @@ export default function Home() {
           
           api.get(`/results/${id}`,{withCredentials: true})
           .then((res)=>{
-            const ranking = res.data.map((cmp: { competitorId: string, eventId:string , score: string ,competitor:ResultProps })=>{
+            const ranking = res.data.map((cmp: ResultProps)=>{
               return {
                 id: cmp.competitor.id,
                 name:cmp.competitor.name,
                 profile_url: cmp.competitor.profile_url,
-                score: cmp.score
+                score: cmp.score,
+                estandartes: cmp.estandartes
               }
             })
             setResults(ranking)
@@ -116,6 +122,8 @@ export default function Home() {
               api.get(`/events/${id}/estandartes/types`,{withCredentials: true})
               .then((res)=>{
                 setBannersTypes(res.data)
+
+                /* api.get(``) */
               })
             })
 

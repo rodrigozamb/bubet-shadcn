@@ -36,7 +36,7 @@ export function JudgePage({ judge }:ProfilePageProps){
                     <span className=" text-3xl text-black font-bold">{ judge.nickname }</span>
                 </div>
 
-                <div className="flex justify-center items-center ">
+                <div className="flex justify-center items-center px-60">
                     <span className=" text-xl"> {judge.description} </span>
                 </div>
 
