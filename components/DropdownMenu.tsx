@@ -58,7 +58,7 @@ export function DropdownConfig() {
 
 
   const handleLogout = () =>{
-    Cookies.remove('bubet.token')
+    Cookies.remove('bubet.token',{ path: '/', domain: 'bu-bet.com' })
     router.push('/login')
   }
 
