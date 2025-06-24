@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 "use client"
 
 import * as React from "react"
@@ -36,7 +38,7 @@ export function DropdownConfig() {
   const [name, setName] = useState<string|undefined>(undefined)
   const [password, setPassword] = useState<string|undefined>(undefined)
   const [email, setEmail] = useState<string|undefined>(undefined)
-  const [avatarImage, setAvatarImage] = useState<File | undefined>(undefined);
+  const [, setAvatarImage] = useState<File | undefined>(undefined);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
@@ -146,10 +148,11 @@ export function DropdownConfig() {
       return
     }
 
-    let data:UpdataUserDataProps = {}
-    data.name = name
-    data.email = email
-    data.password = password
+    const data:UpdataUserDataProps = {
+      email: email,
+      name: name,
+      password: password
+    }
 
     setName(undefined)
     setEmail(undefined)
@@ -158,7 +161,7 @@ export function DropdownConfig() {
     console.log(data)
 
     try{
-      const res = await api.put(`/users/profile`, data)
+      await api.put(`/users/profile`, data)
       toast.success('Suas informações foram atualizadas!', {
         position: 'top-right',
         autoClose: 5000,

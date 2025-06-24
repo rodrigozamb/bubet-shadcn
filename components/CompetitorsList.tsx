@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const data = [[]]
-
 interface CompetitorsListProps{
     competitors:{
         id: string,

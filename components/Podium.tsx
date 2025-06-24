@@ -2,43 +2,6 @@ import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import Link from "next/link";
 
-const data =[
-    {
-        "id":"1",
-        "name":"Bateria Bandida",
-        "logo":"/logos/Bandida Logo.png"
-    },
-    {
-        "id":"2",
-        "name":"Bateria C7",
-        "logo":"/logos/Bateria C7 Logo.png"
-    },
-    {
-        "id":"3",
-        "name":"BaterECA",
-        "logo":"/logos/BaterECA logo.png"
-    },
-    {
-        "id":"4",
-        "name":"UFUteria",
-        "logo":"/logos/UFUteria logo.png"
-    },
-    {
-        "id":"5",
-        "name":"Rateria",
-        "logo":"/logos/Rateria Logo.png"
-    },
-    {
-        "id":"6",
-        "name":"Meritissima",
-        "logo":"/logos/Meritissima-logo.png"
-    },
-    {
-        "id":"7",
-        "name":"Psicolata",
-        "logo":"/logos/Logo Psicolata.png"
-    }
-]
 
 // const data = null
 

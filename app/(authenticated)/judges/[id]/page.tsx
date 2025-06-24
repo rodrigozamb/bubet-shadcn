@@ -1,13 +1,9 @@
 "use client"
 
-import { CompetitorPage } from "@/components/CompetitorPage";
 import { Header } from "@/components/Header";
 import { JudgePage } from "@/components/JudgePage";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
-import axios from "axios";
-import type { Metadata } from "next";
-import Head from "next/head";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 

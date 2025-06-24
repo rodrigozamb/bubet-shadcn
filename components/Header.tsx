@@ -3,7 +3,7 @@
 import { DropdownConfig } from "@/components/DropdownMenu";
 import { AuthContext } from "@/context/AuthContext";
 import Image from "next/image";
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useContext } from "react";
 
 export function Header(){

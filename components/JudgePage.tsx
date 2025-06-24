@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 
 interface ProfilePageProps{

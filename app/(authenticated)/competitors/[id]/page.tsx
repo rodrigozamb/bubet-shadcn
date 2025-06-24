@@ -4,8 +4,6 @@ import { CompetitorPage } from "@/components/CompetitorPage";
 import { Header } from "@/components/Header";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
-import axios from "axios";
-import type { Metadata } from "next";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 

@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
@@ -103,7 +104,7 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
     
     try{
       const bet_res = await api.post(`/bets/${id}`,{bets: bet_body})
-      const req = await api.post(`/estandartes/${id}/${bet_res.data.id}`,{data: ests})
+      await api.post(`/estandartes/${id}/${bet_res.data.id}`,{data: ests})
 
       toast.success('Aposta feita com sucesso!', {
         position: 'top-right',

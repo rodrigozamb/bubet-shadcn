@@ -19,7 +19,7 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { Column, BoardColumn, BoardContainer, ColumnDragData } from "./BoardColumn";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
-import { Competitor, CompetitorCard, CompetitorDragData } from "./CompetitorCard";
+import { Competitor, CompetitorDragData } from "./CompetitorCard";
 
 type NestedColumn = Column & {
   children?: NestedColumn[];
@@ -97,7 +97,7 @@ export function KanbanBoard() {
   const [columns, setColumns] = useState<NestedColumn[]>(defaultCols);
   const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
-  const [activeCompetitor, setActiveCompetitor] = useState<Competitor | null>(null);
+  const [, setActiveCompetitor] = useState<Competitor | null>(null);
   const dndContextId = useId();
 
   const sensors = useSensors(
