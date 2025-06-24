@@ -29,11 +29,19 @@ interface EventData{
 }
 
 interface UserBetData{
-  bets: [{
-    name: string
-  }],
+  created_at: string,
+  bets: {
+      name: string
+  }[],
+  estandartes:{
+      competitor:{
+          name: string
+      },
+      bannerType:{
+          name: string
+      }
+  }[],
   points: string,
-  created_at: string
 }
 
 interface defaultBet{
@@ -44,9 +52,17 @@ interface defaultBet{
       profile_url: string,
       username: string
   }
-  bets: [{
+  bets: {
       name: string
-  }],
+  }[],
+  estandartes:{
+    competitor:{
+        name: string
+    },
+    bannerType:{
+        name: string
+    }
+  }[],
   created_at: string,
   points: string
 }
@@ -80,7 +96,7 @@ export default function Home() {
 
   const [event, setEvent] = useState<EventData|null>(null)
   const [allBets, setAllBets] = useState<defaultBet[]>([])
-  const [userBet, setUserBet] = useState<UserBetData|null>(null)
+  const [userBet, setUserBet] = useState<UserBetData | null >(null)
   const [results, setResults] = useState<ResultProps[]>([])
   const [competitors, setCompetitors] = useState<CompetitorProps[]>([])
   const [bannersTypes, setBannersTypes] = useState<BannersTypesProps[]>([])

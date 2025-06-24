@@ -33,9 +33,9 @@ interface BetsPanelProps{
             profile_url: string,
             username: string
         }
-        bets: [{
+        bets: {
             name: string
-        }],
+        }[],
         estandartes:{
             competitor:{
                 name: string
