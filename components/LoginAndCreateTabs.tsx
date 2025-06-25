@@ -30,14 +30,9 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { AuthContext } from "@/context/AuthContext"
-import { useForm, SubmitHandler } from "react-hook-form"
 import { toast, Bounce } from 'react-toastify'
 import { api } from "@/services/api"
-
-type FormInputs = {
-  email: string
-  password: string
-}
+import { useRouter } from "next/navigation"
 
 export function LoginAndCreateTabs() {
 
@@ -48,6 +43,7 @@ export function LoginAndCreateTabs() {
   const [avatar, setAvatar] = useState<File | null>(null);
 
   const { signIn } = useContext(AuthContext)
+  const router = useRouter()
     
   // Function to handle form submission
   const handleSignIn = async () => {
@@ -118,9 +114,50 @@ export function LoginAndCreateTabs() {
     setAvatar(null)
 
     try{
-      const req = await api.post(`/users`,formData)
-    }catch(err:any){
-      console.log(err)
+      await api.post(`/users`,formData)
+      toast.success('Conta criada com sucesso, verifique seu email para ativá-la!!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      setName("")
+      setPassword("")
+      setEmail("")
+      setAvatar(null)
+
+      router.push("/login")
+    }catch(error:any){
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
     }
   }
     
