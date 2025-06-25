@@ -126,12 +126,9 @@ export function LoginAndCreateTabs() {
         theme: 'dark',
         transition: Bounce,
       })
-      setName("")
-      setPassword("")
-      setEmail("")
-      setAvatar(null)
 
-      router.push("/login")
+
+      router.push("/dashboard")
     }catch(error:any){
       if (error instanceof Error) {
         toast.error(error.message, {
