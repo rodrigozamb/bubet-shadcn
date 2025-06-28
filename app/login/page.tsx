@@ -6,13 +6,17 @@ import BUBetlogo from "@/public/BUlogo1.png"
 
 
 export default function Home() {
-    return (
+
+  const rnd = Math.floor(Math.random() * 6) + 1
+  const im =  "url('/login_wallpapers/bg_"+rnd+".jpg')"
+  
+  return (
       <>
         
         <title>BUBet | Login</title>
         <meta name="login" content="Faça login ou crie uma conta"/>
         
-        <div className="flex bg-cover bg-center justify-between h-screen w-screen" style={{ backgroundImage: "url('/bg.jpg')" }}>
+        <div className="flex bg-cover bg-center justify-between h-screen w-screen" style={{ backgroundImage: im}}>
           <div className="z-20 p-10">
             <Image src={BUBetlogo.src} alt="BUBet logo" width={200} height={200}/>
           </div>
