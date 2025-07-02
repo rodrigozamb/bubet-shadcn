@@ -53,7 +53,7 @@ export function Podium({ ranking }: PodiumProps){
                                             <Link className="flex items-center justify-between h-15 hover:bg-gray-100 my-1" key={i} href={`/competitors/${competitor.id}`}>
                                                 <div className="flex items-center">
                                                     { i < 3 ? <span className="font-black text-lg ml-3">{i+1}º - </span> : <span className="ml-3">{i+1}º - </span>}
-                                                    <AvatarIcon name={competitor.name} size={200} src={competitor.profile_url} className="m-3"/>
+                                                    <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} className="m-3"/>
                                                     {competitor.name}
                                                 </div>
                                                 <span className="flex mr-5 font-medium">{competitor.score}</span>
