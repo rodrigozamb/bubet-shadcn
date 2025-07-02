@@ -55,7 +55,8 @@ interface BetsPanelProps{
     estandartes:{
         id: string,
         name: string
-    }[]
+    }[],
+    event_active?: boolean 
     
 }
 
@@ -75,7 +76,7 @@ const colors = [
 ];
 
 
-export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPanelProps){
+export function BetPanel({ allBets, userBet, competitors, estandartes, event_active = true }:BetsPanelProps){
 
     const [searchTerm, setSearchTerm] = useState("");
     const router = useRouter()
@@ -167,10 +168,15 @@ export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPane
                                     </div>
                                 </div>
                             </div>
-                                : 
+                                :
+                                event_active?
                                 <div className="flex justify-center items-center h-30 max-h-30">
                                     <BetSheet competitors={ competitors } estandartes={ estandartes }/>
                                 </div>
+                                    :
+                                    <div>
+                                        <span>Não é possível fazer uma aposta</span>
+                                    </div>
                         }
                         
                     </div>
