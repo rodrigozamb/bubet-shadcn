@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import AvatarIcon from "./AvatarIcon";
 
 interface ProfilePageProps{
     judge:{
@@ -28,7 +29,7 @@ export function JudgePage({ judge }:ProfilePageProps){
         <div className="flex flex-col items-center" >
 
                 <div className="flex content-center justify-center items-center">
-                    <Image className="rounded-full shadow-2xl" src={judge.avatar} alt={judge.nickname} width={200} height={200}/>
+                    <AvatarIcon name={judge.first_name+" "+judge.last_name} size={200} src={judge.avatar} />
                 </div>
                 <div className="flex justify-center items-center my-5">
                     <span className=" text-3xl text-black font-bold">{ judge.nickname }</span>

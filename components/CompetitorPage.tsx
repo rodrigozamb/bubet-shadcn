@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AvatarIcon from "./AvatarIcon";
 
 interface CompetitorPageProps{
     competitor:{
@@ -23,7 +23,7 @@ export function CompetitorPage({ competitor, stats }:CompetitorPageProps){
 
             <div>
                 <div className="flex content-center justify-center items-center mb-10">
-                    <Image className="" src={competitor.avatar} alt={competitor.name} width={200} height={200}/>
+                    <AvatarIcon name={competitor.name} size={200} src={competitor.avatar} />
                 </div>
                 <div className="flex justify-center items-center my-10">
                     <span className=" text-3xl text-black font-bold">{ competitor.name }</span>

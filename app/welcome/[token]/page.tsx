@@ -1,7 +1,7 @@
 "use client"
 
+import AvatarIcon from "@/components/AvatarIcon";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
 export default function Home() {
@@ -27,7 +27,7 @@ export default function Home() {
             <div className="flex flex-col justify-center items-center">
               <span className="text-white font-extrabold text-4xl text-center mb-10">Bem vindo</span>
               <div className="flex flex-col justify-center text-center my-15">
-                <Image className="rounded-full shadow-2xl" src={tok.profile_url} alt={tok.name} width={200} height={200}/>
+                <AvatarIcon name={tok.name} src={tok.profile_url} size={200} key={tok.name}/>
                 <span className="text-white font-medium text-2xl mt-5">{tok.name}</span>
               </div>
               <div className="text-white">

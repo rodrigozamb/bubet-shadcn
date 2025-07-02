@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import AvatarIcon from "./AvatarIcon";
 
 interface ProfilePageProps{
     profile:{
@@ -45,7 +46,7 @@ export function ProfilePage({ profile, bets }:ProfilePageProps){
         <div className="flex flex-col items-center" >
 
                 <div className="flex content-center justify-center items-center">
-                    <Image className="rounded-full shadow-2xl" src={profile.profile_url} alt={profile.name} width={200} height={200}/>
+                    <AvatarIcon name={profile.name} size={200} src={profile.profile_url} />
                 </div>
                 <div className="flex justify-center items-center my-5">
                     <span className=" text-3xl text-black font-bold">{ profile.name }</span>
