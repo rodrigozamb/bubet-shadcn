@@ -1,12 +1,12 @@
 "use client"
 
-import Image from "next/image"
 import { Button } from "./ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Input } from "./ui/input"
 import { useState } from "react"
 import { BetSheet } from "./BetSheet"
 import { useRouter } from "next/navigation"
+import AvatarIcon from "./AvatarIcon"
 
 
 interface BetsPanelProps{
@@ -196,7 +196,7 @@ export function BetPanel({ allBets, userBet, competitors, estandartes }:BetsPane
                                             apostas.map((bet, index)=>(
                                                 <div className="flex w-130 h-18 border-2 border-gray-800 justify-between bg-amber-200 px-3 m" key={index}>
                                                     <div className="flex justify-center items-center cursor-pointer" onClick={()=>{ router.push(`/profile/${bet.user.id}`) }}>
-                                                        <Image className="flex justify-center items-center rounded-full border-1 border-[#000000]" alt={bet.user.name} src={bet.user.profile_url} height={45} width={45}/>
+                                                        <AvatarIcon name={bet.user.name} size={45} src={bet.user.profile_url} className="flex justify-center items-center rounded-full border-1 border-[#000000]" />
                                                         <span className="flex justify-center items-center ml-3">{bet.user.name}</span>
                                                     </div>
 

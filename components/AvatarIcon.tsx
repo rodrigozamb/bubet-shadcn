@@ -1,5 +1,6 @@
 "use client"
 
+import clsx from 'clsx'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
@@ -7,7 +8,8 @@ import { useEffect, useState } from 'react'
 interface avatarIconProps {
     src: string,
     name: string,
-    size: number | null
+    size?: number | null
+    className?: string
 }
 
 const colors = [
@@ -34,7 +36,7 @@ const colors = [
 ];
 
 
-export default function AvatarIcon({ src, name, size }: avatarIconProps) {
+export default function AvatarIcon({ src, name, size, className = "" }: avatarIconProps) {
   const [imgError, setImgError] = useState(false)
 
   const [color, setColor] = useState("#EF4444")
@@ -59,7 +61,7 @@ export default function AvatarIcon({ src, name, size }: avatarIconProps) {
   if (!src || imgError) {
     return (
       <div
-        className="flex items-center justify-center rounded-full"
+        className={clsx("flex items-center justify-center rounded-full", className)}
         style={{
           width: size,
           height: size,
@@ -80,7 +82,7 @@ export default function AvatarIcon({ src, name, size }: avatarIconProps) {
       alt={name}
       width={size}
       height={size}
-      className="rounded-full object-cover"
+      className={clsx("rounded-full object-cover", className)}
       onError={() => setImgError(true)}
       unoptimized // optional: skip built-in optimization if loading external
     />

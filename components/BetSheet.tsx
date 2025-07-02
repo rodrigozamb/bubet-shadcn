@@ -1,5 +1,4 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import Image from "next/image";
 import { Button } from "./ui/button";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { SelectCompetitor } from "./SelectCompetitor";
@@ -7,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { useParams, useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
+import AvatarIcon from "./AvatarIcon";
 
 interface Competitor{
   id: string,
@@ -188,7 +188,7 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
                                       className="flex p-2 bg-gray-100 rounded-xl cursor-pointer"
                                       onClick={()=> toggleCompetitor(competitor)}
                                     >
-                                      <Image className="mx-2" src={competitor.profile_url} alt={`${i}`} width={40} height={40}/>
+                                      <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url}  className="mx-2"  />
                                       <span className="content-center truncate">
                                           {competitor.name}
                                       </span>  
@@ -220,7 +220,7 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
                                       onClick={()=> toggleCompetitor(competitor)}
                                     >
                                       <span className="content-center ml-1">{i+1}º</span>
-                                      <Image className="mx-2" src={competitor.profile_url} alt={`${i}`} width={40} height={40}/>
+                                      <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} className="mx-2" />
                                       <span className="content-center truncate">
                                           {competitor.name}
                                       </span>  

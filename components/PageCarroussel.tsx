@@ -8,6 +8,7 @@ import { Dialog, DialogHeader, DialogTitle, DialogTrigger, DialogContent } from 
 import Image from "next/image";
 import { Input } from "./ui/input";
 import { useRouter } from "next/navigation"
+import AvatarIcon from "./AvatarIcon";
 
 
 interface EventProps{
@@ -141,7 +142,7 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
                           allCompetitors.map((competitor, i) => (
 
                               <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/competitors/${competitor.id}`)}}>
-                                  <Image className="m-3" src={competitor.profile_url} alt={competitor.name} width={60} height={60}/>
+                                  <AvatarIcon name={competitor.name} size={60} src={competitor.profile_url} className="m-3" />
                                   <p className="font-medium text-md">{competitor.name}</p>
                                   
                               </div>

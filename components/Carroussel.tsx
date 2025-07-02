@@ -4,7 +4,6 @@
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
 import { Card, CardContent } from "@/components/ui/card"
-import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -14,6 +13,7 @@ import {
 } from "@/components/ui/carousel"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 import { useRouter } from 'next/navigation'
+import AvatarIcon from "./AvatarIcon";
 
 interface CarrousselItem{
   id: string
@@ -65,7 +65,7 @@ export function Carroussel({ items, isCompetitor }:CarrousselProps) {
                     <TooltipTrigger>
 
                     <CardContent className="flex items-center justify-center h-30 cursor-pointer">
-                      <Image alt={item.name} src={ isCompetitor ?  item.profile_url! : item.banner! } width={100} height={100} />
+                      <AvatarIcon name={item.name} size={100} src={isCompetitor ?  item.profile_url! : item.banner! } />
                     </CardContent>
                       
                     </TooltipTrigger>

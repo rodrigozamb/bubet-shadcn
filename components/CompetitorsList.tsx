@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import AvatarIcon from "./AvatarIcon";
 
 interface CompetitorsListProps{
     competitors:{
@@ -38,7 +38,7 @@ export function CompetitorsList({ competitors }:CompetitorsListProps){
                     competitors.map((competitor, i) => (
                         <div key={i} className="p-2 bg-gray-100 rounded cursor-pointer">
                             <Link href={`/competitors/${competitor.id}`} className="flex justify-start content-center">
-                                <Image src={competitor.profile_url} alt={competitor.id} width={40} height={40}/>
+                                <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} />
                                 <span className="content-center ml-3 truncate">
                                     {competitor.name}
                                 </span>
