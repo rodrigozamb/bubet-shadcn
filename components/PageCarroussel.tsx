@@ -5,7 +5,6 @@
 import { useState, useEffect } from "react";
 import { Carroussel } from "./Carroussel";
 import { Dialog, DialogHeader, DialogTitle, DialogTrigger, DialogContent } from "./ui/dialog";
-import Image from "next/image";
 import { Input } from "./ui/input";
 import { useRouter } from "next/navigation"
 import AvatarIcon from "./AvatarIcon";
@@ -159,7 +158,7 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
                           allEvents.map((event, i) => (
 
                             <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/events/${event.id}`)}}>
-                                <Image className="m-3" src={event.banner} alt={event.name} width={60} height={60}/>
+                                <AvatarIcon name={event.name} src={event.banner} className="m-3" size={60} key={event.id} />
                                 <p className="font-medium text-md">{event.name}</p>
                             </div>
 

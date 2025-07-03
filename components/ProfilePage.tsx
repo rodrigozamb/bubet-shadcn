@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
@@ -79,7 +78,7 @@ export function ProfilePage({ profile, bets }:ProfilePageProps){
                                 bets.map((bet, index)=>(
                                     <div className="flex w-230 h-18 border-2 border-gray-800 justify-between bg-gray-200 px-3 m" key={index}>
                                         <div className="flex justify-center items-center cursor-pointer" onClick={()=>{router.push(`/events/${bet.event.id}`)}}>
-                                            <Image className="flex justify-center items-center rounded-full border-1 border-[#000000]" alt={bet.event.id} src={bet.event.banner} height={45} width={45}/>
+                                            <AvatarIcon name={bet.event.name} src={bet.event.banner} size={45} key={bet.event.id} className="flex justify-center items-center rounded-full border-1 border-[#000000]" />
                                             <span className="flex justify-center items-center ml-3 font-bold ">{bet.event.name}</span>
                                         </div>
 

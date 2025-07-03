@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import AvatarIcon from "./AvatarIcon";
 
@@ -50,7 +49,7 @@ export function JudgePage({ judge }:ProfilePageProps){
                                 judge.events.map((event, index)=>(
                                     <div className="flex w-230 h-18 border-2 border-gray-800 justify-between bg-gray-200 px-3 m" key={index}>
                                         <div className="flex justify-center items-center cursor-pointer" onClick={()=>{router.push(`/events/${event.id}`)}}>
-                                            <Image className="flex justify-center items-center rounded-full border-1 border-[#000000]" alt={event.id} src={event.banner} height={45} width={45}/>
+                                            <AvatarIcon name={event.name} src={event.banner} size={45} key={event.id} className="flex justify-center items-center rounded-full border-1 border-[#000000]" />
                                             <span className="flex justify-center items-center ml-3 font-bold ">{event.name}</span>
                                         </div>
 

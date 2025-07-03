@@ -1,7 +1,7 @@
 "use client"
 
-import Image from "next/image"
 import { useRouter } from "next/navigation"
+import AvatarIcon from "./AvatarIcon"
 
 interface InfoPanelProps{
     name:string,
@@ -52,7 +52,7 @@ export function InfoPanel({ name, date, local, time, judges }:InfoPanelProps){
                                     key={index+4}
                                     onClick={()=>{ router.push(`/judges/${jurado.id}`) }}    
                                 >
-                                        <Image className="rounded-full border-1 border-black" src={jurado.avatar} alt={jurado.id} width={55} height={55}/>
+                                        <AvatarIcon name={jurado.nickname} src={jurado.avatar} size={55} key={jurado.id} className="rounded-full border-1 border-black" />
                                         <span className="font-semibold" >{jurado.nickname}</span>
                                 </div>    
                             ))
