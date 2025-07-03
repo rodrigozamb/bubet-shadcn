@@ -174,8 +174,8 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                                     <BetSheet competitors={ competitors } estandartes={ estandartes }/>
                                 </div>
                                     :
-                                    <div>
-                                        <span>Não é possível fazer uma aposta</span>
+                                    <div className="h-25 flex justify-center items-center text-xl">
+                                        <span className="text-gray-400 font-semibold" >As apostas estão encerradas para esse evento.</span>
                                     </div>
                         }
                         

@@ -177,7 +177,7 @@ export default function Home() {
                 time={event!.starts_at.substring(11,16)+' - '+event!.ends_at.substring(11,16)}
                 judges={event.judges}
               />
-              <BetPanel allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } event_active={ new Date(event.starts_at) <= new Date() } />
+              <BetPanel allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } event_active={ new Date(event.starts_at) >= new Date() } />
           </div>
           <div className="flex mx-4 flex-col">
             <Podium ranking={results}/>
