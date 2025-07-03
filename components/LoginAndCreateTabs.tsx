@@ -50,6 +50,17 @@ export function LoginAndCreateTabs() {
     setEmail('')
     setPassword('')
     try {
+      toast.info('Credenciais recebidas, aguarde um momento...', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
       await signIn({ email, password })
       toast.success('Login feito com successo', {
         position: 'top-right',
