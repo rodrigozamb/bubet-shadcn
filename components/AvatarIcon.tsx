@@ -46,12 +46,16 @@ export default function AvatarIcon({ src, name, size, className = "" }: avatarIc
     setColor(colors[cn])
   }, [])
 
-  const initials = name
+  const initials = name ? name
     .split(' ')
     .map(part => part[0])
     .join('')
     .substring(0, 2)
     .toUpperCase()
+
+    :
+
+    "Pessoa"
   
     if (!size){
     size = 40
