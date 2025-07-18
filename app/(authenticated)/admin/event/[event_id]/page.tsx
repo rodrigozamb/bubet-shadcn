@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client"
 // TELA DE LOGIN
 
@@ -29,9 +31,6 @@ interface Estandarte{
     description: string
 }
 
-interface AdminCreateEventProps{
-
-}
 
 export default function AdminCreateEventPage({}) {
 
@@ -163,9 +162,9 @@ export default function AdminCreateEventPage({}) {
        console.log('DEU ERRO NA CRIAÇÃO DO EVENTO') 
       }else{
 
-        const addCompetitors = await api.put(`/events/${newEvent.data.id}/addCompetitors`,{competitors: req_competitors})
-        const addJudges = await api.put(`/events/${newEvent.data.id}/addJudges`,{judges: req_judges})
-        const addBannerTypes = await api.put(`/events/${newEvent.data.id}/addBannerTypes`,{bannerTypes: req_banner_types})
+        await api.put(`/events/${newEvent.data.id}/addCompetitors`,{competitors: req_competitors})
+        await api.put(`/events/${newEvent.data.id}/addJudges`,{judges: req_judges})
+        await api.put(`/events/${newEvent.data.id}/addBannerTypes`,{bannerTypes: req_banner_types})
         
         toast.success('Evento criado com sucesso!!', {
           position: 'top-right',

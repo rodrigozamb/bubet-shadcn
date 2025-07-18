@@ -1,35 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client"
 // TELA DE LOGIN
 
 import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import { useParams, useRouter } from "next/navigation";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import AvatarIcon from "@/components/AvatarIcon";
 import { api } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Bounce, toast } from "react-toastify";
-import { SelectCompetitor } from "@/components/SelectCompetitor";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-interface Competitor{
-  id: string,
-  name: string,
-  profile_url: string,
-}
-
-interface Judge{
-    id: string,
-    nickname: string,
-    avatar: string
-}
-
-interface Estandarte{
-    id: string,
-    name: string,
-    description: string
-}
 
 interface EstandarteProps{
     id: string
@@ -170,7 +152,6 @@ export default function AdminCreateEventPage({}) {
 
     try{
       const points = await api.post(`/admin/applypoints`,{ event_id: event_id  })
-      console.log(points)
       toast.success('Pontos gerados com sucesso!!', {
           position: 'top-right',
           autoClose: 5000,

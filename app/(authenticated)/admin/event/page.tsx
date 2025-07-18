@@ -28,10 +28,6 @@ interface Estandarte{
     description: string
 }
 
-interface AdminCreateEventProps{
-
-}
-
 
 export default function AdminCreateEventPage({}) {
 
