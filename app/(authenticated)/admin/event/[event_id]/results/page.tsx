@@ -151,7 +151,7 @@ export default function AdminCreateEventPage({}) {
 
 
     try{
-      const points = await api.post(`/admin/applypoints`,{ event_id: event_id  })
+      await api.post(`/admin/applypoints`,{ event_id: event_id  })
       toast.success('Pontos gerados com sucesso!!', {
           position: 'top-right',
           autoClose: 5000,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 // TELA DE LOGIN
 import React, { useEffect, useState } from "react";
