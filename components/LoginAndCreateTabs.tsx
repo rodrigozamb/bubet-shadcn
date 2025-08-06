@@ -226,7 +226,7 @@ export function LoginAndCreateTabs() {
               </CardContent>
               <CardFooter className="flex items-center justify-center" >
                 <Button 
-                    className="bg-blue-800 font-bold h-12 w-28 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition"
+                    className="bg-blue-800 font-bold h-12 w-28 text-white mt-5 rounded-lg cursor-pointer hover:bg-blue-700 transition"
                     onClick={handleSignIn}
                 >
                     Entrar
