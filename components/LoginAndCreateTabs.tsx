@@ -1,16 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
- 
-// import { z } from "zod"
-// const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"]
-
-// // const formSchema = z.object({
-// //   email: z.string().email(),
-// //   password: z.string().min(5).max(25),
-// //   avatar: z.any().refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-// //   "Only .jpg, .jpeg, .png formats are supported.")
-// // })
 import { useContext, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -33,6 +23,12 @@ import { AuthContext } from "@/context/AuthContext"
 import { toast, Bounce } from 'react-toastify'
 import { api } from "@/services/api"
 import { useRouter } from "next/navigation"
+import { useForm, SubmitHandler } from "react-hook-form"
+
+interface LoginFormProps{
+  email: string
+  password: string
+}
 
 export function LoginAndCreateTabs() {
 
@@ -44,6 +40,9 @@ export function LoginAndCreateTabs() {
 
   const { signIn } = useContext(AuthContext)
   const router = useRouter()
+
+  const { register, handleSubmit } = useForm<LoginFormProps>()
+  const onSubmit: SubmitHandler<LoginFormProps> = (data) => console.log(data)
     
   // Function to handle form submission
   const handleSignIn = async () => {
@@ -196,6 +195,7 @@ export function LoginAndCreateTabs() {
           </TabsList>
           <TabsContent value="entrar">
             <Card>
+              <form onSubmit={handleSubmit(onSubmit)}>
               <CardHeader className="flex items-center justify-center cursor-default" >
                 <CardTitle className="text-2xl">Entrar</CardTitle>
                 <CardDescription className="flex text-black  my-1.5 text-center text-md">
@@ -232,6 +232,7 @@ export function LoginAndCreateTabs() {
                     Entrar
                 </Button>
               </CardFooter>
+              </form>
             </Card>
 
           </TabsContent>

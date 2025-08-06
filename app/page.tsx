@@ -52,14 +52,6 @@ export default function Home() {
           <div className="relative flex justify-center z-4">
             <Image className="shadow-2xl rounded-3xl" src={p1.src} alt="p1" width={1000} height={1000}/>
           </div>
-
-          {/* <div className="relative flex justify-center z-2 bottom-110 left-150">
-            <Image className="shadow-2xl rounded-3xl" src={p2.src} alt="p2" width={700} height={700}/>
-          </div>
-
-          <div className="relative flex justify-center z-1 right-10">
-            <Image className="shadow-2xl rounded-3xl" src={p3.src} alt="p3" width={1000} height={1000}/>
-          </div> */}
         </div>
 
         <div className="relative flex justify-center z-5 bottom-50 ">
@@ -71,7 +63,7 @@ export default function Home() {
       <div className=" flex justify-center bg-blue-900 mb-25">
         <div className="flex justify-center flex-col text-center text-white">
           <span className=" text-6xl font-extrabold my-6">O que é a BUBet?</span>
-          <div className="flex flex-col text-xl w-350 font-medium">
+          <div className="flex flex-col text-xl w-250 font-medium">
             <span>A BUBet é um projeto independente que busca divulgar e enaltecer Baterias Universitários e seus Campeonatos ao redor de todo o Brasil.</span>
             <span>Trata-se de uma plataforma de apostas em Baterias Universitárias ( BUs ) em diversos campeonatos, como esse projeto é apenas uma brincadeira, não utilizamos nenhuma forma de monetização durante seu uso.</span>
             <span>Aposte, com pontos da plataforma, na sua BU do coração, mostre sua torcida e ganhe pontos para se tornar o Rank 1 da BUBet. Quem vai levar o estandarte de repique? e o de tamborim? quem será a campeã do Intermed? e da TABU?</span>
@@ -83,7 +75,7 @@ export default function Home() {
       <div className="flex justify-center bg-blue-900 my-25">
         <div className="flex justify-center flex-col text-center text-white">
           <span className=" text-6xl font-extrabold my-6">Quem está por trás do BUBet?</span>
-          <div className="flex flex-col text-xl w-350 font-medium">
+          <div className="flex flex-col text-xl w-250 font-medium">
             <span>A BUBet é uma plataforma de batuqueiros feita por batuqueiros para batuqueiros.</span>
             <div>
               <span>Esta plataforma foi idealizada e desenvolvida por </span>
@@ -96,7 +88,7 @@ export default function Home() {
       <div className="flex justify-center bg-blue-900mt-25 mb-10">
         <div className="flex justify-center flex-col text-center text-white">
           <span className=" text-6xl font-extrabold my-6">Entre em contato</span>
-          <div className="flex flex-col text-xl w-350 font-medium">
+          <div className="flex flex-col text-xl w-250 font-medium">
             <span>Tem alguma sugestão/reclamação/comentário?</span>
             <span>Fique a vontade para entrar em contato nas redes sociais abaixo.</span>
             <div className="flex justify-center m-4">
