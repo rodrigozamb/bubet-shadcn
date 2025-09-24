@@ -45,7 +45,7 @@ export function ProfilePage({ profile, bets }:ProfilePageProps){
         <div className="flex flex-col items-center" >
 
                 <div className="flex content-center justify-center items-center">
-                    <AvatarIcon name={profile.name} size={200} src={profile.profile_url} />
+                    <AvatarIcon name={profile.name} size={200} src={profile.profile_url} className="h-[200px] w-[200px]"/>
                 </div>
                 <div className="flex justify-center items-center my-5">
                     <span className=" text-3xl text-black font-bold">{ profile.name }</span>
