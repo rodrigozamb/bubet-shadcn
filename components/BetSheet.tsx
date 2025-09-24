@@ -7,6 +7,7 @@ import { api } from "@/services/api";
 import { useParams, useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
 import AvatarIcon from "./AvatarIcon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface Competitor{
   id: string,
@@ -149,11 +150,12 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
   }
 
 
+
   return(
       <Sheet>
-      <SheetTrigger className="cursor-pointer w-56 h-15 text-xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:opacity-90 transition-opacity duration-200">Fazer Aposta</SheetTrigger>
+      <SheetTrigger className="cursor-pointer w-56 h-15 text-xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold rounded-full shadow-lg hover:opacity-90 transition-opacity duration-200">Fazer Aposta</SheetTrigger>
       <SheetContent className="flex" side="bottom">
-          <SheetHeader className="text-center ">
+          <SheetHeader className="text-center">
             <SheetTitle className="text-2xl">Fazer Aposta</SheetTitle>
             <SheetDescription>
               Coloque as baterias em ordem de pódio, além de assinalar os vencedores dos estandartes.
@@ -161,112 +163,131 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
           </SheetHeader>
             <div className="flex justify-center items-center">
 
-                {/* Aposta de Resultado */}
-              <div className="flex flex-col justify-center mr-15">
-                <div className="text-center my-5">
-                  <div className="text-xl font-semibold">Resultado</div>
-                  <div>Escolha, em ordem decrescente, os colocados de cada posição do campeonato</div>
-                </div>
-                <div className="flex ">
-                  <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                    {/* Header */}
-                    <div className="flex justify-between rounded-t-2xl h-15 bg-blue-900 text-white">
-                      <span className="content-center ml-5 text-mk font-bold">Competidores</span>
-                      <div className="flex flex-col mr-5 justify-center align-middle content-center ">
-                        <span className="flex justify-center  content-center border-2 rounded-xl w-7 h-7 shadow-2xl font-bold"> {competitors.length - selectedCount} </span>
-                      </div>
+              <Tabs defaultValue="podium" className="flex justify-center items-center">
+                <TabsList className=" w-100 h-15 bg-blue-900">
+                  <TabsTrigger value="podium" className="h-13 text-gray-400 font-bold">Pódio</TabsTrigger>
+                  <TabsTrigger value="estandartes"  className="h-13 text-gray-400 font-bold">Estandartes</TabsTrigger>
+                </TabsList>
+                <TabsContent value="podium">            
+                  {/* Aposta de Resultado */}
+                  <div className="flex flex-col justify-center">
+                    <div className="text-center my-3">
+                      <div className="text-xl font-semibold">Pódio</div>
+                      <div>Escolha, em ordem decrescente, os colocados de cada posição do campeonato</div>
                     </div>
+                    <div className="flex ">
+                      <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
+                        
+                        {/* Header */}
+                        <div className="flex justify-between rounded-t-2xl h-15 bg-blue-900 text-white">
+                          <span className="content-center ml-5 text-mk font-bold">Competidores</span>
+                          <div className="flex flex-col mr-5 justify-center align-middle content-center ">
+                            <span className="flex justify-center  content-center border-2 rounded-xl w-7 h-7 shadow-2xl font-bold"> {competitors.length - selectedCount} </span>
+                          </div>
+                        </div>
 
-                    <div className="flex justify-center">
-                        <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5 shadow">
-                            
-                            <div className="space-y-2 h-64 overflow-auto">
-                            {
-                                available.map((competitor, i) => (
-                                    <div 
-                                      key={i} 
-                                      className="flex p-2 bg-gray-100 rounded-xl cursor-pointer"
-                                      onClick={()=> toggleCompetitor(competitor)}
-                                    >
-                                      <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url}  className="mx-2"  />
-                                      <span className="content-center truncate">
-                                          {competitor.name}
-                                      </span>  
-                                    </div>
-                                ))
-                            }
+                        <div className="flex justify-center">
+                            <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5 shadow">
+                                
+                                <div className="space-y-2 h-64 overflow-auto">
+                                {
+                                    available.map((competitor, i) => (
+                                        <div 
+                                          key={i} 
+                                          className="flex p-2 bg-gray-100 rounded-xl cursor-pointer"
+                                          onClick={()=> toggleCompetitor(competitor)}
+                                        >
+                                          <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url}  className="mx-2"  />
+                                          <span className="content-center truncate">
+                                              {competitor.name}
+                                          </span>  
+                                        </div>
+                                    ))
+                                }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                  </div>
-                  <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                    {/* Header */}
-                    <div className="flex justify-between rounded-t-2xl h-15 bg-blue-900 text-white">
-                      <span className="content-center ml-5 text-mk font-bold">Aposta</span>
-                      <div className="flex flex-col mr-5 justify-center align-middle content-center ">
-                        <span className="flex justify-center  content-center border-2 rounded-xl w-7 h-7 shadow-2xl font-bold"> {selectedCount} </span>
                       </div>
-                    </div>
+                      <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
+                        {/* Header */}
+                        <div className="flex justify-between rounded-t-2xl h-15 bg-blue-900 text-white">
+                          <span className="content-center ml-5 text-mk font-bold">Aposta</span>
+                          <div className="flex flex-col mr-5 justify-center align-middle content-center ">
+                            <span className="flex justify-center  content-center border-2 rounded-xl w-7 h-7 shadow-2xl font-bold"> {selectedCount} </span>
+                          </div>
+                        </div>
 
-                    <div className="flex justify-center">
-                        <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5">
-                            
-                            <div className="space-y-2 h-64 overflow-auto">
-                            {
-                                selected.map((competitor, i) => (
-                                    <div 
-                                      key={i} 
-                                      className="flex p-2 bg-gray-100 rounded-xl cursor-pointer shadow"
-                                      onClick={()=> toggleCompetitor(competitor)}
-                                    >
-                                      <span className="content-center ml-1">{i+1}º</span>
-                                      <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} className="mx-2" />
-                                      <span className="content-center truncate">
-                                          {competitor.name}
-                                      </span>  
-                                    </div>
-                                ))
-                            }
+                        <div className="flex justify-center">
+                            <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5">
+                                
+                                <div className="space-y-2 h-64 overflow-auto">
+                                {
+                                    selected.map((competitor, i) => (
+                                        <div 
+                                          key={i} 
+                                          className="flex p-2 bg-gray-100 rounded-xl cursor-pointer shadow"
+                                          onClick={()=> toggleCompetitor(competitor)}
+                                        >
+                                          <span className="content-center ml-1">{i+1}º</span>
+                                          <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} className="mx-2" />
+                                          <span className="content-center truncate">
+                                              {competitor.name}
+                                          </span>  
+                                        </div>
+                                    ))
+                                }
+                                </div>
                             </div>
                         </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Aposta de Estandartes */}
-              <div className="flex flex-col justify-center w-200 ml-15">
-
-                <div className="text-center">
-                  <div className="text-xl font-semibold">Estandartes</div>
-                  <div>Escolha os vencedores dos estandartes dessa competição</div>
-                </div>
+                </TabsContent>
                 
-                <div className="grid grid-cols-3 my-5 ">
+                <TabsContent value="estandartes">
+                  {/* Aposta de Estandartes */}
+                  <div className="flex flex-col justify-center">
 
-                  {
-                    estandartes.map((est,idx)=>(
-                      <div className="flex flex-col items-center text-center py-3 my-3 mx-2 border-2 bg-gray-100 rounded-2xl" key={idx}>
-                        <div className="text-md font-medium py-2">{est.name}</div>
-                        <SelectCompetitor 
-                          options={competitors} 
-                          value={
-                            selectedValues.find((entry) => entry.bannerTypeId === est.id)?.competitorId ?? undefined
-                          }
-                          onValueChange={(v)=> handleChange(est.id,   v)} 
-                        />
-                      </div>
-                    ))
-                  }
+                    <div className="text-center my-3">
+                      <div className="text-xl font-semibold">Estandartes</div>
+                      <div>Escolha os vencedores dos estandartes dessa competição</div>
+                    </div>
+                    
+                    <div className="grid grid-cols-4">
 
-                </div>
+                      {
+                        estandartes.map((est,idx)=>(
+                          <div className="flex flex-col items-center text-center py-3 my-1 mx-1 border-2 bg-blue-900 rounded-2xl text-white" key={idx}>
+                            <div className="text-md font-medium py-2  w-70">{est.name}</div>
+                            <SelectCompetitor 
+                              options={competitors} 
+                              value={
+                                selectedValues.find((entry) => entry.bannerTypeId === est.id)?.competitorId ?? undefined
+                              }
+                              onValueChange={(v)=> handleChange(est.id,   v)} 
+                            />
+                          </div>
+                        ))
+                      }
 
-              </div>
+                    </div>
+
+                  </div>
+                </TabsContent>
+              
+              </Tabs>
+              
+
+
+              
+            
+            
             </div>
-          <SheetFooter className="flex justify-center items-center mb-20">
+          
+          <SheetFooter className="flex justify-center items-center mb-5">
             <SheetClose asChild>
               <Button 
-                className="cursor-pointer w-56 h-15 text-xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:opacity-90 transition-opacity duration-200" 
+                className="cursor-pointer w-56 h-15 text-xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold rounded-full shadow-lg hover:opacity-90 transition-opacity duration-200" 
                 type="submit"
                 onClick={()=> handleSubmit(selected, selectedValues) }
               >
@@ -274,7 +295,10 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
               </Button>
             </SheetClose>
           </SheetFooter>
+
       </SheetContent>
       </Sheet>
   )
+
+
 }

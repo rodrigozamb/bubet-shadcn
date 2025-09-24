@@ -25,13 +25,15 @@ interface SelectProps{
 export function SelectCompetitor({ options, value, onValueChange }:SelectProps) {
 
   return (
-    <ShadcnSelect value={value} onValueChange={onValueChange}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Escolha uma bateria" />
+    <ShadcnSelect value={value} onValueChange={onValueChange} >
+      <SelectTrigger className="w-[180px] text-white bg-gray-100">
+        <div className="text-black">
+          <SelectValue placeholder="Escolha uma bateria"/>
+        </div>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Competidores</SelectLabel>
+          <SelectLabel className="text-black font-bold">Competidores</SelectLabel>
           {options.map((v) => (
             <SelectItem 
               className="cursor-pointer" 
