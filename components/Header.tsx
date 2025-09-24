@@ -31,7 +31,10 @@ export function Header(){
               </div>
             </div>
             
-            <Image className=" rounded-full border-1 border-[#000000] " src={user.profile_url} alt="user" width={50} height={50}/>
+
+            <div className=" h-[50px] w-[50px]">
+              <Image className="h-[50px] w-[50px] rounded-full border-1 border-[#000000] object-cover " src={user.profile_url} alt="user" width={50} height={50}/>
+            </div>
           </div>
         
         </div>

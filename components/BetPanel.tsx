@@ -202,7 +202,7 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                                             apostas.map((bet, index)=>(
                                                 <div className="flex w-130 h-18 border-2 border-gray-800 justify-between bg-amber-200 px-3 m" key={index}>
                                                     <div className="flex justify-center items-center cursor-pointer" onClick={()=>{ router.push(`/profile/${bet.user.id}`) }}>
-                                                        <AvatarIcon name={bet.user.name} size={45} src={bet.user.profile_url} className="flex justify-center items-center rounded-full border-1 border-[#000000]" />
+                                                        <AvatarIcon name={bet.user.name} size={45} src={bet.user.profile_url} className="flex justify-center items-center h-[50px] w-[50px] rounded-full border-1 border-[#000000]" />
                                                         <span className="flex justify-center items-center ml-3">{bet.user.name}</span>
                                                     </div>
 
