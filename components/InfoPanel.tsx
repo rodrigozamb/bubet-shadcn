@@ -52,7 +52,7 @@ export function InfoPanel({ name, date, local, time, judges }:InfoPanelProps){
                                     key={index+4}
                                     onClick={()=>{ router.push(`/judges/${jurado.id}`) }}    
                                 >
-                                        <AvatarIcon name={jurado.nickname} src={jurado.avatar} size={55} key={jurado.id} className="rounded-full border-1 border-black" />
+                                        <AvatarIcon name={jurado.nickname} src={jurado.avatar} size={55} key={jurado.id} className="rounded-full border-1 border-black h-[55px] w-[55px]" />
                                         <span className="font-semibold" >{jurado.nickname}</span>
                                 </div>    
                             ))
