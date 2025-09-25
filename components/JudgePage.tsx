@@ -28,7 +28,7 @@ export function JudgePage({ judge }:ProfilePageProps){
         <div className="flex flex-col items-center" >
 
                 <div className="flex content-center justify-center items-center">
-                    <AvatarIcon name={judge.first_name+" "+judge.last_name} size={200} src={judge.avatar} />
+                    <AvatarIcon name={judge.first_name+" "+judge.last_name} size={200} src={judge.avatar} className="h-[200px] w-[200px]" />
                 </div>
                 <div className="flex justify-center items-center my-5">
                     <span className=" text-3xl text-black font-bold">{ judge.nickname }</span>
