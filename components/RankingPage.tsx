@@ -70,7 +70,7 @@ export function RankingPage({ ranking, userRanking }:RankingPageProps){
 
                     
                     <div className="flex justify-center flex-col">
-                        <span className="text-white text-center font-bold">Seu Ranking: </span>
+                        <span className="text-white text-center font-bold mt-2">Seu Ranking: </span>
                         <div className="flex w-230 h-18 border-2 border-gray-800 justify-between bg-gray-200 px-3 my-4">
                             <div className="flex justify-center items-center cursor-pointer" onClick={()=>{router.push(`/profile/${userRanking.id}`)}}>
                                 {
