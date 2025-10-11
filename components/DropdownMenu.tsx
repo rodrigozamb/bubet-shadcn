@@ -213,6 +213,9 @@ export function DropdownConfig() {
         <div className="p-1 cursor-pointer hover:bg-gray-100" onClick={()=>{router.push(`/profile/${user!.id}`)}}>
           Ver perfil
         </div>
+        <div className="p-1 cursor-pointer hover:bg-gray-100" onClick={()=>{router.push(`/ranking`)}}>
+          Ranking Geral
+        </div>
         <div className="p-1  hover:bg-gray-100">
           <Dialog>
             <div>
