@@ -19,7 +19,7 @@ interface RankingData{
 
 
 //Tela do ranking geral
-export default function rankingUserPage() {
+export default function RankingUserPage() {
 
   const { user } = useContext(AuthContext)
   const [ranking, setRanking] = useState<RankingData[]>([])
