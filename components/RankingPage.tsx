@@ -37,7 +37,7 @@ export function RankingPage({ ranking, userRanking }:RankingPageProps){
     const [pointedUsers, setPointedUsers] = useState<RankingProps[]>([])
     const [noPointedUsers, setNoPointedUsers] = useState<RankingProps[]>([])
     useEffect(() => {
-        setPointedUsers(ranking.filter((r)=> r.points > 0))
+        setPointedUsers(ranking.filter((r)=> r.points > 0).sort((a,b) => b.points - a.points ))
         setNoPointedUsers(ranking.filter((r)=> r.points == 0))
         
     }, [])
