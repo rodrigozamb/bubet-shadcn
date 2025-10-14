@@ -11,7 +11,7 @@ import bubetlogo from '@/public/logoRetoSemSombra2.png'
 import { useRouter } from "next/navigation";
 import { FaInstagram, FaLinkedin, FaWhatsapp, FaGithub } from 'react-icons/fa';
 
-
+ 
 
 export default function Home() {
 
