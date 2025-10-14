@@ -89,7 +89,7 @@ export default function Home() {
           <span className=" text-6xl font-extrabold my-6">Entre em contato</span>
           <div className="flex flex-col text-xl w-250 font-medium">
             <span>Tem alguma sugestão/reclamação/comentário?</span>
-            <span>Fique a vontade para entrar em contato nas redes sociais abaixo.</span>
+            <span>Fique a vontade para entrar em contato nas redes sociais abaixo</span>
             <div className="flex justify-center m-4">
               <a
                 href="https://www.instagram.com/rodrigozamboni_"
