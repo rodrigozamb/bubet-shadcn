@@ -18,8 +18,7 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <div className="flex flex-col absolute justify-begin bg-blue-900 w-screen ">
-
+    <div className="flex flex-col bg-blue-900">
       <title>BUBet | Apostas em BU</title>
       <meta name="landing-page" content="Bem vindo ao BUBet"/>
 
