@@ -16,19 +16,19 @@ export function NavigationMenuLandingPage() {
       <NavigationMenuList>
         <NavigationMenuItem>
           <button
-            onClick={() => scrollToSection("sobre-nos")}
+            onClick={() => scrollToSection("como-apostar")}
             className="bg-blue-950 text-amber-50 font-bold text-xl px-4 py-2 rounded-md hover:bg-blue-800"
           >
-            Sobre nós
+            Como apostar?
           </button>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
           <button
-            onClick={() => scrollToSection("como-apostar")}
+            onClick={() => scrollToSection("sobre-nos")}
             className="bg-blue-950 text-amber-50 font-bold text-xl px-4 py-2 rounded-md hover:bg-blue-800"
           >
-            Como apostar
+            Sobre nós
           </button>
         </NavigationMenuItem>
       </NavigationMenuList>
