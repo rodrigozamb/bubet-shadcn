@@ -21,13 +21,14 @@ export default function Home() {
       <div className="flex justify-center my-10">
         <div className="flex justify-between bg-blue-950 w-7xl h-20 px-15 py-3 rounded-3xl">
           <div className="flex">
-              <Image className="" src={BUBetlogo.src} alt="BUBet logo" width={100} height={100} />
+            <Image className="" src={BUBetlogo.src} alt="BUBet logo" width={100} height={100} />
             <div className="flex items-center">
               <NavigationMenuLandingPage />
             </div>
           </div>
           <div className="flex justify-center items-center">
-            <Button className="w-25 h-12 cursor-pointer bg-yellow-500 hover:bg-yellow-600 font-extrabold"
+            <Button
+              className="w-25 h-12 cursor-pointer bg-yellow-500 hover:bg-yellow-600 font-extrabold"
               onClick={() => { router.push(`/login`) }}
             >
               Entrar
@@ -44,21 +45,29 @@ export default function Home() {
           <Image src={bubetlogo.src} alt="bubetlogo" width={500} height={500} />
         </div>
         <div className="justify-center flex mt-30">
-          <h1 className="text-yellow-400 font-extrabold text-3xl">A plataforma feita por batuqueiros para batuqueiros!</h1>
+          <h1 className="text-yellow-400 font-extrabold text-3xl">
+            A plataforma feita por batuqueiros para batuqueiros!
+          </h1>
         </div>
       </div>
 
-      <div className="flex bg-white p-20">
+      {/* Seção O que é a BUBet? */}
+      <div id="sobre-nos" className="flex bg-white p-20">
         <div className="flex flex-col">
           <span className="text-6xl mb-6 text-blue-900 font-extrabold">O que é a BUBet?</span>
           <div>
-            <div className="text-2xl mb-8 max-w-400">A BUBet é um projeto independente que busca divulgar e enaltecer Baterias Universitários e seus Campeonatos ao redor de todo o Brasil. Trata-se de uma plataforma de apostas em Baterias Universitárias (BUs) em diversos campeonatos, como esse projeto é apenas uma brincadeira, não utilizamos nenhuma forma de monetização durante seu uso.</div>
-            <div className="text-xl max-w-300">Aposte, com pontos da plataforma, na sua BU do coração, mostre sua torcida e ganhe pontos para se tornar o Rank 1 da BUBet. <span className="font-bold text-blue-900">Chame os amigos pra ver quem realmente entende de BU!!!</span></div>
+            <div className="text-2xl mb-8 max-w-400">
+              A BUBet é um projeto independente que busca divulgar e enaltecer Baterias Universitários e seus Campeonatos ao redor de todo o Brasil. Trata-se de uma plataforma de apostas em Baterias Universitárias (BUs) em diversos campeonatos, como esse projeto é apenas uma brincadeira, não utilizamos nenhuma forma de monetização durante seu uso.
+            </div>
+            <div className="text-xl max-w-300">
+              Aposte, com pontos da plataforma, na sua BU do coração, mostre sua torcida e ganhe pontos para se tornar o Rank 1 da BUBet. <span className="font-bold text-blue-900">Chame os amigos pra ver quem realmente entende de BU!!!</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end bg-blue-900 p-20">
+      {/* Seção Quem está por trás do BUBet? */}
+      <div id="como-apostar" className="flex justify-end bg-blue-900 p-20">
         <div className="flex flex-col text-center text-white">
           <span className=" text-6xl justify-end text-right font-extrabold mb-6">Quem está por trás do BUBet?</span>
           <div className="text-2xl justify-end text-right">
@@ -79,7 +88,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="hover:text-yellow-400 text-gray-100 hover:text:text-white text-2xl"
+                className="hover:text-yellow-400 text-gray-100 text-2xl"
               >
                 <FaInstagram size={36} />
               </a>
@@ -88,7 +97,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Linkedin"
-                className="hover:text-yellow-400 text-gray-100 hover:text:text-white text-2xl "
+                className="hover:text-yellow-400 text-gray-100 text-2xl"
               >
                 <FaLinkedin size={36} />
               </a>
@@ -97,7 +106,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Github"
-                className="hover:text-yellow-400 text-gray-100 hover:text:text-white text-2xl"
+                className="hover:text-yellow-400 text-gray-100 text-2xl"
               >
                 <FaGithub size={36} />
               </a>
@@ -106,7 +115,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Whatsapp"
-                className="hover:text-yellow-400 text-gray-100 hover:text:text-white text-2xl"
+                className="hover:text-yellow-400 text-gray-100 text-2xl"
               >
                 <FaWhatsapp size={36} />
               </a>
