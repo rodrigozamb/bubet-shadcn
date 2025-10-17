@@ -17,7 +17,7 @@ export function NavigationMenuLandingPage() {
         <NavigationMenuItem>
           <button
             onClick={() => scrollToSection("como-apostar")}
-            className="bg-blue-950 text-amber-50 font-bold text-xl px-4 py-2 rounded-md hover:bg-blue-800"
+            className="hidden md:flex bg-blue-950 text-amber-50 font-bold text-xl px-4 py-2 rounded-md hover:bg-blue-800"
           >
             Como apostar?
           </button>
@@ -26,7 +26,7 @@ export function NavigationMenuLandingPage() {
         <NavigationMenuItem>
           <button
             onClick={() => scrollToSection("sobre-nos")}
-            className="bg-blue-950 text-amber-50 font-bold text-xl px-4 py-2 rounded-md hover:bg-blue-800"
+            className="hidden md:flex bg-blue-950 text-amber-50 font-bold text-xl px-4 py-2 rounded-md hover:bg-blue-800"
           >
             Sobre nós
           </button>
