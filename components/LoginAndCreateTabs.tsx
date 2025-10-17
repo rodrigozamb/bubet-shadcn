@@ -197,29 +197,26 @@ export function LoginAndCreateTabs() {
             <Card>
               <form onSubmit={handleSubmit(onSubmit)}>
               <CardHeader className="flex items-center justify-center cursor-default" >
-                <CardTitle className="text-2xl">Entrar</CardTitle>
-                <CardDescription className="flex text-black  my-1.5 text-center text-md">
-                  Faça login na plataforma para apostar...
-                </CardDescription>
+                <CardTitle className="mb-10 text-2xl">Acesse já!</CardTitle>
               </CardHeader>
               <CardContent className="space-y-5">
                 <div className="space-y-3">
-                  <Label  className="flex items-center justify-center" htmlFor="name">Email</Label>
+                  <Label  className="flex items-center justify-start" htmlFor="name">Email</Label>
                   <Input 
                     type="text" 
                     id="name" 
                     value={email} 
-                    placeholder="Ex: ritmista@bateria.com"
+                    placeholder="repique@batefofo.com"
                     onChange={(e)=>setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-3">
-                  <Label className="flex items-center justify-center" htmlFor="password">Senha</Label>
+                  <Label className="flex items-center justify-start" htmlFor="password">Senha</Label>
                   <Input 
                     id="password"
                     type="password"
                     value={password}
-                    placeholder="Ex: Bateria123"
+                    placeholder="********"
                     onChange={(e)=>setPassword(e.target.value)}
                   />
                 </div>
@@ -240,45 +237,39 @@ export function LoginAndCreateTabs() {
             <Card>
               <CardHeader className="flex items-center justify-center" >
                 <CardTitle className="text-2xl">Crie uma conta</CardTitle>
-                <CardDescription className="flex text-black  my-1.5 text-center text-md" >
-                  Crie uma conta em nossa plataforma e comece a apostar já!!
-                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-5">
                 <div className="space-y-3">
-                  <Label className="flex items-center justify-center" htmlFor="email">Nome</Label>
+                  <Label className="flex items-center justify-" htmlFor="email">Nome</Label>
                   <Input 
                     id="name"
                     value={name}
                     type="text"
-                    placeholder="Seu nome"
                     onChange={(e)=>setName(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-3">
-                  <Label className="flex items-center justify-center" htmlFor="email">Email</Label>
+                  <Label className="flex items-center justify-" htmlFor="email">Email</Label>
                   <Input 
                     id="email"
                     value={email}
                     type="text"
-                    placeholder="Seu melhor email"
                     onChange={(e)=>setEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-3">
-                  <Label className="flex items-center justify-center" htmlFor="password">Senha</Label>
+                  <Label className="flex items-center justify-" htmlFor="password">Senha</Label>
                   <Input 
                     id="password" 
                     type="password" 
-                    placeholder="Sua melhor senha"
                     onChange={(e)=>setPassword(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-3">
-                  <Label className="flex items-center justify-center" htmlFor="avatar">Foto de Perfil</Label>
+                  <Label className="flex items-center justify-" htmlFor="avatar">Foto de Perfil</Label>
                   <Input
                     id="avatar" 
                     type="file"
