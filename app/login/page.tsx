@@ -9,7 +9,7 @@ export default function Home() {
   const [bgUrl, setBgUrl] = useState("");
 
   useEffect(() => {
-    const rnd = Math.floor(Math.random() * 6) + 1;
+    const rnd = Math.floor(Math.random() * 13) + 1;
     setBgUrl("url('/login_wallpapers/bg_" + rnd + ".jpg')");
   }, []);
 
