@@ -116,19 +116,32 @@ export function LoginAndCreateTabs() {
     
     try {
       
-      await api.post(`/forget`,{email:recoverEmail})
-
-      toast.success('Um email de redefinição de senha foi enviado para: '+recoverEmail, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-        transition: Bounce,
-      })
+      const res = await api.post(`/forget`,{email:recoverEmail})
+      if(res.status == 400){
+        toast.warn('Este email não existe em nossa plataforma. Tente novamente.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }else{
+        toast.success('Um email de redefinição de senha foi enviado para: '+recoverEmail, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
       setRecoverEmail('')
     } catch (error) {
       if (error instanceof Error) {
