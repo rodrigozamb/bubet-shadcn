@@ -220,7 +220,7 @@ export function LoginAndCreateTabs() {
       router.push("/dashboard")
     }catch(error:any){
       if (error instanceof Error) {
-        toast.error(error.message, {
+        toast.error("Houve um erro durante essa operação. Por favor tente novamente...", {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
