@@ -23,7 +23,7 @@ export function Header(){
     useEffect(()=>{
       if(user){
         setNotifications(user.notifications)
-        setNotCount(user.notifications.length)
+        setNotCount(1)
       }
       setIsLoading(false)
     },[])
