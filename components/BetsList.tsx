@@ -30,7 +30,7 @@ interface BetListProps{
 export function BetsList({ bets }:BetListProps){
 
     const router = useRouter()
-    console.log(bets)
+
     return(
         <div className="h-120 w-screen justify-end items-end align-bottom bg-gray-800 px-5 py-2" >
             <div className="text-2xl m-2 text-white font-bold">Apostas</div>

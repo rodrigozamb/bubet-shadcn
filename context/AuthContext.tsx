@@ -17,6 +17,14 @@ type User = {
   email: string
   profile_url: string
   id: string
+  notifications:{
+      id: string,
+      title: string,
+      content: string,
+      user_notification_id: string,
+      link?: string,
+      icon?: string
+  }[]
 }
 
 type SignInData = {
@@ -61,6 +69,12 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
     setToken(buBetToken)
     const res = await api.get('/users/profile', { withCredentials: true })
+
+    if(res.data.user.notifications == undefined){
+      res.data.user.notifications = []
+    }else{
+      res.data.user.notifications = res.data.user.notifications.map((not:any) => { return {...not.notification, user_notification_id: not.id}  })
+    }
 
     setUser(res.data.user)
 

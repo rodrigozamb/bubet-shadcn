@@ -59,7 +59,7 @@ export const BoardColumn = ({ column, competitors, isOverlay }: BoardColumnProps
       }
     }
   );
-  console.log(competitors)
+
   return (
     <Card
       ref={setNodeRef}

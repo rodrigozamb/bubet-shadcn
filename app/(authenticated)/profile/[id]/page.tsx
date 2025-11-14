@@ -63,7 +63,7 @@ export default function ProfileUserPage() {
     return null
   }
   const tit = `Perfil | ${profile.name}`
-  console.log(tit)
+
   return (
     <>
       <title>{tit}</title>

@@ -158,7 +158,6 @@ export function DropdownConfig() {
     setEmail(undefined)
     setPassword(undefined)
 
-    console.log(data)
 
     try{
       await api.put(`/users/profile`, data)

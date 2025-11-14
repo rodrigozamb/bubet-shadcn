@@ -157,7 +157,7 @@ export default function Home() {
     return null
   }
   const tit = `Evento | ${event.name}`
-  console.log(event)
+
   return (
     <>
 

@@ -25,7 +25,7 @@ interface PodiumProps{
 }
 
 export function Podium({ ranking }: PodiumProps){
-    console.log(ranking)
+
     return (
 
         <div className="h-68 my-5">
