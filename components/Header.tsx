@@ -19,11 +19,8 @@ export function Header(){
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
 
-    if(!user){
-      return null
-    }
     useEffect(()=>{
-      setNotifications(user.notifications)
+      setNotifications(user!.notifications)
       setIsLoading(false)
     },[])
 
