@@ -20,11 +20,13 @@ export function Header(){
 
 
     useEffect(()=>{
-      setNotifications(user!.notifications)
+      if(user){
+        setNotifications(user.notifications)
+      }
       setIsLoading(false)
     },[])
 
-    if(isLoading){
+    if(isLoading || !user){
       return null
     }
 
@@ -59,7 +61,7 @@ export function Header(){
                         notifications.map((not)=>(
                           <DropdownMenuItem key={not.id}>
                             <div className="flex justify-between items-center w-100 m-2 cursor-pointer" >
-                              <div onClick={()=>{ not.link ? router.push(`${not.link}`) : null}}>
+                              <div onClick={()=>{ not.link ? router.push(`${process.env.NEXT_PUBLIC_WEB_URL}/${not.link}`) : null}}>
                                 <p className="font-bold">{not.title}</p>
                                 <p>{not.content}</p>
                               </div>
