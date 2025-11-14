@@ -17,11 +17,13 @@ export function Header(){
 
     const [notifications, setNotifications] = useState<{id: string, title: string, content: string, user_notification_id: string, link?: string, icon?: string}[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isNotCount, setNotCount] = useState<number>(0)
 
 
     useEffect(()=>{
       if(user){
         setNotifications(user.notifications)
+        setNotCount(user.notifications.length)
       }
       setIsLoading(false)
     },[])
@@ -51,7 +53,7 @@ export function Header(){
                     <div className="flex">
                       <FaBell className="text-white cursor-pointer"/>
                       {
-                        notifications.length > 0 ?
+                        isNotCount > 0 ?
                         (<p className="bg-red-700 text-center rounded-full w-2 h-2"></p>)  : (<p></p>)
                       }
                       
@@ -63,7 +65,7 @@ export function Header(){
                   <DropdownMenuGroup>
                     {
                       
-                      notifications.length > 0 ?
+                      isNotCount > 0 ?
                         notifications.map((not)=>(
                           <DropdownMenuItem key={not.id}>
                             <div className="flex justify-between items-center w-100 m-2 cursor-pointer" >
