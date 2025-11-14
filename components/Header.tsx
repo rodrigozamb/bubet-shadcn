@@ -5,9 +5,9 @@ import { AuthContext } from "@/context/AuthContext";
 import Image from "next/image";
 import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from "react";
-import { FaBell, FaCheckCircle } from "react-icons/fa";
+/* import { FaBell, FaCheckCircle } from "react-icons/fa";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { api } from "@/services/api";
+import { api } from "@/services/api"; */
 
 export function Header(){
 
@@ -15,28 +15,28 @@ export function Header(){
     const { user } = useContext(AuthContext)
 
 
-    const [notifications, setNotifications] = useState<{id: string, title: string, content: string, user_notification_id: string, link?: string, icon?: string}[]>([]);
+    //const [notifications, setNotifications] = useState<{id: string, title: string, content: string, user_notification_id: string, link?: string, icon?: string}[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [isNotCount, setNotCount] = useState<number>(0)
+    
+    //const [isNotCount, setNotCount] = useState<number>(0)
 
 
     useEffect(()=>{
-      if(user){
+      /* if(user){
         setNotifications(user.notifications)
         setNotCount(user.notifications.length)
-      }
+      } */
       setIsLoading(false)
     },[])
-
     if(isLoading || !user){
       return null
     }
 
-    const handleNotificationRedirect = async (to?:string) => {
+    /* const handleNotificationRedirect = async (to?:string) => {
       if(to){
         router.push(`${process.env.NEXT_PUBLIC_WEB_URL}/${to}`)
       }
-    }
+    } */
 
     return (
         <div className="flex justify-between items-center pr-10 bg-cover bg-center h-16 w-screen bg-blue-900" >
@@ -47,7 +47,7 @@ export function Header(){
           
           <div className="flex justify-end items-center content-center w-100 ">
             
-            <div>
+            {/* <div>
               <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <div className="flex">
@@ -96,7 +96,7 @@ export function Header(){
               </DropdownMenu>
               
 
-            </div>
+            </div> */}
 
             <div className="justify-center items-center m-5">
               <div className="flex justify-center items-center text-white font-medium ">{user.name}</div>
