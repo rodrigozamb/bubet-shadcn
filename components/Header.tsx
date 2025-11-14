@@ -30,6 +30,12 @@ export function Header(){
       return null
     }
 
+    const handleNotificationRedirect = async (to?:string) => {
+      if(to){
+        router.push(`${process.env.NEXT_PUBLIC_WEB_URL}/${to}`)
+      }
+    }
+
     return (
         <div className="flex justify-between items-center pr-10 bg-cover bg-center h-16 w-screen bg-blue-900" >
           
@@ -61,7 +67,7 @@ export function Header(){
                         notifications.map((not)=>(
                           <DropdownMenuItem key={not.id}>
                             <div className="flex justify-between items-center w-100 m-2 cursor-pointer" >
-                              <div onClick={()=>{ not.link ? router.push(`${process.env.NEXT_PUBLIC_WEB_URL}/${not.link}`) : null}}>
+                              <div onClick={()=>{  handleNotificationRedirect(not.link) }}>
                                 <p className="font-bold">{not.title}</p>
                                 <p>{not.content}</p>
                               </div>
