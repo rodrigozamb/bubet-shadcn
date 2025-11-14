@@ -173,7 +173,7 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
                   <div className="flex flex-col justify-center">
                     <div className="text-center my-3">
                       <div className="text-xl font-semibold">Pódio</div>
-                      <div>Escolha, em ordem decrescente, os colocados de cada posição do campeonato</div>
+                      <div>Escolha, do último ao primeiro colocado, as posições de cada bateria no campeonato</div>
                     </div>
                     <div className="flex ">
                       <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
