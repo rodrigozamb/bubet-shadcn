@@ -21,12 +21,6 @@ import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation"
 import { Bounce, toast } from "react-toastify"
 
-interface UpdataUserDataProps{
-  name?:string
-  password?:string
-  email?:string
-}
-
 export function DropdownConfig() {
 
   const router = useRouter()
