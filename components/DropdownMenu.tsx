@@ -38,9 +38,9 @@ export function DropdownConfig() {
   const [name, setName] = useState<string|undefined>(undefined)
   const [password, setPassword] = useState<string|undefined>(undefined)
   const [email, setEmail] = useState<string|undefined>(undefined)
-  const [, setAvatarImage] = useState<File | undefined>(undefined);
+  const [avatar, setAvatarImage] = useState<File | undefined>(undefined);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFeedbackFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
   
       if (file) {
@@ -48,12 +48,12 @@ export function DropdownConfig() {
       }
   };
 
-    const handleAvatarFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-  
-      if (file) {
-        setAvatarImage(file);
-      }
+  const handleAvatarFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      setAvatarImage(file);
+    }
   };
 
 
@@ -148,10 +148,18 @@ export function DropdownConfig() {
       return
     }
 
-    const data:UpdataUserDataProps = {
-      email: email,
-      name: name,
-      password: password
+    const formData = new FormData()
+    if(name){
+      formData.append("name",name)
+    }
+    if(email){
+      formData.append("email",email)
+    }
+    if(password){
+      formData.append("password",password)
+    }
+    if(avatar){
+      formData.append("profile",avatar!)
     }
 
     setName(undefined)
@@ -160,8 +168,8 @@ export function DropdownConfig() {
 
 
     try{
-      await api.put(`/users/profile`, data)
-      toast.success('Suas informações foram atualizadas!', {
+      await api.put(`/users/profile`, formData)
+      toast.success('Suas informações foram atualizadas! Por favor relogue na plataforma.', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -304,7 +312,7 @@ export function DropdownConfig() {
                     <Input
                       id="feedbackImage" 
                       type="file"
-                      onChange={handleFileChange}
+                      onChange={handleFeedbackFileChange}
                     />
                     <Button 
                         className="bg-blue-800 my-10 font-bold h-15 w-50 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition"
