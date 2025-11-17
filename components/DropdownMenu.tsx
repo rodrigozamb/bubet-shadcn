@@ -156,10 +156,6 @@ export function DropdownConfig() {
       formData.append("profile",avatar!)
     }
 
-    setName(undefined)
-    setEmail(undefined)
-    setPassword(undefined)
-
 
     try{
       toast.info('Atualizando dados...', {
@@ -185,6 +181,9 @@ export function DropdownConfig() {
         theme: 'dark',
         transition: Bounce,
       })
+      setName(undefined)
+      setEmail(undefined)
+      setPassword(undefined)
     } catch(error: any){
       if (error instanceof Error) {
         toast.error(error.message, {
