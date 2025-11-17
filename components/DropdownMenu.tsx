@@ -127,7 +127,7 @@ export function DropdownConfig() {
 
   const handleUpdateUserData = async () => {
     
-    if(name == undefined && password == undefined && email == undefined){
+    if(name == undefined && password == undefined && email == undefined && avatar == undefined){
       toast.info('Preencha pelo menos um campo.', {
           position: 'top-right',
           autoClose: 5000,
