@@ -162,6 +162,17 @@ export function DropdownConfig() {
 
 
     try{
+      toast.info('Atualizando dados...', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
       await api.put(`/users/profile`, formData)
       toast.success('Suas informações foram atualizadas! Por favor relogue na plataforma.', {
         position: 'top-right',
