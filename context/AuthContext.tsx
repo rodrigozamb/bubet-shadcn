@@ -59,7 +59,6 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   }, [])
 
   async function signIn({ email, password }: SignInData) {
-    console.log("Inside signIn function! - ", email, password)
     const response = await signInRequest({
       email,
       password,
