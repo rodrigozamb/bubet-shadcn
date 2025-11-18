@@ -8,7 +8,14 @@ import { useContext, useEffect, useState } from "react";
 import { FaBell, FaCheckCircle } from "react-icons/fa";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { api } from "@/services/api";
-
+interface Notification{
+      id: string,
+      title: string,
+      content: string,
+      user_notification_id: string,
+      link?: string,
+      icon?: string
+  }
 export function Header(){
 
     const router = useRouter()
@@ -20,7 +27,7 @@ export function Header(){
 
     useEffect(()=>{
       if(user){
-        api.get('/users/profile', { withCredentials: true }).then((res)=>{setNotifications(res.data.user.notifications.map((not:any) => { return {...not.notification, user_notification_id: not.id}  }))})
+        api.get('/users/profile', { withCredentials: true }).then((res)=>{setNotifications(res.data.user.notifications.map((not: { notification: Notification; id: string; }) => { return {...not.notification, user_notification_id: not.id}  }))})
       }
       setIsLoading(false)
     },[])
