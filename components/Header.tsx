@@ -103,7 +103,7 @@ export function Header(){
             </div>
 
             <div className="justify-center items-center m-5">
-              <div className="flex justify-center items-center text-white font-medium ">{user.name}</div>
+              <div className="flex justify-center items-center text-white font-medium ">{user.name.length > 30 ? user.name.substring(0,30)+"..." : user.name}</div>
               <div className="flex justify-end items-center">
                 <DropdownConfig/>
               </div>
