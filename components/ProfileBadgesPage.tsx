@@ -1,9 +1,7 @@
-import { InfoIcon, GemIcon, FileQuestionIcon, Crown, CrownIcon } from 'lucide-react'
+import { Crown } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import AvatarIcon from "./AvatarIcon";
 import Image from "next/image";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { CardContent } from "./ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
 
 
@@ -77,14 +75,6 @@ export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
                     </div>
                 </div>
 
-
-                {/* <div className="bg-blue-900 w-250 h-100 flex justify-center p-5 rounded-3xl">
-                    <div className="overflow-y-auto">
-                        
-                    </div>
-
-                </div> */}
-                
           
         </div>
     )
