@@ -39,9 +39,19 @@ export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
 
 
                 <div className="flex justify-center items-center">
-                    <div className="grid grid-cols-5 gap-4 justify-center" >
-                        {
-                            badges.length > 0 ? 
+
+                    {
+                        badges.length == 0 ?
+                            <div className="flex justify-center align-middle items-center my-8"> 
+                                <span className="text-xl font-medium text-black text-center">
+                                    Este usuário ainda não tem nenhuma medalha
+                                </span>
+                            </div>
+
+                        :
+
+                        <div className="grid grid-cols-5 gap-4 justify-center" >
+                            {
                                 badges.map((badge, index)=>(
                                     <HoverCard openDelay={0} closeDelay={0} key={index}>
                                         <HoverCardTrigger asChild>
@@ -60,14 +70,10 @@ export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
                                         </HoverCardContent>
                                     </HoverCard>
                                 ))
-                            :
-                                <div className="flex justify-center items-center h-80"> 
-                                    <span className="text-xl font-medium text-white">
-                                        Este usuário ainda não tem nenhuma medalha
-                                    </span>
-                                </div>
-                        }
-                    </div>
+                            }
+                        </div>
+                    }
+
                 </div>
 
           
