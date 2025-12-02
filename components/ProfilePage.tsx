@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import AvatarIcon from "./AvatarIcon";
 
 interface ProfilePageProps{
@@ -34,6 +34,11 @@ export function ProfilePage({ profile, bets }:ProfilePageProps){
 
     const router = useRouter()
 
+
+    const params = useParams<{id: string}>()
+    const { id } = params
+
+
     let user_points = 0
     for (let index = 0; index < bets.length; index++) {
         user_points += Number(bets[index].points)
@@ -51,7 +56,7 @@ export function ProfilePage({ profile, bets }:ProfilePageProps){
                     <span className=" text-3xl text-black font-bold">{ profile.name }</span>
                 </div>
 
-                <div className="flex justify-between w-100 my-5">
+                <div className="flex justify-between w-150 my-5">
                     <div className="flex flex-col text-center">
                         <span className="font-medium text-xl">Criado em:</span>
                         <span className="font-medium">{profile.created_at.split("T")[0].split("-")[2]+"/"+profile.created_at.split("T")[0].split("-")[1]+"/"+profile.created_at.split("T")[0].split("-")[0]}</span>
@@ -65,6 +70,15 @@ export function ProfilePage({ profile, bets }:ProfilePageProps){
                         <span className="text-2xl font-bold">Ranking</span>
                         <span className="font-semibold text-2xl">{profile.position}º</span>
                     </div>
+
+                    <div className="flex flex-col text-center">
+                        <Button className='bg-transparent bg-gradient-to-r from-amber-600 via-amber-600/60 to-amber-600 [background-size:200%_auto] text-white font-bold cursor-pointer hover:bg-transparent hover:bg-[99%_center] focus-visible:ring-amber-600/20 dark:from-amber-400 dark:via-amber-400/60 dark:to-amber-400 dark:focus-visible:ring-amber-400/40'
+                            onClick={()=>{router.replace(`${id}/badges`)}}
+                        >
+                            Ver Medalhas
+                        </Button>
+                    </div>
+                    
                 </div>
 
                 <div className="flex justify-center items-center my-5 pt-5">
