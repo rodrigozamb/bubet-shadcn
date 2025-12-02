@@ -2,7 +2,6 @@
 
 import { Header } from "@/components/Header";
 import { ProfileBadgesPage } from "@/components/ProfileBadgesPage";
-import { ProfilePage } from "@/components/ProfilePage";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import { useParams } from "next/navigation";

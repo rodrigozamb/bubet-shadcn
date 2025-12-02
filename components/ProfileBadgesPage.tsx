@@ -20,10 +20,6 @@ interface BadgeProps{
 
 
 export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
-
-    const router = useRouter()
-
-
     
     return(
 
