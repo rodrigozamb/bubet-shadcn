@@ -1,5 +1,4 @@
 import { Crown } from 'lucide-react'
-import { useRouter } from "next/navigation";
 import AvatarIcon from "./AvatarIcon";
 import Image from "next/image";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
