@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
-import AvatarIcon from "./AvatarIcon";
+import Image from "next/image";
 
 interface SeasonProps{
     points: number
@@ -58,7 +58,7 @@ export function SeasonResultsPage({ id, season_name }: SeasonResultsPageProps){
                                     <div className="flex w-230 h-18 border-2 border-gray-800 justify-between bg-gray-200 hover:bg-gray-100 px-5 cursor-pointer" key={index}  onClick={()=>{ router.push(`/profile/${season.user.id}`) }}>
                                         <div className="flex justify-center items-center cursor-pointer" >
                                             <span className="flex justify-center items-center font-bold mr-3">{season.position}º - </span>
-                                            <AvatarIcon name={season.user.name} src={season.user.profile_url} size={45} key={season.user.id} className="flex justify-center items-center rounded-full border-1 border-[#000000]" />
+                                            <Image unoptimized className="h-[50px] w-[50px] rounded-full border-1 border-[#000000] object-cover " src={season.user.profile_url} alt="user" width={50} height={50}/>
                                         </div>
                                         <div className="flex justify-center items-center">
                                             <span className="font-semibold">{season.user.name}</span>
