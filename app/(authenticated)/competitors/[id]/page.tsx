@@ -14,13 +14,27 @@ interface UserData{
   description: string
   created_at: string
   profile_url:string
+  socials:{
+    type: string
+    name: string
+  }[]
 } 
 
+interface EventResultData{
+  eventId: string
+  placing: string
+  score: number
+  event:{
+    name: string
+    banner: string
+  }
+}
+
 interface StatsData{
-  first: number
-  second: number
-  third: number
-  others: number
+  first: EventResultData[]
+  second: EventResultData[]
+  third: EventResultData[]
+  others: EventResultData[]
   all: number
 } 
 
@@ -70,7 +84,8 @@ export default function ProfilePage() {
               {
                 name:competitor && competitor.name, 
                 avatar:competitor.profile_url,
-                description:competitor.description
+                description:competitor.description,
+                socials:competitor.socials
               } 
             }
             
