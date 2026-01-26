@@ -140,6 +140,9 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
     if(profileImage){
       formData.append("profile",profileImage!)
     }
+    if(selectedCompetitor){
+      formData.append("favorite_competitor",selectedCompetitor)
+    }
     try {
     toast.info('Atualizando dados...', {
         position: 'top-right',
@@ -152,8 +155,6 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
         theme: 'dark',
         transition: Bounce,
       })
-      values.favoriteCompetitorId = selectedCompetitor
-      console.log('Updating user settings:', values, profileImage)
       
       await api.put(`/users/profile`, formData)
       
