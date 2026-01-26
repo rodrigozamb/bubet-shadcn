@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { UserSettingsConfigPage } from "@/components/UserSettingsPage";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
-import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 
@@ -18,8 +17,6 @@ export default function UserSettingsPage() {
 
   useContext(AuthContext)
 
-  const params = useParams<{id: string}>()
-  const { id } = params
   const tit = `Configurações`
 
   
