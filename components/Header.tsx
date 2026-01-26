@@ -111,7 +111,7 @@ export function Header(){
             
 
             <div className=" h-[50px] w-[50px]">
-              <Image unoptimized className="h-[50px] w-[50px] rounded-full border-1 border-[#000000] object-cover " src={user.profile_url} alt="user" width={50} height={50}/>
+              <Image unoptimized={true} className="h-[50px] w-[50px] rounded-full border-1 border-[#000000] object-cover " src={user.profile_url} alt="user" width={50} height={50}/>
             </div>
           </div>
         

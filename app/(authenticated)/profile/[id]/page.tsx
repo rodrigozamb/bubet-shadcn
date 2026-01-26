@@ -14,6 +14,11 @@ interface UserData{
   created_at: string
   profile_url:string
   position: string
+  favorite_competitor:{
+    id: string
+    name: string
+    profile_url: string
+  }
 } 
 
 interface EventProps{

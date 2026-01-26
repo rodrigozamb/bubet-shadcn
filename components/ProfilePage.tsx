@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "./ui/button";
 import { useParams, useRouter } from "next/navigation";
 import AvatarIcon from "./AvatarIcon";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface ProfilePageProps{
     profile:{
@@ -9,6 +10,11 @@ interface ProfilePageProps{
         profile_url: string
         position: string
         created_at: string
+        favorite_competitor?:{
+            id: string
+            name: string
+            profile_url: string
+        }
     }
     bets:UserBetProps[]
 }
@@ -44,13 +50,57 @@ export function ProfilePage({ profile, bets }:ProfilePageProps){
         user_points += Number(bets[index].points)
         
     }
-    
+
     return(
 
         <div className="flex flex-col items-center" >
 
-                <div className="flex content-center justify-center items-center">
-                    <AvatarIcon name={profile.name} size={200} src={profile.profile_url} className="h-[200px] w-[200px]"/>
+                <div className="relative flex justify-center items-center h-[200px] w-[200px]">
+                {/* Big Image */}
+                <AvatarIcon
+                    name={profile.name}
+                    size={200}
+                    src={profile.profile_url}
+                    className="h-[200px] w-[200px]"
+                />
+
+                {/* Small Image (absolute bottom/right) */}
+                <Tooltip>
+                <TooltipTrigger asChild>
+                    <div className="bg-white">
+
+                        {
+                            profile.favorite_competitor ?
+                            <>
+                                <div  onClick={()=>{router.push(`/competitors/${profile.favorite_competitor?.id}`)}} >
+                                    <AvatarIcon
+                                        name={profile.favorite_competitor.name}
+                                        size={60}
+                                        src={profile.favorite_competitor.profile_url ? profile.favorite_competitor.profile_url : "https://bubet-bucket.s3.sa-east-1.amazonaws.com/logos/no-competitor"}
+                                        className="bg-white absolute bottom-0 cursor-pointer right-0 h-[60px] w-[60px] border-1 border-black rounded-full"
+                                    />
+                                </div>
+                            </>
+                            :
+                            <>
+                                <AvatarIcon
+                                    name={"Sem Bateria Favorita"}
+                                    size={60}
+                                    src={"https://bubet-bucket.s3.sa-east-1.amazonaws.com/logos/no-competitor"}
+                                    className="absolute bottom-0 right-0 h-[60px] w-[60px] border-2 border-white rounded-full"
+                                    
+                                />
+                            </>
+
+                        }
+                        
+                    </div>
+                </TooltipTrigger>
+                <TooltipContent className="absolute right-0" >
+                    <p>Bateria Favorita</p>
+                </TooltipContent>
+                </Tooltip>
+                
                 </div>
                 <div className="flex justify-center items-center my-5">
                     <span className=" text-3xl text-black font-bold">{ profile.name }</span>
