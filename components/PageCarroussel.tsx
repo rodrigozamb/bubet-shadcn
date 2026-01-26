@@ -175,7 +175,7 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
               </DialogContent>
 
               <div className="flex justify-center">
-                <Carroussel items={ isCompetitor ? competitors : events } isCompetitor={isCompetitor}/>
+                <Carroussel items={ isCompetitor ? competitors : events.slice(0,5) } isCompetitor={isCompetitor}/>
               </div>
             </div>
           </div>
