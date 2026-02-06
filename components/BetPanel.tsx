@@ -56,6 +56,12 @@ interface BetsPanelProps{
         id: string,
         name: string
     }[],
+    cupons:{
+        id: string,
+        value: string,
+        used_at:string,
+        betId: string
+    }[],
     event_active?: boolean 
     
 }
@@ -76,7 +82,7 @@ const colors = [
 ];
 
 
-export function BetPanel({ allBets, userBet, competitors, estandartes, event_active = true }:BetsPanelProps){
+export function BetPanel({ allBets, userBet, competitors, estandartes, event_active = true , cupons}:BetsPanelProps){
 
     const [searchTerm, setSearchTerm] = useState("");
     const router = useRouter()
@@ -171,7 +177,7 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                                 :
                                 event_active?
                                 <div className="flex justify-center items-center h-30 max-h-30">
-                                    <BetSheet competitors={ competitors } estandartes={ estandartes }/>
+                                    <BetSheet competitors={ competitors } estandartes={ estandartes } cupons={cupons}/>
                                 </div>
                                     :
                                     <div className="h-25 flex justify-center items-center text-xl">

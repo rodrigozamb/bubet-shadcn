@@ -130,6 +130,9 @@ export function DropdownConfig() {
         <div className="p-1 cursor-pointer hover:bg-gray-100" onClick={()=>{router.push(`/temporadas`)}}>
           Temporadas
         </div>
+        <div className="p-1 cursor-pointer hover:bg-gray-100" onClick={()=>{router.push(`/wheel`)}}>
+          Roleta da Sorte
+        </div>
         <div className="p-1 cursor-pointer hover:bg-gray-100" onClick={()=>{router.push(`/settings`)}}>
           Configurações
         </div>

@@ -20,10 +20,16 @@ interface BetSheetProps {
   estandartes:{
     id: string,
     name: string
+  }[],
+  cupons:{
+    id: string,
+    value: string,
+    used_at:string,
+    betId: string
   }[]
 }
 
-export function BetSheet({ competitors, estandartes }:BetSheetProps){
+export function BetSheet({ competitors, estandartes, cupons }:BetSheetProps){
 
   const router = useRouter();
 
@@ -32,7 +38,9 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
   
   const [selected, setSelected] = useState<Competitor[]>([]);
   const [selectedCount, setSelectedCount] = useState<number>(0)
+  const [selectedCupom, setSelectedCupom] = useState<string|null>(null)
   const [selectedValues, setSelectedValues] = React.useState<{ bannerTypeId: string; competitorId: string }[]>([])
+
   
   const available = competitors.filter(c => !selected.some(s => s.id === c.id));
   
@@ -102,9 +110,14 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
 
 
     const bet_body = data.map((cp:any) => cp.id)
-    
+    const body: { bets: any[]; cupom?: string } = {
+      "bets":bet_body,
+    }
+    if(selectedCupom){
+      body["cupom"] = selectedCupom
+    }
     try{
-      const bet_res = await api.post(`/bets/${id}`,{bets: bet_body})
+      const bet_res = await api.post(`/bets/${id}`,body)
       await api.post(`/estandartes/${id}/${bet_res.data.id}`,{data: ests})
 
       toast.success('Aposta feita com sucesso!', {
@@ -165,8 +178,9 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
 
               <Tabs defaultValue="podium" className="flex justify-center items-center">
                 <TabsList className=" w-100 h-15 bg-blue-900">
-                  <TabsTrigger value="podium" className="h-13 text-gray-400 font-bold">Pódio</TabsTrigger>
-                  <TabsTrigger value="estandartes"  className="h-13 text-gray-400 font-bold">Estandartes</TabsTrigger>
+                  <TabsTrigger value="podium" className="h-13 text-gray-400 font-bold cursor-pointer">Pódio</TabsTrigger>
+                  <TabsTrigger value="estandartes"  className="h-13 text-gray-400 font-bold cursor-pointer">Estandartes</TabsTrigger>
+                  <TabsTrigger value="cupons"  className="h-13 text-gray-400 font-bold cursor-pointer">Cupons</TabsTrigger>
                 </TabsList>
                 <TabsContent value="podium">            
                   {/* Aposta de Resultado */}
@@ -253,25 +267,78 @@ export function BetSheet({ competitors, estandartes }:BetSheetProps){
                       <div>Escolha os vencedores dos estandartes dessa competição</div>
                     </div>
                     
-                    <div className="grid grid-cols-4">
+                    {
+                      estandartes.length > 0 ? 
+                        <div className="grid grid-cols-4">
+                          {
+                            estandartes.map((est,idx)=>(
+                              <div className="flex flex-col items-center text-center py-3 my-1 mx-1 border-2 bg-blue-900 rounded-2xl text-white" key={idx}>
+                                <div className="text-md font-medium py-2  w-70">{est.name}</div>
+                                <SelectCompetitor 
+                                  options={competitors} 
+                                  value={
+                                    selectedValues.find((entry) => entry.bannerTypeId === est.id)?.competitorId ?? undefined
+                                  }
+                                  onValueChange={(v)=> handleChange(est.id,   v)} 
+                                />
+                              </div>
+                            ))
+                          }
+                        </div>
+                      :
+                        <div className="flex flex-col justify-center items-center h-70 bg-gray-200 rounded-2xl"> 
+                            <span className="text-xl font-medium text-yellow-950">
+                                Não há estandartes para esse torneio
+                            </span>
+                        </div>
+                    }
 
-                      {
-                        estandartes.map((est,idx)=>(
-                          <div className="flex flex-col items-center text-center py-3 my-1 mx-1 border-2 bg-blue-900 rounded-2xl text-white" key={idx}>
-                            <div className="text-md font-medium py-2  w-70">{est.name}</div>
-                            <SelectCompetitor 
-                              options={competitors} 
-                              value={
-                                selectedValues.find((entry) => entry.bannerTypeId === est.id)?.competitorId ?? undefined
-                              }
-                              onValueChange={(v)=> handleChange(est.id,   v)} 
-                            />
-                          </div>
-                        ))
-                      }
+                  </div>
+                </TabsContent>
 
+                <TabsContent value="cupons">
+                  {/* Aposta de Estandartes */}
+                  <div className="flex flex-col justify-center">
+
+                    <div className="text-center my-3">
+                      <div className="text-xl font-semibold">Cupons</div>
+                      <div>Se quiser, escolha um cupom para aumentar seus pontos nessa aposta</div>
                     </div>
+                    {
 
+                      cupons.length > 0 ? 
+                        <div className="grid grid-cols-4">
+                          {
+                            cupons.map((cup, idx) => (
+                              <div
+                              key={idx}
+                              onClick={() => {setSelectedCupom(cup.id);console.log('Cupon - ',selectedCupom)}}
+                              className={`
+                                flex flex-col items-center text-center py-3 my-1 mx-1
+                                border-2 rounded-2xl text-white cursor-pointer
+                                ${selectedCupom === cup.id
+                                  ? "bg-green-600 border-green-400"
+                                  : "bg-blue-950 hover:bg-blue-800 border-blue-700"}
+                              `}
+                              >
+                              <div className="text-md font-medium py-2 w-70">
+                                Cupom {cup.value}%
+                              </div>
+                            </div>
+                            ))
+                          }
+                        </div>
+                      :
+                        <div className="flex flex-col justify-center items-center h-70 bg-gray-200 rounded-2xl"> 
+                            <span className="text-xl font-medium text-yellow-950">
+                                Não há cupons disponíveis ainda.
+                            </span>
+                            <span className="font-medium text-black mt-5">
+                                Gire a roleta para conseguir cupons.
+                            </span>
+                            <Button className="mt-3 cursor-pointer bg-blue-950 hover:bg-blue-800" onClick={()=>{router.push(`/wheel`)}}>Girar Roleta</Button>
+                        </div>
+                    } 
                   </div>
                 </TabsContent>
               

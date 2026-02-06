@@ -90,6 +90,13 @@ interface BannersTypesProps{
   name: string
 }
 
+interface CuponsProps{
+  id: string,
+  value: string,
+  used_at:string,
+  betId: string
+}
+
 export default function Home() {
 
   useContext(AuthContext)
@@ -98,6 +105,7 @@ export default function Home() {
   const [allBets, setAllBets] = useState<defaultBet[]>([])
   const [userBet, setUserBet] = useState<UserBetData | null >(null)
   const [results, setResults] = useState<ResultProps[]>([])
+  const [cupons, setCupons] = useState<CuponsProps[]>([])
   const [competitors, setCompetitors] = useState<CompetitorProps[]>([])
   const [bannersTypes, setBannersTypes] = useState<BannersTypesProps[]>([])
   const [isloading, setIsLoading] = useState<boolean>(true)
@@ -139,7 +147,19 @@ export default function Home() {
               .then((res)=>{
                 setBannersTypes(res.data)
 
-                /* api.get(``) */
+                api.get(`/users/profile`,{withCredentials: true})
+                .then((res)=>{
+                  const cups = res.data.user.cupons.map((cp: CuponsProps)=>{
+                    return {
+                      id: cp.id,
+                      value: cp.value,
+                      betId: cp.betId,
+                      used_at: cp.used_at
+                    }
+                  })
+                  setCupons(cups)
+                  
+              })
               })
             })
 
@@ -177,7 +197,7 @@ export default function Home() {
                 time={event!.starts_at.substring(11,16)+' - '+event!.ends_at.substring(11,16)}
                 judges={event.judges}
               />
-              <BetPanel allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } event_active={ new Date(event.starts_at) >= new Date() } />
+              <BetPanel cupons={cupons} allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } event_active={ new Date(event.starts_at) >= new Date() } />
           </div>
           <div className="flex mx-4 flex-col">
             <Podium ranking={results}/>
