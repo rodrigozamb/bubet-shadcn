@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 
 import { useWindowSize } from 'react-use'
 import Confetti from 'react-confetti'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { api } from "@/services/api";
 import { Bounce, toast } from "react-toastify";
 import { Button } from "./ui/button";
