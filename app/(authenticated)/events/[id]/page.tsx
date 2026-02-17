@@ -42,6 +42,9 @@ interface UserBetData{
       }
   }[],
   points: string,
+  cupons:{
+    value: string
+  } | null
 }
 
 interface defaultBet{
@@ -64,7 +67,10 @@ interface defaultBet{
     }
   }[],
   created_at: string,
-  points: string
+  points: string,
+  cupons:{
+    value: string
+  }
 }
 
 interface ResultProps{

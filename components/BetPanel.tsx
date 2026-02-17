@@ -24,6 +24,9 @@ interface BetsPanelProps{
             }
         }[],
         points: string,
+        cupons:{
+            value: string,
+        } | null
     } | null
     allBets:{
         user:{
@@ -45,7 +48,10 @@ interface BetsPanelProps{
             }
         }[],
         created_at: string,
-        points: string
+        points: string,
+        cupons:{
+            value: string,
+        } | null
     }[],
     competitors:{
         id: string,
@@ -237,7 +243,12 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                                                                     <div className="flex flex-col justify-center items-center mr-10">
                                                                         <span className="font-bold  text-xl">Pontos</span>
                                                                         <span className=" text-xl">{bet.points}</span>
-
+                                                                        {
+                                                                            bet?.cupons ? 
+                                                                            <span className="text-sm text-green-700">Cupon de {bet.cupons.value}% aplicado!</span>
+                                                                            :
+                                                                            <></>
+                                                                        }
                                                                         <span className="text-sm text-gray-700 mt-15 text-center">aposta feita em: {bet.created_at.split("T")[0].split("-")[2]+"/"+bet.created_at.split("T")[0].split("-")[1]+"/"+bet.created_at.split("T")[0].split("-")[0]}</span>
                                                                     </div>
                                                                 </div>
@@ -247,6 +258,12 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                                                         <div className="flex flex-col justify-center items-center">
                                                             <span className="text-sm font-black">Pontos</span>
                                                             <span>{bet.points}</span>
+                                                            {
+                                                                bet?.cupons ? 
+                                                                <span className="text-xs text-green-700">Cupon de {bet.cupons.value}% aplicado!</span>
+                                                                :
+                                                                <></>
+                                                            }
                                                         </div>
                                                     </div>
 
