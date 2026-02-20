@@ -9,8 +9,9 @@ export default function Home() {
   const [bgUrl, setBgUrl] = useState("");
 
   useEffect(() => {
-    const rnd = Math.floor(Math.random() * 7) + 1;
-    setBgUrl("url('/login_wallpapers/bg_" + rnd + ".jpg')");
+    //const rnd = Math.floor(Math.random() * 13) + 1;
+    //setBgUrl("url('/login_wallpapers/old/bg_" + rnd + ".jpg')");
+    setBgUrl("url('/login_wallpapers/specific/cica.jpeg')");
   }, []);
 
   return (
