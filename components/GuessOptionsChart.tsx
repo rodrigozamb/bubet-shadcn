@@ -47,7 +47,7 @@ export function GuessOptionsChart( chartProps: ChartProps) {
 
   const guesses = chartProps.results.map(result => result.guess)
 
-  let chartData = chartProps.options.map((option, index) => ({
+  const chartData = chartProps.options.map((option) => ({
     option:option,
     palpites: guesses.filter(guess => guess === option).length
   }))

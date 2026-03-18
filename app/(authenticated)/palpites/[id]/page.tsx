@@ -1,16 +1,11 @@
 "use client"
 
-import { BetPanel } from "@/components/BetPanel";
-import { CompetitorsList } from "@/components/CompetitorsList";
 import { Header } from "@/components/Header";
 import { GuessPanel } from "@/components/GuessPanel";
-import { InfoPanel } from "@/components/InfoPanel";
-import { Podium } from "@/components/Podium";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { Separator } from "@base-ui/react";
 import { GuessOptionsChart } from "@/components/GuessOptionsChart";
 
 

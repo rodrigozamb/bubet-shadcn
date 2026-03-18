@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import { FieldSelect } from "./GuessOptionsCombobox";
 
 interface ProfilePageProps{
@@ -9,9 +8,6 @@ interface ProfilePageProps{
 
 
 export function GuessPanel({ description, options }:ProfilePageProps){
-
-    const router = useRouter()
-
     
     return(
 
