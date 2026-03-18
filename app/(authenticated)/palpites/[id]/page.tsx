@@ -118,7 +118,7 @@ export default function Home() {
               </div>
             :
               <div>
-                <GuessPanel description={event.description} options={event.guess_options} />
+                <GuessPanel description={event.description} options={event.guess_options} points={event.points} />
               </div>
             
           }

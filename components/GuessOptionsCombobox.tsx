@@ -5,6 +5,7 @@
 interface SelectProps {
   options: string[]
   description: string
+  points: string
 }
 
 import { useState } from "react"
@@ -135,7 +136,7 @@ export function FieldSelect( props: SelectProps  ) {
         </Select>
         <div className="flex text-center align-middle justify-center items-center">
           <p>Acerte o palpite e ganhe</p>
-          <p className="mx-3 text-orange-400 font-bold text-2xl"  > 50</p>
+          <p className="mx-3 text-orange-400 font-bold text-2xl"  > {props.points}</p>
           <p>pontos</p>
         </div>
         <Button onClick={handleSubmit} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200"> Fazer Palpite</Button>
