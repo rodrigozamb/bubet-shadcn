@@ -24,10 +24,12 @@ interface CarrousselItem{
 
 interface CarrousselProps{
   items: CarrousselItem[]
-  isCompetitor: boolean
+  categoryIndex: number
 }
 
-export function Carroussel({ items, isCompetitor }:CarrousselProps) {
+export function Carroussel({ items, categoryIndex }:CarrousselProps) {
+
+  console.log(categoryIndex)
 
   const router = useRouter()
 
@@ -54,7 +56,10 @@ export function Carroussel({ items, isCompetitor }:CarrousselProps) {
               <Card 
                 className="cursor-pointer" 
                 onClick={() => {
-                    isCompetitor ?
+                    categoryIndex == 0 ?
+                      router.push(`/palpites/${item.id}`)
+                    :
+                    categoryIndex == 1 ?
                       router.push(`/competitors/${item.id}`)
                     :
                       router.push(`/events/${item.id}`)
@@ -65,7 +70,7 @@ export function Carroussel({ items, isCompetitor }:CarrousselProps) {
                     <TooltipTrigger>
 
                     <CardContent className="flex items-center justify-center h-30 cursor-pointer">
-                      <AvatarIcon name={item.name} size={100} src={isCompetitor ?  item.profile_url! : item.banner! } />
+                      <AvatarIcon name={item.name} size={100} src={index == 1 ?  item.profile_url! : item.banner! } />
                     </CardContent>
                       
                     </TooltipTrigger>

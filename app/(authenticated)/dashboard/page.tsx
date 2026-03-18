@@ -18,6 +18,11 @@ interface CompetitorProps{
   profile_url:  string,
 }
 
+interface GuessEventProps{
+  id:string,
+  name: string,
+  profile_url: string
+}
 interface DashboardBetProps{
   id: string,
   points: string,
@@ -34,6 +39,7 @@ interface DashboardBetProps{
 export default function Dashboard() {
 
   const [events, setEvents] = useState<EventProps[]>([])
+  const [guessEvents, setGuessEvents] = useState<GuessEventProps[]>([])
   const [competitors, setCompetitors] = useState<CompetitorProps[]>([])
   const [bets, setBets] = useState<DashboardBetProps[]>([])
   const [isloading, setIsLoading] = useState<boolean>(true)
@@ -47,10 +53,16 @@ export default function Dashboard() {
       api.get(`/competitors`, { withCredentials: true })
       .then((res) => {
         setCompetitors(res.data)  
-        
-        api.get(`/bets`, { withCredentials: true })
+
+        api.get(`/guess-events`, { withCredentials: true })
         .then((res) => {
-          setBets(res.data)  
+          setGuessEvents(res.data)  
+        
+          api.get(`/bets`, { withCredentials: true })
+          .then((res) => {
+            setBets(res.data)  
+          })
+        
         })
       
       })
@@ -73,7 +85,7 @@ export default function Dashboard() {
         <div>
           <Header />
         </div>
-        <PageCarroussel competitors={competitors} events={events}/>
+        <PageCarroussel competitors={competitors} events={events} guessEvents={guessEvents}/>
         <BetsList bets={bets}/>
       </div>
     </>

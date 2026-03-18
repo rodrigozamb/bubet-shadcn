@@ -21,16 +21,24 @@ interface CompetitorProps{
   name:string,
   profile_url: string
 }
+
+interface GuessEventProps{
+  id:string,
+  name: string,
+  profile_url: string
+}
 interface PageCarrousselProps{
   events:EventProps[]
   competitors:CompetitorProps[]
+  guessEvents:GuessEventProps[]
 }
 
-export function PageCarroussel({ competitors, events }:PageCarrousselProps){
+export function PageCarroussel({ competitors, events, guessEvents }:PageCarrousselProps){
 
       const router = useRouter()
 
       const [isCompetitor,setIsCompetitor] = useState<boolean>(false)
+      const [index, setIndex] = useState<number>(1)
       const [competitorColor, setCompetitorColor] = useState<string>('gray')
       const [eventColor, setEventColor] = useState<string>('black')
       const [searchTerm, setSearchTerm] = useState("");
@@ -42,22 +50,14 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
       const allEvents = events.filter((item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      const handleClickComp = () => {
-        setIsCompetitor(true)
-        setEventColor('gray')
-        setCompetitorColor('black')
-      }
-      const handleClickEvent = () => {
-        setIsCompetitor(false)
-        setEventColor('black')
-        setCompetitorColor('gray')
-      }
 
-      useEffect(()=>{
-        setIsCompetitor(false)
-        setEventColor('black')
-        setCompetitorColor('gray')
-      },[])
+      const allGuessEvents = guessEvents.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      const handleClickCategory = ( index: number ) => {
+        setIndex(index)
+      }
       
       return (
         <Dialog>
@@ -70,50 +70,59 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
                   width: '100%',
                   padding: '1rem',
                   textAlign: 'center',
-                  justifyContent: 'space-between',
-                  alignContent: 'center',
-                  position: 'relative',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
                   fontSize:'30px'
-                  // alignItems: 'center',
                 }}
-              >
-                <h1
-                  style={{
-                    flex: 1,
-                    textAlign: 'right',
-                    marginRight: '1rem',
-                    display: 'inline-block',
-                    color: eventColor
-                  }}
-                >
-                  <span className="cursor-pointer" onClick={handleClickEvent} >Torneios</span>
-                </h1>
-                <h1 style={ {
-                  position: 'absolute',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  color: 'gray',
-                }} 
-                >
-                  |
-                </h1>
-                <h1
-                  style={{
-                    flex: 1,
-                    textAlign: 'left',
-                    marginLeft: '1rem',
-                    display: 'inline-block',
-                    color: competitorColor
-                  }}
-                >
-                  <span className="cursor-pointer" onClick={handleClickComp}>Baterias</span>
-                </h1>
+              >    
+
+                <div style={{
+
+                  display: 'flex',
+                }} >
+                  <h1
+                    style={{
+                      color: index == 0 ? 'black' : 'gray'
+                    }}
+                  >
+                    <span className="cursor-pointer" onClick={() => handleClickCategory(0)} >Palpites</span>
+                  </h1>
+                  <h1 style={ {
+                    color: 'gray',
+                    margin: '0 1rem',
+                  }} 
+                  >
+                    |
+                  </h1> 
+                  <h1
+                    style={{
+                      
+                      color: index == 1 ? 'black' : 'gray'
+                    }}
+                  >
+                    <span className="cursor-pointer" onClick={() => handleClickCategory(1)} >Torneios</span>
+                  </h1>
+                  <h1 style={ {
+                    color: 'gray',
+                    margin: '0 1rem',
+                  }} 
+                  >
+                    |
+                  </h1>
+                  <h1
+                    style={{
+                      color: index == 2 ? 'black' : 'gray'
+                    }}
+                  >
+                    <span className="cursor-pointer" onClick={() => handleClickCategory(2)}>Baterias</span>
+                  </h1>
+                </div>
               </div>  
 
 
               {/* Main title */}
               <div className="flex justify-center">
-                <span className="ml-20 pb-5 text-4xl font-semibold">{isCompetitor ? 'Baterias' : 'Torneios'}</span>
+                <span className="ml-20 pb-5 text-4xl font-semibold">{index == 0 ? 'Palpites' : index == 1 ? 'Torneios' : 'Baterias'}</span>
                   <span className="ml-3 flex justify-center content-center items-center">
                     <DialogTrigger className="cursor-pointer">
                       <p>ver todos</p>
@@ -125,7 +134,7 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
                 
                 <DialogHeader>
                   <DialogTitle>
-                    <span className="flex justify-center">{isCompetitor ? "Todas as Baterias":"Todas os torneios"}</span>
+                    <span className="flex justify-center">{index == 0 ? 'Todos os Palpites' : index == 1 ? 'Todos os Torneios' : 'Todas as Baterias'}</span>
                   </DialogTitle>
                 </DialogHeader>
                 
@@ -136,7 +145,24 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
                 <div className="overflow-y-auto h-100">
 
                     {
-                      isCompetitor ? 
+                      index == 0 ?
+                        allGuessEvents.length > 0 ?
+                          allGuessEvents.map((guessEvents: GuessEventProps, i: number) => (
+
+                              <div className="flex items-center h-20 cursor-pointer hover:bg-gray-200 transition-opacity duration-200" key={i} onClick={()=> {router.push(`/palpites/${guessEvents.id}`)}}>
+                                  <AvatarIcon name={guessEvents.name} size={60} src={guessEvents.profile_url} className="m-3" />
+                                  <p className="font-medium text-md">{guessEvents.name}</p>
+                                  
+                              </div>
+
+                          ))
+                        :
+                          <div className="flex justify-center text-md font-bold mt-15">
+                            <p>Nenhum resultado encontrado</p>
+                            
+                          </div>
+                      :
+                      index == 1 ? 
                         allCompetitors.length > 0 ?
                           allCompetitors.map((competitor, i) => (
 
@@ -175,7 +201,7 @@ export function PageCarroussel({ competitors, events }:PageCarrousselProps){
               </DialogContent>
 
               <div className="flex justify-center">
-                <Carroussel items={ isCompetitor ? competitors : events.slice(0,5) } isCompetitor={isCompetitor}/>
+                <Carroussel items={ index == 2 ? competitors : index == 1 ? events.slice(0,5) : allGuessEvents } categoryIndex={index} />
               </div>
             </div>
           </div>
