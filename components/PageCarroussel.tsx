@@ -37,10 +37,7 @@ export function PageCarroussel({ competitors, events, guessEvents }:PageCarrouss
 
       const router = useRouter()
 
-      const [isCompetitor,setIsCompetitor] = useState<boolean>(false)
       const [index, setIndex] = useState<number>(1)
-      const [competitorColor, setCompetitorColor] = useState<string>('gray')
-      const [eventColor, setEventColor] = useState<string>('black')
       const [searchTerm, setSearchTerm] = useState("");
   
       const allCompetitors = competitors.filter((item:{name: string}) =>
@@ -162,7 +159,7 @@ export function PageCarroussel({ competitors, events, guessEvents }:PageCarrouss
                             
                           </div>
                       :
-                      index == 1 ? 
+                      index == 2 ? 
                         allCompetitors.length > 0 ?
                           allCompetitors.map((competitor, i) => (
 
