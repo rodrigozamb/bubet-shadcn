@@ -59,7 +59,7 @@ export function Carroussel({ items, categoryIndex }:CarrousselProps) {
                     categoryIndex == 0 ?
                       router.push(`/palpites/${item.id}`)
                     :
-                    categoryIndex == 1 ?
+                    categoryIndex == 2 ?
                       router.push(`/competitors/${item.id}`)
                     :
                       router.push(`/events/${item.id}`)
