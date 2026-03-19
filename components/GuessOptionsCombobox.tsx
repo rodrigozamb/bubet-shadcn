@@ -29,7 +29,7 @@ export function FieldSelect( props: SelectProps  ) {
   const pathname = usePathname()
 
   const router = useRouter()
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1)
 
   const handleValueChange = (value: string) => {
     const index = props.options.indexOf(value)
@@ -39,7 +39,7 @@ export function FieldSelect( props: SelectProps  ) {
   const handleSubmit = async() => {
     console.log("Index selecionado:", selectedIndex)
     const guessBetId = pathname.split("/palpites/")[1]
-    if(!selectedIndex){
+    if(selectedIndex === -1){
       toast.warn("Você precisa selecionar um palpite...", {
         position: 'top-right',
         autoClose: 5000,
