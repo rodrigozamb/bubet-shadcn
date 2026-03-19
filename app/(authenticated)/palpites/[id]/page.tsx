@@ -104,16 +104,24 @@ export default function Home() {
 
               <div className="flex flex-col justify-center items-center">
                 <p className="flex justify-center text-center font-semibold text-3xl w-150 mb-5" >{event.description}</p>
-
-                <div className=" text-center p-3 mb-2 rounded-2xl bg-blue-100 border-1 border-[#000000]">
-                    <p className="text-xl font-bold" >{userGuess.guess}</p>
-                    <p className="text-sm text-gray-500">Seu palpite</p>
-                </div>
-                <div className="flex text-center align-middle justify-center items-center">
-                  <p>Acerte o palpite e ganhe</p>
-                  <p className="mx-3 text-orange-400 font-bold text-2xl"  >{event.points}</p>
-                  <p>pontos</p>
-                </div>
+                {
+                  new Date(event.ends_at) <= new Date() && !userGuess ?
+                    <div className="flex justify-center items-center font-bold text-xl text-center p-3 mb-2 rounded-2xl w-95 h-15 bg-red-100 border-1 border-[#000000]">
+                          <p className="text-sm text-red-700">A data para esse palpite já expirou!!</p>
+                      </div>
+                  :
+                    <>
+                      <div className=" text-center p-3 mb-2 rounded-2xl bg-blue-100 border-1 border-[#000000]">
+                          <p className="text-xl font-bold" >{userGuess.guess}</p>
+                          <p className="text-sm text-gray-500">Seu palpite</p>
+                      </div>
+                      <div className="flex text-center align-middle justify-center items-center">
+                        <p>Acerte o palpite e ganhe</p>
+                        <p className="mx-3 text-orange-400 font-bold text-2xl"  >{event.points}</p>
+                        <p>pontos</p>
+                      </div>
+                    </>
+                }
 
               </div>
             :

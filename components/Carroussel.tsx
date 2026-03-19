@@ -69,8 +69,17 @@ export function Carroussel({ items, categoryIndex }:CarrousselProps) {
                   <Tooltip>
                     <TooltipTrigger>
 
-                    <CardContent className="flex items-center justify-center h-30 cursor-pointer">
-                      <AvatarIcon name={item.name} size={100} src={index == 1 ?  item.profile_url! : item.banner! } />
+                    <CardContent className="flex flex-col items-center justify-center h-30 cursor-pointer">
+                      {
+                        categoryIndex == 0 ?
+                        <>
+                          <p className="text-sm text-gray-500">Qual o seu palpite sobre:</p>
+                          <p className=" font-mono mt-2 font-semibold " >{item.name}</p>
+                        </>
+                        :
+                        <AvatarIcon name={item.name} size={100} src={index == 1 ?  item.profile_url! : item.banner! } />
+                      }
+
                     </CardContent>
                       
                     </TooltipTrigger>
