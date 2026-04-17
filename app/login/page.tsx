@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     //const rnd = Math.floor(Math.random() * 13) + 1;
     //setBgUrl("url('/login_wallpapers/old/bg_" + rnd + ".jpg')");
-    setBgUrl("url('/login_wallpapers/specific/tibufu.jpg')");
+    setBgUrl("url('/login_wallpapers/specific/tibufu.png')");
   }, []);
 
   return (
