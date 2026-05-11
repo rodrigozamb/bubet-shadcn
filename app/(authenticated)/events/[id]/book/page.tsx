@@ -3,109 +3,12 @@
 
 "use client"
 
-import { BetPanel } from "@/components/BetPanel";
-import { CompetitorsList } from "@/components/CompetitorsList";
 import { EventBook } from "@/components/book/EventBook";
 import { Header } from "@/components/Header";
-import { InfoPanel } from "@/components/InfoPanel";
-import { Podium } from "@/components/Podium";
 import { AuthContext } from "@/context/AuthContext";
-import { api } from "@/services/api";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
-
-interface EventData{
-    id: string,
-    name: string,
-    description: string,
-    date: string,
-    banner: string,
-    starts_at: string,
-    ends_at: string,
-    created_at: string,
-    local: string,
-    judges:{
-      id: string,
-      nickname: string,
-      avatar: string
-    }[]
-}
-
-interface UserBetData{
-  created_at: string,
-  bets: {
-      name: string
-  }[],
-  estandartes:{
-      competitor:{
-          name: string
-      },
-      bannerType:{
-          name: string
-      }
-  }[],
-  points: string,
-  cupons:{
-    value: string
-  } | null
-}
-
-interface defaultBet{
-  user:{
-  
-      id: string,
-      name: string,
-      profile_url: string,
-      username: string
-  }
-  bets: {
-      name: string
-  }[],
-  estandartes:{
-    competitor:{
-        name: string
-    },
-    bannerType:{
-        name: string
-    }
-  }[],
-  created_at: string,
-  points: string,
-  cupons:{
-    value: string
-  }
-}
-
-interface ResultProps{
-  id: string,
-  name: string,
-  profile_url: string
-  score: string,
-  competitor: CompetitorProps,
-  estandartes: {
-    name: string
-  }[]
-}
-
-interface CompetitorProps{
-  id: string,
-  name: string,
-  profile_url: string,
-  description: string
-}
-
-interface BannersTypesProps{
-  id: string,
-  name: string
-}
-
-interface CuponsProps{
-  id: string,
-  value: string,
-  used_at:string,
-  betId: string
-}
 
 
 

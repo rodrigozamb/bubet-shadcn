@@ -10,7 +10,7 @@ interface EventItem {
   id: string
   title: string
   content: string
-  type: 'description' | 'images'
+  type: string
   [key: string]: any
 }
 
@@ -25,19 +25,19 @@ export function EventBook({ items = [
     id: '1',
     title: 'Event 1',
     content: 'This is the first event with some generic content about the event details and information.',
-    type: 'description' as const
+    type: 'description'
   },
   {
     id: '2',
     title: 'Event 2',
     content: 'This is the second event with detailed information about what will happen during this event.',
-    type: 'images' as const
+    type: 'images'
   },
   {
     id: '3',
     title: 'Event 3',
     content: 'This is the third event containing important details and schedules for attendees.',
-    type: 'description' as const
+    type: 'description'
   }
 ] }: EventBookProps): ReactNode {
   return (
