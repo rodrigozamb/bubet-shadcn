@@ -122,7 +122,7 @@ export default function EventBookPage() {
     })
     // Faça algo com o selectedIndex
     try{
-      const newResult = await api.post(`/cards/${buyPackItem!.id}/buy`, { withCredentials: true })
+      const newResult = await api.post(`/cards/${buyPackItem!.id}/buy`,{"quantity": 3}, { withCredentials: true })
       if(newResult.status != 201){
         console.log('Falha na compra do pacote') 
       }else{
