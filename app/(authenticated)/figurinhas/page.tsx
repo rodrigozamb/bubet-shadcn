@@ -11,6 +11,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -49,6 +50,20 @@ interface UserCardPackProps{
 }
 
 
+interface UserAlbumCardProps{
+    id: string,
+    obtained_at: string,
+    quantity: number,
+    album_card: {
+        imageUrl: string,
+        naipe: string,
+        name: string,
+        album: {
+            name: string
+        }
+    }
+}
+
 export default function EventBookPage() {
 
   useContext(AuthContext)
@@ -60,11 +75,19 @@ export default function EventBookPage() {
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false)
 
   const [userCardPacks, setUserCardPacks] = useState<UserCardPackProps[]>([])
+  const [userAlbumCards, setUserAlbumCards] = useState<UserAlbumCardProps[]>([])
   const [userPackItem, setUserPackItem] = useState<typeof userCardPacks[number] | null>(null)
   const [isUserPackModalOpen, setIsUserPackModalOpen] = useState(false)
+  const [selectedSticker, setSelectedSticker] = useState<UserAlbumCardProps | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+
+  const openStickerModal = (sticker: UserAlbumCardProps) => {
+    setSelectedSticker(sticker)
+    setIsModalOpen(true)
+  }
 
   useEffect(() => {
 
@@ -75,6 +98,7 @@ export default function EventBookPage() {
             api.get("/cards/collection", {withCredentials: true})
             .then((res2) => {
                 setUserCardPacks(res2.data.packs)
+                setUserAlbumCards(res2.data.cards)
             })
         })
         .finally(() => { setIsLoading(false) })
@@ -202,9 +226,10 @@ export default function EventBookPage() {
         <div className="flex flex-col justify-center items-center align-middle mt-5">
             
           <Tabs defaultValue="store" className="  ">
-          <TabsList className="grid w-full bg-blue-900 h-15 grid-cols-2">
+          <TabsList className="grid w-full bg-blue-900 h-15 grid-cols-3">
             <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="store" >Comprar Figurinhas</TabsTrigger>
             <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="collection" >Minha Coleção</TabsTrigger>
+            <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="my-cards" >Minhas Figurinhas</TabsTrigger>
           </TabsList>
           <TabsContent value="store">
             <Card>
@@ -299,29 +324,35 @@ export default function EventBookPage() {
                 
                 
                 <div className="w-full max-w-6xl px-4 py-10">
-                  <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                    {userCardPacks.map((item) => (
-                      <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
-                        <div
-                          className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
-                          onClick={() => handleOpenUserPacksModal(item)}
-                        >
-                          <Image
-                            src={item.card_pack.image_url}
-                            alt={item.card_pack.name}
-                            width={180}
-                            height={180}
-                            className="object-contain"
-                          />
+                  {userCardPacks.length === 0 ? (
+                    <div className="flex items-center w-218 h-50 justify-center">
+                      <p className="font-extrabold text-xl" >Você ainda não possui pacotinhos</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+                      {userCardPacks.map((item) => (
+                        <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
+                          <div
+                            className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
+                            onClick={() => handleOpenUserPacksModal(item)}
+                          >
+                            <Image
+                              src={item.card_pack.image_url}
+                              alt={item.card_pack.name}
+                              width={180}
+                              height={180}
+                              className="object-contain"
+                            />
+                          </div>
+                          <div className="flex justify-center items-center align-middle mt-2">
+                            <p className="font-bold">{item.quantity}</p>
+                            <p className="ml-0.5 mr-2">x</p>
+                            <p className="text-center font-medium">{item.card_pack.name}</p>
+                          </div>
                         </div>
-                        <div className="flex justify-center items-center align-middle mt-2">
-                          <p className="font-bold">{item.quantity}</p>
-                          <p className="ml-0.5 mr-2">x</p>
-                          <p className="text-center font-medium">{item.card_pack.name}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                   <Dialog
@@ -368,16 +399,93 @@ export default function EventBookPage() {
               </CardContent>
             </Card>
           </TabsContent>
+          <TabsContent value="my-cards">
+            <Card>
+              <CardHeader className="flex items-center justify-center" >
+                <CardTitle className="text-2xl">Suas Figurinhas</CardTitle>
+                <CardDescription>Aqui estão todos as figurinhas que você possui</CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-5">
+                
+                
+                <div className="w-full max-w-6xl px-4 py-10">
+                  {userAlbumCards.length === 0 ? (
+                    <div className="flex items-center w-218 h-50 justify-center">
+                      <p className="font-extrabold text-xl">Você ainda não possui figurinhas</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+                      {userAlbumCards.map((item) => (
+                        <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
+                          <div
+                            className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
+                            onClick={() => openStickerModal(item)}
+                          >
+                            <Image
+                              src={item.album_card.imageUrl}
+                              alt={item.album_card.name}
+                              width={180}
+                              height={180}
+                              className="object-contain"
+                            />
+                          </div>
+                          <div className="flex flex-col justify-center items-center align-middle mt-2">
+                            <p>{item.album_card.album.name}</p>
+                            <div className="flex">
+                              <p className="font-bold mr-2" >{item.quantity} x </p>
+                              <p className="text-center font-medium">{item.album_card.name} - {item.album_card.naipe}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                  <Dialog
+                    open={isModalOpen}
+                    onOpenChange={(open) => {
+                      if (!open) setSelectedSticker(null)
+                      setIsModalOpen(open)
+                    }}
+                  >
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle className="text-center">Figurinha</DialogTitle>
+                        <DialogDescription className="text-center">
+                          {selectedSticker?.album_card.name}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="relative h-102 w-82 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                          {selectedSticker && (
+                            <Image
+                              src={selectedSticker.album_card.imageUrl}
+                              alt={selectedSticker.album_card.name}
+                              fill
+                              className="object-contain"
+                            />
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-muted-foreground">Data de obtenção</p>
+                          <p className="text-lg font-semibold">
+                            {selectedSticker?.obtained_at ? new Date(selectedSticker.obtained_at).toLocaleDateString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: '2-digit',
+                            }) : 'Data desconhecida'}
+                          </p>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
-
-
-
-
-
-
-
-            
-
         </div>
       </div>
     </>
