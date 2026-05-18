@@ -11,7 +11,7 @@ interface AlbumCardProps {
 }
 
 
-export function AlbumCard({ backgroundImage, name, competitor, instrument }: AlbumCardProps) {
+export function AlbumCard({ backgroundImage, name }: AlbumCardProps) {
 
     const [flipped, setFlipped] = useState(false)
     return (
