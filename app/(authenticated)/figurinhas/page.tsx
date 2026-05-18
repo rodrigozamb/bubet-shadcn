@@ -552,7 +552,7 @@ export default function EventBookPage() {
                           <p className="text-sm text-muted-foreground">Data de obtenção</p>
 
                           {
-                            selectedSticker?.obtained_at ? 
+                            selectedSticker?.obtained_at && selectedSticker.obtained_at !== "Desconhecido" ? 
                             (
                               <p className="text-lg font-semibold">
                                 {selectedSticker?.obtained_at ? new Date(selectedSticker.obtained_at).toLocaleDateString('pt-BR', {

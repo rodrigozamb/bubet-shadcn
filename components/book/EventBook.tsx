@@ -232,13 +232,22 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           </div>
           <div className="text-center">
             <p className="text-sm text-muted-foreground">Data de obtenção</p>
-            <p className="text-lg font-semibold">
-              {selectedSticker?.obtained_at ? new Date(selectedSticker.obtained_at).toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: '2-digit',
-              }) : 'Data desconhecida'}
-            </p>
+            {
+              selectedSticker?.obtained_at && selectedSticker.obtained_at !== "Desconhecido" ? 
+              (
+                <p className="text-lg font-semibold">
+                  {selectedSticker?.obtained_at ? new Date(selectedSticker.obtained_at).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: '2-digit',
+                  }) : 'Data desconhecida'}
+                </p>
+              )
+              :
+              (
+                <p className="text-lg font-semibold">Ainda não adquirida</p>
+              )
+            }
           </div>
         </div>
       </DialogContent>
