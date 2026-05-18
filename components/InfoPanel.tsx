@@ -44,9 +44,9 @@ export function InfoPanel({ name, date, local, time, judges, event_id }:InfoPane
                         <span className="flex justify-center content-center text-3xl font-bold">Data</span>
                         <span className="flex justify-center content-center my-3 text-xl">{date}</span>
                     </div>
-                    {/* <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center">
                         <Image className="cursor-pointer " src="/albuns/icon-album.png" alt="Album de Figurinhas" width={80} height={80} onClick={()=>{ router.push(`/events/${event_id}/album`) }}/>
-                    </div> */}
+                    </div>
                 </div>
 
                 <div className="flex flex-col mt-8 font-extrabold text-center">
