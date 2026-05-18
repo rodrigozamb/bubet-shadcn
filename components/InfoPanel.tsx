@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation"
 import AvatarIcon from "./AvatarIcon"
-
+import Image from "next/image"
 interface InfoPanelProps{
     name:string,
     date:string,
     local:string,
-    time:string
+    time:string,
+    event_id:string,
     judges:{
         id: string,
         nickname: string
@@ -15,7 +16,7 @@ interface InfoPanelProps{
     }[]
 }
 
-export function InfoPanel({ name, date, local, time, judges }:InfoPanelProps){
+export function InfoPanel({ name, date, local, time, judges, event_id }:InfoPanelProps){
 
     const router = useRouter()
 
@@ -39,6 +40,9 @@ export function InfoPanel({ name, date, local, time, judges }:InfoPanelProps){
                     <div>
                         <span className="flex justify-center content-center text-3xl font-bold">Data</span>
                         <span className="flex justify-center content-center my-3 text-xl">{date}</span>
+                    </div>
+                    <div className="flex justify-center items-center">
+                        <Image className="cursor-pointer " src="/albuns/icon-album.png" alt="Album de Figurinhas" width={80} height={80} onClick={()=>{ router.push(`/events/${event_id}/album`) }}/>
                     </div>
                 </div>
 

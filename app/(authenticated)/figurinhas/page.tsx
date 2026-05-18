@@ -211,6 +211,86 @@ export default function EventBookPage() {
     }
   }
 
+  const handleBuyAlbumPackAndOpen = async() => {
+
+    toast.info("Realizando compra...", {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+      transition: Bounce,
+    })
+    // Faça algo com o selectedIndex
+    try{
+      const newResult = await api.post(`/cards/${buyPackItem!.id}/buy`,{"quantity": 3}, { withCredentials: true })
+      if(newResult.status != 201){
+        console.log('Falha na compra do pacote') 
+      }else{
+        
+        toast.success('Pacote comprado com sucesso!!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+        router.push(`/figurinhas/${buyPackItem!.id}/abrir`)
+
+
+      }
+      
+    }catch(error:any){
+      if (error instanceof AxiosError) {
+        
+        toast.error(error.response?.data?.message || 'Erro desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else
+      if (error instanceof Error) {
+        console.log(error)
+        toast.error(error.message+' AIIN', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
+    }
+  }
+
   return (
     <>
 
@@ -291,7 +371,7 @@ export default function EventBookPage() {
                           <p className="text-base leading-6">{buyPackItem.description}</p>
                           <div className="flex justify-center mt-5">
                               <Button className="w-25 mr-4 bg-orange-600 cursor-pointer" onClick={handleBuyAlbumPacks}>Comprar</Button>
-                              <Button disabled className="w-35 ml-4 bg-green-600 cursor-pointer" onClick={handleBuyAlbumPacks}>Comprar e Abrir</Button>
+                              <Button className="w-35 ml-4 bg-green-600 cursor-pointer" onClick={handleBuyAlbumPackAndOpen}>Comprar e Abrir</Button>
                           </div>
                         </div>
                       </div>
@@ -390,7 +470,7 @@ export default function EventBookPage() {
 
                       <DialogFooter className="flex justify-center align-middle items-center">
                         <DialogClose asChild>
-                          <Button disabled className="w-25 mr-4 bg-orange-600 cursor-pointer" onClick={ () => router.push(`/figurinhas/${userPackItem!.card_pack.id}/abrir`) }>Abrir Pacote</Button>      
+                          <Button className="w-25 mr-4 bg-orange-600 cursor-pointer" onClick={ () => router.push(`/figurinhas/${userPackItem!.card_pack.id}/abrir`) }>Abrir Pacote</Button>      
                         </DialogClose>
                       </DialogFooter>
                     </DialogContent>

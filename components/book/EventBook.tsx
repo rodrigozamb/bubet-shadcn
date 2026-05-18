@@ -3,56 +3,60 @@
 
 'use client'
 
-import React, { ReactNode } from 'react'
+import Image from 'next/image'
+import React, { ReactNode, useState } from 'react'
 import HTMLFlipBook from 'react-pageflip'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog'
 
-interface EventItem {
-  id: string
-  title: string
-  content: string
+interface AlbumPageProps {
+  description: string
   type: string
-  [key: string]: any
+  cards:StickerCard[]
+}
+
+interface StickerCard {
+  image_url: string
+  name: string
+  naipe: string
+  obtained_at: string
 }
 
 interface EventBookProps {
-  items?: EventItem[]
+  items: AlbumPageProps[]
+  albumId: string
 }
 
 
 
-export function EventBook({ items = [
-  {
-    id: '1',
-    title: 'Event 1',
-    content: 'This is the first event with some generic content about the event details and information.',
-    type: 'description'
-  },
-  {
-    id: '2',
-    title: 'Event 2',
-    content: 'This is the second event with detailed information about what will happen during this event.',
-    type: 'images'
-  },
-  {
-    id: '3',
-    title: 'Event 3',
-    content: 'This is the third event containing important details and schedules for attendees.',
-    type: 'description'
+export function EventBook({ items, albumId }: EventBookProps): ReactNode {
+  const [selectedSticker, setSelectedSticker] = useState<StickerCard | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openStickerModal = (sticker: StickerCard) => {
+    setSelectedSticker(sticker)
+    setIsModalOpen(true)
   }
-] }: EventBookProps): ReactNode {
+  console.log(items)
   return (
-    <HTMLFlipBook
-      width={300}
-      height={500}
+    <>
+      <HTMLFlipBook
+      width={500}
+      height={700}
       maxShadowOpacity={0.5}
       drawShadow={true}
       showCover={true}
       size="fixed"
       startPage={0}
-      minWidth={300}
-      maxWidth={300}
-      minHeight={500}
-      maxHeight={500}
+      minWidth={500}
+      maxWidth={500}
+      minHeight={700}
+      maxHeight={700}
       className="event-book"
       style={{ background: 'transparent' }}
       flippingTime={1000}
@@ -67,52 +71,115 @@ export function EventBook({ items = [
       useMouseEvents={true}
       swipeDistance={10}
       showPageCorners={true}
-      disableFlipByClick={false}
+      disableFlipByClick={true}
     >
-      <div className="page bg-red-500 text-white flex items-center justify-center" style={{ background: 'transparent' }}>
-        <div className="flex flex-col justify-center items-center  page-content cover h-full w-full">
-          <h1 className="text-xl font-bold">Album de Figurinhas</h1>
-          <h1 className="text-xl font-semibold mt-15">XVI Principal Balatucada</h1>
+      <div className="page text-white flex items-center justify-center" style={{ background: 'transparent' }}>
+        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-capa.png)` }}>
         </div>
       </div>
       
       
       
       {items.length > 0 ? (
-        items.map((item: EventItem) => (
-          item.type === "description" ? (
-            <div className="page bg-gray-300 text-black p-4" key={item.id}>
-              <div className="flex flex-col items-center justify-between h-full w-full page-content">
-                <h2 className="text-lg font-bold mb-4">{item.title}</h2>
-                <p className="text-center font-light ">{item.content}</p>
-                <p className="text-center font-light ">Confira a escalação da {item.title}</p>
+        items.map((item: AlbumPageProps, idx: number) => (
+          item.type === "DESCRIPTION" ? (
+            <div className="page bg-cover bg-center text-black" key={idx}>
+              <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${item.description})` }}>
               </div>
             </div>
-          ) : (
-            <div className="page bg-blue-200 text-black p-4" key={item.id}>
-              <div className="page-content">
-                <h2>{item.title}</h2>
+          ) : 
+          item.type === "IMAGESR" ?
+          (
+            <div className="page bg-cover bg-center text-black " key={idx}>
+              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className="image-gallery">
-                  <div className="flex justify-between items-center ">
-                    <p className="text-center font-lightp-3">{item.title}</p>
-                    <div className="bg-gray-400 h-25 w-30 rounded flex items-center justify-center">Image 1</div>
+                  <div className="flex h-35 w-55 items-center justify-center bg-cover bg-center ">
+                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
                   </div>
-                  {/* Placeholder for images */}
+                  
                   <div className="grid grid-cols-3 gap-2 mt-4">
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 1</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 2</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 3</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 4</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 1</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 2</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 3</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 4</div>
-                    <div className="bg-gray-400 h-25 rounded flex items-center justify-center">Image 4</div>
+                    {item.cards.map((sticker, index) => (
+                      <button
+                        type="button"
+                        key={`sticker-${index}`}
+                        className="rounded "
+                        onClick={() => openStickerModal(sticker)}
+                      >
+                        <Image
+                          src={sticker.image_url}
+                          alt={sticker.name}
+                          width={130}
+                          height={130}
+                          className="object-contain"
+                        />
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-          )
+          ) :
+          item.type === "IMAGESL" ? 
+          (
+            <div className="page bg-cover bg-center text-black" key={idx}>
+              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+                <div className="image-gallery">
+                  <div className="flex h-35 w-55 items-center justify-center bg-cover bg-center ">
+                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
+                  </div>
+                  {/* Placeholder for images */}
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {item.cards.map((sticker, index) => (
+                      <button
+                        type="button"
+                        key={`sticker-${index}`}
+                        className="rounded "
+                        onClick={() => openStickerModal(sticker)}
+                      >
+                        <Image
+                          src={sticker.image_url}
+                          alt={sticker.name}
+                          width={130}
+                          height={130}
+                          className="object-contain"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) :
+          ( 
+            <div className="page bg-cover bg-center text-black" key={idx}>
+              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+                <div className="image-gallery">
+                  <div className="flex h-35 w-55 items-center justify-center bg-cover bg-center ">
+                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
+                  </div>
+                  {/* Placeholder for images */}
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {item.cards.map((sticker, index) => (
+                      <button
+                        type="button"
+                        key={`sticker-${index}`}
+                        className="rounded "
+                        onClick={() => openStickerModal(sticker)}
+                      >
+                        <Image
+                          src={sticker.image_url}
+                          alt={sticker.name}
+                          width={130}
+                          height={130}
+                          className="object-contain"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) 
         ))
       ) : (
         <div className="page">
@@ -122,9 +189,60 @@ export function EventBook({ items = [
         </div>
       )}
       
-      <div className="page bg-red-500" key="final-page">
-        <div className="page-content h-full w-full" />
+      {
+        items.length % 2 != 0 ? (
+          <div className="page bg-blue-950" key="semi-final-page">
+            <div className="flex flex-col justify-center items-center  page-content bg-cover bg-center h-full w-full" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+            </div>
+          </div>
+        ):(
+          <></>
+        )
+      }
+      <div className="page bg-blue-500" key="final-page">
+        <div className="flex flex-col justify-center items-center  page-content bg-cover bg-center h-full w-full" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-final.png)` }}>
+        </div>
       </div>
     </HTMLFlipBook>
+
+    <Dialog
+      open={isModalOpen}
+      onOpenChange={(open) => {
+        if (!open) setSelectedSticker(null)
+        setIsModalOpen(open)
+      }}
+    >
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-center">{selectedSticker?.name}</DialogTitle>
+          <DialogDescription className="text-center">
+            {selectedSticker?.naipe}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative h-102 w-82 overflow-hidden rounded-xl border border-slate-200 bg-white">
+            {selectedSticker && (
+              <Image
+                src={selectedSticker!.image_url}
+                alt={selectedSticker!.name}
+                fill
+                className="object-contain"
+              />
+            )}
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">Data de obtenção</p>
+            <p className="text-lg font-semibold">
+              {selectedSticker?.obtained_at ? new Date(selectedSticker.obtained_at).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit',
+              }) : 'Data desconhecida'}
+            </p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  </>
   )
 }

@@ -200,6 +200,7 @@ export default function Home() {
                 name={event!.name} 
                 date={event!.date.split("T")[0].split("-")[2]+"/"+event!.date.split("T")[0].split("-")[1]+"/"+event!.date.split("T")[0].split("-")[0]} 
                 local={event!.local}
+                event_id={event!.id}
                 time={event!.starts_at.substring(11,16)+' - '+event!.ends_at.substring(11,16)}
                 judges={event.judges}
               />
