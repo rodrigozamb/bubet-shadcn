@@ -40,7 +40,10 @@ export default function EventBookPage() {
   const [isloading, setIsLoading] = useState<boolean>(true)
   const [cards, setCards] = useState<CardProps[]>([])
   const [album,setAlbum] = useState<AlbumProps|null>(null)
+  const [isOpening, setIsOpening] = useState<boolean>(false)
+  const [clickedCards, setClickedCards] = useState<string[]>([])
 
+  const allCardsClicked = cards.length > 0 && clickedCards.length === cards.length
 
   useEffect(() => {
 
@@ -60,12 +63,15 @@ export default function EventBookPage() {
 
 
 const handleOpenPack = async () => {
-    
+    if (isOpening) return
+
+    setIsOpening(true)
 
     try{
       await api.post(`/cards/${pack_id}/open`, {withCredentials: true})
       .then((res) => {
             setCards(res.data)
+            setClickedCards([])
         })
 
     } catch(error: any){
@@ -106,6 +112,8 @@ const handleOpenPack = async () => {
           transition: Bounce,
         })
       }
+    } finally {
+      setIsOpening(false)
     }
   }
 
@@ -145,7 +153,9 @@ const handleOpenPack = async () => {
               />
 
               <div className="flex justify-center align-middle items-center text-center ">
-                <Button onClick={handleOpenPack} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 ">Abrir Pacote</Button>
+                <Button disabled={isOpening} onClick={handleOpenPack} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {isOpening ? 'Abrindo...' : 'Abrir Pacote'}
+                </Button>
               </div>
             </div>
 
@@ -158,12 +168,17 @@ const handleOpenPack = async () => {
                         name={card.name}
                         competitor={card.competitor ?? "Desconhecido" }
                         backgroundImage={card.imageUrl}
+                        onFlip={() => {
+                          if (!clickedCards.includes(card.id)) {
+                            setClickedCards((prev) => [...prev, card.id])
+                          }
+                        }}
                     />
                 ))}
               </div>
               <div className="flex  justify-between px-50">
                 <Button onClick={()=>{ router.push('/figurinhas') }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 ">Voltar a coleção</Button>
-                <Button onClick={()=>{ setCards([]) }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 ">Abrir outro Pacote</Button>
+                <Button disabled={!allCardsClicked} onClick={()=>{ setCards([]); setClickedCards([]); }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed ">Abrir outro Pacote</Button>
                 <Button onClick={()=>{ router.push(`/events/${album?.event_id}/album`) }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-orange-800 to-orange-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 ">Ver Album</Button>
               </div>
             </div>
