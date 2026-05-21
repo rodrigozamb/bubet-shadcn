@@ -4,9 +4,18 @@
 
 import { Header } from "@/components/Header";
 import { AuthContext } from "@/context/AuthContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { ArrowRightLeftIcon } from "lucide-react"
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogClose,
@@ -22,6 +31,7 @@ import { Bounce, toast } from "react-toastify";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AxiosError } from "axios";
+import AvatarIcon from "@/components/AvatarIcon";
 
 
 interface CardPackProps{
@@ -54,19 +64,72 @@ interface UserAlbumCardProps{
     id: string,
     obtained_at: string,
     quantity: number,
+    naipe:string
     album_card: {
+        id: string,
         imageUrl: string,
         naipe: string,
         name: string,
+        team:string,
         album: {
             name: string
         }
     }
 }
 
+interface AllAlbumCardsProps{
+  id: string,
+  name: string,
+  naipe: string,
+  team: string,
+  imageUrl?: string,
+  album:{
+    name: string
+  }
+}
+
+const mapAllAlbumCardToUserAlbumCard = (card: AllAlbumCardsProps): UserAlbumCardProps => ({
+  id: card.id,
+  obtained_at: "",
+  quantity: 5,
+  naipe: card.naipe ?? "Desconhecido",
+  album_card: {
+    id: card.id,
+    imageUrl: card.imageUrl ?? "",
+    naipe: card.naipe ?? "Desconhecido",
+    name: card.name,
+    team: card.team,
+    album: {
+      name: card.album.name,
+    },
+  },
+})
+
+interface TradeProps{
+  id: string,
+  created_at:string,
+  from_user:{
+    name: string,
+    id:string,
+    profile_url: string
+  },
+  offered_card:{
+    name: string,
+    id:string,
+    imageUrl: string
+  },
+  trade_card:{
+    name: string,
+    id:string,
+    imageUrl: string
+  },
+  offered_quantity: string,
+  trade_quantity: string
+}
+
 export default function EventBookPage() {
 
-  useContext(AuthContext)
+  const { user } = useContext(AuthContext)
 
   const [refresh, setRefresh] = useState(false)
 
@@ -76,10 +139,38 @@ export default function EventBookPage() {
 
   const [userCardPacks, setUserCardPacks] = useState<UserCardPackProps[]>([])
   const [userAlbumCards, setUserAlbumCards] = useState<UserAlbumCardProps[]>([])
+  const [allAlbumsCards, setAllAlbumsCards] = useState<AllAlbumCardsProps[]>([])
+  const [trades, setTrades] = useState<TradeProps[]>([])
+  const [stickerFilter, setStickerFilter] = useState("")
   const [userPackItem, setUserPackItem] = useState<typeof userCardPacks[number] | null>(null)
   const [isUserPackModalOpen, setIsUserPackModalOpen] = useState(false)
   const [selectedSticker, setSelectedSticker] = useState<UserAlbumCardProps | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Trade-cards modal state
+  const [isTradeModalOpen, setIsTradeModalOpen] = useState(false)
+  const [selectedOfferSticker, setSelectedOfferSticker] = useState<UserAlbumCardProps | null>(null)
+  const [selectedTradeSticker, setSelectedTradeSticker] = useState<UserAlbumCardProps | null>(null)
+  const [offerQuantity, setOfferQuantity] = useState(1)
+  const [tradeQuantity, setTradeQuantity] = useState(1)
+  const [isTradeLoading, setIsTradeLoading] = useState(false)
+
+  useEffect(() => {
+    if (selectedOfferSticker) {
+      setOfferQuantity((current) =>
+        Math.min(Math.max(current, 1), selectedOfferSticker.quantity)
+      )
+    } else {
+      setOfferQuantity(1)
+    }
+  }, [selectedOfferSticker])
+
+  const filteredUserAlbumCards = useMemo(
+    () => userAlbumCards.filter((item) =>
+      item.album_card.name.toLowerCase().includes(stickerFilter.toLowerCase())
+    ),
+    [userAlbumCards, stickerFilter]
+  )
 
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
@@ -88,6 +179,13 @@ export default function EventBookPage() {
     setSelectedSticker(sticker)
     setIsModalOpen(true)
   }
+
+  useEffect(()=>{
+    api.get(`/cards/album`,{withCredentials: true})
+      .then((res)=>{
+        setAllAlbumsCards(res.data.cards)
+      })
+  },[])
 
   useEffect(() => {
 
@@ -99,6 +197,10 @@ export default function EventBookPage() {
             .then((res2) => {
                 setUserCardPacks(res2.data.packs)
                 setUserAlbumCards(res2.data.cards)
+              api.get("/cards/trades", {withCredentials: true})
+                .then((res3) => {
+                    setTrades(res3.data)
+                })  
             })
         })
         .finally(() => { setIsLoading(false) })
@@ -183,8 +285,7 @@ export default function EventBookPage() {
         })
       } else
       if (error instanceof Error) {
-        console.log(error)
-        toast.error(error.message+' AIIN', {
+        toast.error(error.message, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -263,8 +364,8 @@ export default function EventBookPage() {
         })
       } else
       if (error instanceof Error) {
-        console.log(error)
-        toast.error(error.message+' AIIN', {
+        
+        toast.error(error.message, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -291,6 +392,291 @@ export default function EventBookPage() {
     }
   }
 
+
+  const handleCreateCardTradeOffer = async() => {
+
+    if(selectedOfferSticker?.id === selectedTradeSticker?.id){
+      toast.warn(`Você não pode oferecer uma figurinha em troca de si mesma`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      return
+    }
+
+    if(!selectedTradeSticker || !selectedOfferSticker?.quantity || selectedOfferSticker.quantity <= 1){
+      toast.warn(`Você precisa ter mais de uma figurinha de "${selectedOfferSticker?.album_card.name}" para fazer a oferta de troca`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      return
+    }
+
+    toast.info("Realizando oferta de troca...", {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+      transition: Bounce,
+    })
+    
+    try{
+      const data ={
+        "offered_card_id":selectedOfferSticker.album_card.id,
+        "offered_quantity":offerQuantity,
+        "trade_card_id":selectedTradeSticker.album_card.id,
+        "trade_quantity":tradeQuantity
+      }
+      const newResult = await api.post(`/cards/trades`,data, { withCredentials: true })
+      if(newResult.status != 200){
+        console.log('Falha na criação da oferta de troca') 
+      }else{
+        
+        toast.success('Oferta de troca criada com sucesso!!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+        setRefresh((refresh) => !refresh)
+        setSelectedTradeSticker(null)
+        setSelectedOfferSticker(null)
+        setOfferQuantity(1)
+        setTradeQuantity(1)
+        setIsTradeModalOpen(false)
+
+      }
+      
+    }catch(error:any){
+      if (error instanceof AxiosError) {
+        
+        toast.error(error.response?.data?.message || 'Erro desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else
+      if (error instanceof Error) {
+        
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
+    }
+  }
+
+  const handleFazerTroca = async (tradeId: string) => {
+    setIsTradeLoading(true)
+
+    toast.info("Realizando Troca...", {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+      transition: Bounce,
+    })
+    try{
+      const newResult = await api.post(`/cards/trades/${tradeId}/accept`, { withCredentials: true })
+      if(newResult.status != 200){
+        console.log('Falha na execução da troca') 
+      }else{
+        
+        toast.success('Troca realizada com sucesso!!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+        setRefresh((refresh) => !refresh)
+
+
+      }
+      
+    }catch(error:any){
+      if (error instanceof AxiosError) {
+        
+        toast.error(error.response?.data?.message || 'Erro desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else
+      if (error instanceof Error) {
+        
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
+    } finally {
+      setIsTradeLoading(false)
+    }
+  }
+
+  const handleDeleteTroca = async (tradeId: string) => {
+    setIsTradeLoading(true)
+
+    toast.info("Deletando Troca...", {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+      transition: Bounce,
+    })
+    try{
+      const newResult = await api.delete(`/cards/trades/${tradeId}`, { withCredentials: true })
+      if(newResult.status != 200){
+        console.log('Falha na execução da troca') 
+      }else{
+        
+        toast.success('Troca deletada com sucesso!!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+        setRefresh((refresh) => !refresh)
+
+
+      }
+      
+    }catch(error:any){
+      if (error instanceof AxiosError) {
+        
+        toast.error(error.response?.data?.message || 'Erro desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
+    } finally {
+      setIsTradeLoading(false)
+    }
+  }
+
+
   return (
     <>
 
@@ -306,10 +692,11 @@ export default function EventBookPage() {
         <div className="flex flex-col justify-center items-center align-middle mt-5">
             
           <Tabs defaultValue="store" className="  ">
-          <TabsList className="grid w-full bg-blue-900 h-15 grid-cols-3">
+          <TabsList className="grid w-full bg-blue-900 h-15 grid-cols-4">
             <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="store" >Comprar Figurinhas</TabsTrigger>
             <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="collection" >Minha Coleção</TabsTrigger>
             <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="my-cards" >Minhas Figurinhas</TabsTrigger>
+            <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="trade-cards" >Troca de Figurinhas</TabsTrigger>
           </TabsList>
           <TabsContent value="store">
             <Card>
@@ -402,11 +789,10 @@ export default function EventBookPage() {
               
               <CardContent className="space-y-5">
                 
-                
                 <div className="w-full max-w-6xl px-4 py-10">
                   {userCardPacks.length === 0 ? (
                     <div className="flex items-center w-218 h-50 justify-center">
-                      <p className="font-extrabold text-xl" >Você ainda não possui pacotinhos</p>
+                      <p className="font-extrabold text-xl">Você ainda não possui pacotinhos</p>
                     </div>
                   ) : (
                     <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
@@ -487,16 +873,26 @@ export default function EventBookPage() {
               </CardHeader>
               
               <CardContent className="space-y-5">
-                
-                
-                <div className="w-full max-w-6xl px-4 py-10">
+                <div className="flex justify-center align-middle items-center flex-col w-full px-4 ">
+                  <div className=" mb-5 w-70">
+                    <Input
+                      placeholder="Filtrar figurinhas por nome..."
+                      value={stickerFilter}
+                      onChange={(event) => setStickerFilter(event.target.value)}
+                    />
+                  </div>
+
                   {userAlbumCards.length === 0 ? (
                     <div className="flex items-center w-218 h-50 justify-center">
                       <p className="font-extrabold text-xl">Você ainda não possui figurinhas</p>
                     </div>
+                  ) : filteredUserAlbumCards.length === 0 ? (
+                    <div className="flex items-center w-218 h-50 justify-center">
+                      <p className="font-extrabold text-xl">Nenhuma figurinha corresponde ao filtro</p>
+                    </div>
                   ) : (
                     <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                      {userAlbumCards.map((item) => (
+                      {filteredUserAlbumCards.map((item) => (
                         <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
                           <div
                             className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
@@ -570,6 +966,254 @@ export default function EventBookPage() {
 
                         </div>
                       </div>
+                    </DialogContent>
+                  </Dialog>
+
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="trade-cards">
+            <Card>
+                <CardHeader className="flex items-center justify-center" >
+                <CardTitle className="text-2xl">Troca de Figurinhas</CardTitle>
+                <CardDescription>Aqui você pode trocar suas figurinhas com outros usuários</CardDescription>
+                <Button
+                  disabled={userAlbumCards.length === 0 || isTradeLoading}
+                  className="w-35 h-12 mt-5 bg-blue-800 hover:bg-blue-700 cursor-pointer font-extrabold"
+                  onClick={() => {
+                    setSelectedOfferSticker(userAlbumCards.length > 0 ? userAlbumCards[0] : null)
+                    setSelectedTradeSticker(userAlbumCards.length > 0 ? userAlbumCards[0] : null)
+                    setIsTradeModalOpen(true)
+                  }}
+                >
+                  Criar troca
+                </Button>
+              </CardHeader>
+              
+              <CardContent className="space-y-5">
+                <div className="flex justify-center align-middle items-center flex-col w-full px-4 ">
+
+                    {trades.length === 0 ? (
+                      <div className="flex flex-col items-center w-218 h-50 justify-center">
+                        <p className="font-extrabold text-xl">Nenhuma oferta de troca disponível</p>
+                      </div>
+                    ) : (
+                      trades.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((trade) => (
+                        <div key={trade.id} className="flex justify-between w-218 h-60 align-middle items-center border-2 border-gray-300 rounded-lg px-12 mb-3">
+                          
+                          <div className="flex flex-col justify-center align-middle items-center">
+                            <p className="mb-2">{trade.from_user.name}</p>
+                            <AvatarIcon name={trade.from_user.name} size={60} src={trade.from_user.profile_url}  className="mx-2"  />
+                          </div>
+                          
+                          <div className="flex flex-col justify-center align-middle items-center text-center">
+                            <p className="font-bold mb-3" >Oferta de troca</p>
+                            <div className="flex justify-center align-middle items-center text-center">
+                              <div className="flex flex-col justify-center align-middle items-center">
+                                <p className="font-extralight">Oferecendo:</p>
+                                <div className="relative h-32 w-22 overflow-hidden rounded-xl ">
+                                  <Image
+                                    src={trade.offered_card.imageUrl}
+                                    alt={trade.offered_card.name}
+                                    fill
+                                    className="object-contain"
+                                  />
+                                </div>
+                                <p className="font-bold text-xl">{trade.offered_quantity} x {trade.offered_card.name}</p>
+                              </div>
+                              <ArrowRightLeftIcon className="size-10 text-black mx-4 " />
+                              <div className="flex flex-col justify-center align-middle items-center">
+                                <p className="font-extralight">Pedindo:</p>
+                                <div className="relative  h-32 w-22 overflow-hidden rounded-xl ">
+                                  <Image
+                                    src={trade.trade_card.imageUrl}
+                                    alt={trade.trade_card.name}
+                                    fill
+                                    className="object-contain"
+                                  />
+                                </div>
+                                <p className="font-bold text-xl">{trade.trade_quantity} x {trade.trade_card.name}</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col">
+                            {
+                              trade.from_user.id === user!.id ? (
+                                <Button disabled={isTradeLoading} className="mt-4 bg-red-700 hover:bg-red-800 cursor-pointer" onClick={() => handleDeleteTroca(trade.id)}>Excluir troca</Button>
+                              ):(
+                                <Button disabled={trade.from_user.id === user!.id || isTradeLoading} className=" bg-green-600 hover:bg-green-700 cursor-pointer" onClick={() => handleFazerTroca(trade.id)}> Fazer Troca</Button>
+                              )
+                            }
+                          </div>
+                        </div>
+                      ))
+                    )}
+                </div>
+
+                  <Dialog
+                    open={isTradeModalOpen}
+                    onOpenChange={(open) => {
+                      if (!open) setSelectedTradeSticker(null)
+                      setIsTradeModalOpen(open)
+                    }}
+                  >
+                    <DialogContent className="w-220 flex flex-col justify-center align-middle items-center">
+                      <DialogHeader>
+                        <DialogTitle className="text-center">Qual a sua troca?</DialogTitle>
+                        <DialogDescription className="text-center">
+                          Ofereça uma figurinha que você tem
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="flex items-between gap-10 justify-center items-center align-middle ">
+                        
+                        <div>
+                          <div className="flex flex-col text-center justify-center">
+                            <p className="font-bold mb-3" >Sua figurinha:</p>
+                            <Select
+                              value={selectedOfferSticker?.id ?? ""}
+                              onValueChange={(value) => {
+                                const card = userAlbumCards.find((item) => item.id === value)
+                                if (card) setSelectedOfferSticker(card)
+                              }}
+                            >
+                              <SelectTrigger className="w-52">
+                                <SelectValue placeholder="Selecione uma figurinha" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {userAlbumCards
+                                .sort((a, b) => {
+                                    const albumCompare = a.album_card.album.name.localeCompare(b.album_card.album.name)
+                                    if (albumCompare !== 0) return albumCompare
+
+                                    const teamCompare = a.album_card.team.localeCompare(b.album_card.team)
+                                    if (teamCompare !== 0) return teamCompare
+
+                                    const naipeCompare = a.album_card.naipe.localeCompare(b.album_card.naipe)
+                                    if (naipeCompare !== 0) return naipeCompare
+
+                                    return a.album_card.name.localeCompare(b.album_card.name)
+                                  })
+                                .map((item) => (
+                                  <SelectItem key={item.id} value={item.id}>
+                                    {item.album_card.name} - {item.album_card.naipe} - {item.album_card.album.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
+                              {selectedOfferSticker && (
+                                <Image
+                                  src={selectedOfferSticker.album_card.imageUrl}
+                                  alt={selectedOfferSticker.album_card.name}
+                                  fill
+                                  className="object-contain"
+                                />
+                              )}
+                            </div>
+                            <div className="flex flex-col items-center gap-2 mt-2">
+                              <p className="font-semibold" >Quantidade:</p>
+                              <Select
+                                value={String(offerQuantity)}
+                                onValueChange={(value) => setOfferQuantity(Number(value))}
+                              >
+                                <SelectTrigger className="w-52">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {selectedOfferSticker &&
+                                    Array.from(
+                                      { length: selectedOfferSticker.quantity - 1 },
+                                      (_, i) => i + 1
+                                    ).map((quantity) => (
+                                      <SelectItem key={quantity} value={String(quantity)}>
+                                        {quantity}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <ArrowRightLeftIcon className="size-10 text-muted-foreground" />
+                        
+                        <div>
+                          <div className="flex flex-col text-center justify-center">
+                            <p className="font-bold mb-3" >Troco por:</p>
+                            <Select
+                              value={selectedTradeSticker?.id ?? ""}
+                              onValueChange={(value) => {
+                                const card = allAlbumsCards.find((item) => item.id === value)
+                                if (card) setSelectedTradeSticker(mapAllAlbumCardToUserAlbumCard(card))
+                              }}
+                            >
+                              <SelectTrigger className="w-52">
+                                <SelectValue placeholder="Selecione uma figurinha" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {allAlbumsCards
+                                  .filter((item) => item.id !== selectedOfferSticker?.id)
+                                  .sort((a, b) => {
+                                    const albumCompare = a.album.name.localeCompare(b.album.name)
+                                    if (albumCompare !== 0) return albumCompare
+
+                                    const teamCompare = a.team.localeCompare(b.team)
+                                    if (teamCompare !== 0) return teamCompare
+
+                                    const naipeCompare = a.naipe.localeCompare(b.naipe)
+                                    if (naipeCompare !== 0) return naipeCompare
+
+                                    return a.name.localeCompare(b.name)
+                                  })
+                                  .map((item) => (
+                                    <SelectItem key={item.id} value={item.id}>
+                                      {item.name} - {item.naipe} - {item.album.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
+                              {selectedTradeSticker && (
+                                <Image
+                                  src={selectedTradeSticker.album_card.imageUrl}
+                                  alt={selectedTradeSticker.album_card.name}
+                                  fill
+                                  className="object-contain"
+                                />
+                              )}
+                            </div>
+                            <div className="flex flex-col items-center gap-2 mt-2">
+                              <p className="font-semibold" >Quantidade:</p>
+                              <Select
+                                value={String(tradeQuantity)}
+                                onValueChange={(value) => setTradeQuantity(Number(value))}
+                              >
+                                <SelectTrigger className="w-52">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {selectedTradeSticker &&
+                                    Array.from(
+                                      { length: 5 },
+                                      (_, i) => i + 1
+                                    ).map((quantity) => (
+                                      <SelectItem key={quantity} value={String(quantity)}>
+                                        {quantity}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        
+                        
+                      </div>
+
+                      <Button className="w-80 my-8 cursor-pointer bg-blue-950 hover:bg-blue-900 font-bold" onClick={handleCreateCardTradeOffer} >Fazer Oferta de Troca</Button>
+                      
                     </DialogContent>
                   </Dialog>
 
