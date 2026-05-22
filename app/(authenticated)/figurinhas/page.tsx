@@ -715,6 +715,7 @@ export default function EventBookPage() {
                           onClick={() => handleOpenModal(item)}
                         >
                           <Image
+                            unoptimized
                             src={item.image_url}
                             alt={item.name}
                             width={180}
@@ -746,6 +747,7 @@ export default function EventBookPage() {
                       <div className="grid gap-4 md:grid-cols-[160px_1fr] items-center">
                         <div className="rounded-3xl overflow-hidden p-3">
                           <Image
+                            unoptimized
                             src={buyPackItem.image_url}
                             alt={buyPackItem.name}
                             width={220}
@@ -803,6 +805,7 @@ export default function EventBookPage() {
                             onClick={() => handleOpenUserPacksModal(item)}
                           >
                             <Image
+                              unoptimized
                               src={item.card_pack.image_url}
                               alt={item.card_pack.name}
                               width={180}
@@ -839,6 +842,7 @@ export default function EventBookPage() {
                         <div className="grid gap-4 md:grid-cols-[160px_1fr] items-center">
                           <div className="rounded-3xl overflow-hidden p-3">
                             <Image
+                              unoptimized
                               src={userPackItem.card_pack.image_url}
                               alt={userPackItem.card_pack.name}
                               width={220}
@@ -904,6 +908,7 @@ export default function EventBookPage() {
                               width={180}
                               height={180}
                               className="object-contain"
+                              unoptimized
                             />
                           </div>
                           <div className="flex flex-col justify-center items-center align-middle mt-2">
@@ -937,6 +942,7 @@ export default function EventBookPage() {
                         <div className="relative h-102 w-82 overflow-hidden rounded-xl border border-slate-200 bg-white">
                           {selectedSticker && (
                             <Image
+                              unoptimized
                               src={selectedSticker.album_card.imageUrl}
                               alt={selectedSticker.album_card.name}
                               fill
@@ -1013,6 +1019,7 @@ export default function EventBookPage() {
                                 <p className="font-extralight">Oferecendo:</p>
                                 <div className="relative h-32 w-22 overflow-hidden rounded-xl ">
                                   <Image
+                                    unoptimized
                                     src={trade.offered_card.imageUrl}
                                     alt={trade.offered_card.name}
                                     fill
@@ -1026,6 +1033,7 @@ export default function EventBookPage() {
                                 <p className="font-extralight">Pedindo:</p>
                                 <div className="relative  h-32 w-22 overflow-hidden rounded-xl ">
                                   <Image
+                                    unoptimized
                                     src={trade.trade_card.imageUrl}
                                     alt={trade.trade_card.name}
                                     fill
@@ -1104,6 +1112,7 @@ export default function EventBookPage() {
                             <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
                               {selectedOfferSticker && (
                                 <Image
+                                  unoptimized
                                   src={selectedOfferSticker.album_card.imageUrl}
                                   alt={selectedOfferSticker.album_card.name}
                                   fill
@@ -1176,6 +1185,7 @@ export default function EventBookPage() {
                             <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
                               {selectedTradeSticker && (
                                 <Image
+                                  unoptimized
                                   src={selectedTradeSticker.album_card.imageUrl}
                                   alt={selectedTradeSticker.album_card.name}
                                   fill
