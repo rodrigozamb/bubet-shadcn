@@ -56,7 +56,7 @@ export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
                                     <HoverCard openDelay={0} closeDelay={0} key={index}>
                                         <HoverCardTrigger asChild>
                                             <div className="flex justify-center items-center cursor-pointer mx-5" key={index}>
-                                                <Image alt={badge.name} src={badge.image_url} width={130} height={130} />
+                                                <Image unoptimized alt={badge.name} src={badge.image_url} width={130} height={130} />
                                             </div>
                                         </HoverCardTrigger>
                                         <HoverCardContent className='w-60'>
