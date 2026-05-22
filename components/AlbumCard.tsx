@@ -35,7 +35,7 @@ export function AlbumCard({ backgroundImage, name, onFlip }: AlbumCardProps) {
                 {flipped &&
                     <div style={{borderRadius: '10px', overflow: 'hidden', position: 'relative'}} >
                         
-                        <Image src={backgroundImage}  alt={name}  width={320} height={400} layout="fit" objectFit="cover"/>
+                        <Image unoptimized src={backgroundImage}  alt={name}  width={320} height={400} layout="fit" objectFit="cover"/>
                         
 
                     </div>
