@@ -896,7 +896,20 @@ export default function EventBookPage() {
                     </div>
                   ) : (
                     <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                      {filteredUserAlbumCards.map((item) => (
+                      {filteredUserAlbumCards
+                      .sort((a, b) => {
+                        const albumCompare = a.album_card.album.name.localeCompare(b.album_card.album.name)
+                        if (albumCompare !== 0) return albumCompare
+
+                        const teamCompare = a.album_card.team.localeCompare(b.album_card.team)
+                        if (teamCompare !== 0) return teamCompare
+
+                        const naipeCompare = a.album_card.naipe.localeCompare(b.album_card.naipe)
+                        if (naipeCompare !== 0) return naipeCompare
+
+                        return a.album_card.name.localeCompare(b.album_card.name)
+                      })
+                      .map((item) => (
                         <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
                           <div
                             className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"

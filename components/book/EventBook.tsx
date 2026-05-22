@@ -98,7 +98,13 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                   </div>
                   
                   <div className="grid grid-cols-3 gap-2 mt-4">
-                    {item.cards.map((sticker, index) => (
+                    {item.cards
+                    .sort((a, b) => {
+                        const naipeCompare = a.naipe.localeCompare(b.naipe)
+                        if (naipeCompare !== 0) return naipeCompare
+                        return a.name.localeCompare(b.name)
+                      })
+                    .map((sticker, index) => (
                       <button
                         type="button"
                         key={`sticker-${index}`}
@@ -129,7 +135,13 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                   </div>
                   {/* Placeholder for images */}
                   <div className="grid grid-cols-3 gap-2 mt-4">
-                    {item.cards.map((sticker, index) => (
+                    {item.cards
+                    .sort((a, b) => {
+                        const naipeCompare = a.naipe.localeCompare(b.naipe)
+                        if (naipeCompare !== 0) return naipeCompare
+                        return a.name.localeCompare(b.name)
+                      })
+                    .map((sticker, index) => (
                       <button
                         type="button"
                         key={`sticker-${index}`}
@@ -159,7 +171,13 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                   </div>
                   {/* Placeholder for images */}
                   <div className="grid grid-cols-3 gap-2 mt-4">
-                    {item.cards.map((sticker, index) => (
+                    {item.cards
+                    .sort((a, b) => {
+                        const naipeCompare = a.naipe.localeCompare(b.naipe)
+                        if (naipeCompare !== 0) return naipeCompare
+                        return a.name.localeCompare(b.name)
+                      })
+                    .map((sticker, index) => (
                       <button
                         type="button"
                         key={`sticker-${index}`}
