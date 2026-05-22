@@ -93,8 +93,8 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
             <div className="page bg-cover bg-center text-black " key={idx}>
               <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className="image-gallery">
-                  <div className="flex h-35 w-55 items-center justify-center bg-cover bg-center ">
-                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
+                  <div className=" flex justify-end items-end align-bottom  bg-cover bg-center ">
+                    <div className=" page-content  rounded-md mr-5 h-35 w-55 bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/jj-merce.png)` }}></div>
                   </div>
                   
                   <div className="grid grid-cols-3 gap-2 mt-4">
@@ -112,6 +112,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                         onClick={() => openStickerModal(sticker)}
                       >
                         <Image
+                          unoptimized
                           src={sticker.image_url}
                           alt={sticker.name}
                           width={130}
@@ -131,7 +132,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
               <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className="image-gallery">
                   <div className="flex h-35 w-55 items-center justify-center bg-cover bg-center ">
-                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
+                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/logo-meri.png)` }}></div>
                   </div>
                   {/* Placeholder for images */}
                   <div className="grid grid-cols-3 gap-2 mt-4">
@@ -149,6 +150,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                         onClick={() => openStickerModal(sticker)}
                       >
                         <Image
+                          unoptimized
                           src={sticker.image_url}
                           alt={sticker.name}
                           width={130}
@@ -166,9 +168,6 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
             <div className="page bg-cover bg-center text-black" key={idx}>
               <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className="image-gallery">
-                  <div className="flex h-35 w-55 items-center justify-center bg-cover bg-center ">
-                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
-                  </div>
                   {/* Placeholder for images */}
                   <div className="grid grid-cols-3 gap-2 mt-4">
                     {item.cards
@@ -185,6 +184,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                         onClick={() => openStickerModal(sticker)}
                       >
                         <Image
+                          unoptimized
                           src={sticker.image_url}
                           alt={sticker.name}
                           width={130}
@@ -241,6 +241,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           <div className="relative h-102 w-82 overflow-hidden rounded-xl border border-slate-200 bg-white">
             {selectedSticker && (
               <Image
+                unoptimized
                 src={selectedSticker!.image_url}
                 alt={selectedSticker!.name}
                 fill
