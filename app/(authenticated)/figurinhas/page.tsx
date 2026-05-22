@@ -1022,7 +1022,7 @@ export default function EventBookPage() {
                           
                           <div className="flex flex-col justify-center align-middle items-center">
                             <p className="mb-2">{trade.from_user.name}</p>
-                            <AvatarIcon name={trade.from_user.name} size={60} src={trade.from_user.profile_url}  className="mx-2"  />
+                            <AvatarIcon name={trade.from_user.name} size={60} src={trade.from_user.profile_url}  className="mx-2 h-[60px] w-[60px] "  />
                           </div>
                           
                           <div className="flex flex-col justify-center align-middle items-center text-center">
@@ -1034,7 +1034,7 @@ export default function EventBookPage() {
                                   <Image
                                     unoptimized
                                     src={trade.offered_card.imageUrl}
-                                    alt={trade.offered_card.name}
+                                    alt={trade.offered_card.name}   
                                     fill
                                     className="object-contain"
                                   />
