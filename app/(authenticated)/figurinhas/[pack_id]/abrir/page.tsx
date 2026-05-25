@@ -21,12 +21,20 @@ interface CardProps {
   imageUrl: string;
   competitor: string | null;
   naipe: string
+  //type: string
 }
 
 interface AlbumProps{
   name:string
   id:string
   event_id:string
+}
+
+interface CardPack{
+  name: string,
+  image_url: string,
+  can_open: boolean,
+
 }
 
 export default function EventBookPage() {
@@ -40,6 +48,7 @@ export default function EventBookPage() {
   const [isloading, setIsLoading] = useState<boolean>(true)
   const [cards, setCards] = useState<CardProps[]>([])
   const [album,setAlbum] = useState<AlbumProps|null>(null)
+  const [cardPack,setCardPack] = useState<CardPack|null>(null)
   const [isOpening, setIsOpening] = useState<boolean>(false)
   const [clickedCards, setClickedCards] = useState<string[]>([])
 
@@ -51,7 +60,12 @@ export default function EventBookPage() {
     api.get(`/packs/album/${pack_id}`, {withCredentials: true})
         .then((res) => {
             setAlbum(res.data)
+            
+            api.get(`/packs/find/${pack_id}`, {withCredentials: true})
+              .then((res2) => {
+                  setCardPack(res2.data)
 
+              })
         })
         .finally(() => { setIsLoading(false) })
   }, [])  
@@ -66,6 +80,22 @@ const handleOpenPack = async () => {
     if (isOpening) return
 
     setIsOpening(true)
+
+    if (!cardPack?.can_open) {
+      toast.error('Não é possível abrir este pacote no momento. Em breve estará disponível!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      setIsOpening(false)
+      return
+    }
 
     try{
       await api.post(`/cards/${pack_id}/open`, {withCredentials: true})
@@ -137,7 +167,7 @@ const handleOpenPack = async () => {
             <div className="flex flex-col text-center mt-10">
                 <p className="text-xl font-semibold" >Pacote de figurinhas</p>
                 <p className="text-2xl font-bold my-3">
-                    {album?.name}
+                    {cardPack?.name}
                 </p>
                 <p className="text-gray-500">Clique no pacote ou no botão para abrir</p>
             </div>
@@ -145,7 +175,7 @@ const handleOpenPack = async () => {
             <div className={`transition-all duration-500 ease-in-out ${cards.length === 0 ? 'max-h-[1200px] opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-5 overflow-hidden pointer-events-none'}`}>
               <Image
                 unoptimized
-                src={`https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/24171c2e-0744-4582-8da1-f7d1bb48f114/pack.png`}
+                src={cardPack?.image_url || `https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/24171c2e-0744-4582-8da1-f7d1bb48f114/pack.png`}
                 alt={'Pacote de Figurinhas'}
                 width={220}
                 height={220}
@@ -154,7 +184,7 @@ const handleOpenPack = async () => {
               />
 
               <div className="flex justify-center align-middle items-center text-center ">
-                <Button disabled={isOpening} onClick={handleOpenPack} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                <Button disabled={isOpening || !cardPack?.can_open} onClick={handleOpenPack} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                   {isOpening ? 'Abrindo...' : 'Abrir Pacote'}
                 </Button>
               </div>
@@ -169,7 +199,7 @@ const handleOpenPack = async () => {
                         name={card.name}
                         competitor={card.competitor ?? "Desconhecido" }
                         backgroundImage={card.imageUrl}
-                        type={card.type}
+                        //type={card.type}
                         onFlip={() => {
                           if (!clickedCards.includes(card.id)) {
                             setClickedCards((prev) => [...prev, card.id])
