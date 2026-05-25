@@ -71,7 +71,7 @@ export function CompetitorCard({ competitor, isOverlay, index }: CompetitorCardP
           className="flex justify-center items-center"
         >
           <span> {index}º - </span>
-          <Image className="mr-3" alt={competitor.content} src="/logos/Logo Computaria.png" width={40} height={40}/>
+          <Image unoptimized className="mr-3" alt={competitor.content} src="/logos/Logo Computaria.png" width={40} height={40}/>
           <span>
            {competitor.content}
           </span>

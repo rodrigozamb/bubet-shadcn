@@ -144,6 +144,7 @@ const handleOpenPack = async () => {
       
             <div className={`transition-all duration-500 ease-in-out ${cards.length === 0 ? 'max-h-[1200px] opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-5 overflow-hidden pointer-events-none'}`}>
               <Image
+                unoptimized
                 src={`https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/24171c2e-0744-4582-8da1-f7d1bb48f114/pack.png`}
                 alt={'Pacote de Figurinhas'}
                 width={220}
@@ -168,6 +169,7 @@ const handleOpenPack = async () => {
                         name={card.name}
                         competitor={card.competitor ?? "Desconhecido" }
                         backgroundImage={card.imageUrl}
+                        type={card.type}
                         onFlip={() => {
                           if (!clickedCards.includes(card.id)) {
                             setClickedCards((prev) => [...prev, card.id])

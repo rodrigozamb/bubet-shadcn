@@ -24,7 +24,7 @@ export default function Home() {
         style={{ backgroundImage: bgUrl }}
       >
         <div className="z-20 p-10 hidden md:block">
-          <Image src={BUBetlogo.src} alt="BUBet logo" width={200} height={200} />
+          <Image unoptimized src={BUBetlogo.src} alt="BUBet logo" width={200} height={200} />
         </div>
 
         <div

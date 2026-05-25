@@ -22,7 +22,7 @@ export default function Home() {
       <div className="flex justify-center mx-5 my-10">
         <div className="flex justify-between bg-blue-950 w-7xl h-20 px-15 py-3 rounded-3xl">
           <div className="flex">
-            <Image className="" src={BUBetlogo.src} alt="BUBet logo" width={100} height={100} />
+            <Image unoptimized className="" src={BUBetlogo.src} alt="BUBet logo" width={100} height={100} />
             <div className="flex items-center">
               <NavigationMenuLandingPage />
             </div>
@@ -40,10 +40,10 @@ export default function Home() {
 
       <div className="flex flex-col pb-20 pt-10 justify-center">
         <div className="relative flex justify-center">
-          <Image src={bemvindo.src} alt="bemvindo" className="px-4" width={700} height={700} />
+          <Image unoptimized src={bemvindo.src} alt="bemvindo" className="px-4" width={700} height={700} />
         </div>
         <div className="relative flex justify-center">
-          <Image src={bubetlogo.src} alt="bubetlogo" className="px-4" width={500} height={500} />
+          <Image unoptimized src={bubetlogo.src} alt="bubetlogo" className="px-4" width={500} height={500} />
         </div>
         <div className="justify-center flex mt-10 md:mt-30 text-center px-4">
           <h1 className="text-yellow-400 font-extrabold text-2xl md:text-3xl">

@@ -46,7 +46,7 @@ export function Header(){
         <div className="flex justify-between items-center pr-10 bg-cover bg-center h-16 w-screen bg-blue-900" >
           
           <div className="flex justify-center items-center">
-            <Image className="p-[5px] cursor-pointer ml-10" src="/logoRetoSemSombra2.png" alt="BUBet logo" width={100} height={100} onClick={()=>{ router.push("/dashboard") }}/>
+            <Image unoptimized className="p-[5px] cursor-pointer ml-10" src="/logoRetoSemSombra2.png" alt="BUBet logo" width={100} height={100} onClick={()=>{ router.push("/dashboard") }}/>
           </div>
           
           <div className="flex justify-end items-center content-center w-100 ">

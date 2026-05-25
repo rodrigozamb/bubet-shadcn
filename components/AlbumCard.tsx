@@ -28,8 +28,8 @@ export function AlbumCard({ backgroundImage, name, onFlip }: AlbumCardProps) {
                 }}
             >   
                 {!flipped &&
-                <div style={{borderRadius: '10px', overflow: 'hidden'}} className="hover:transform hover:scale-105 transition-transform" >
-                    <Image src={bgTibufu}  alt="bemvindo" layout="fit" objectFit="cover"/>
+                <div style={{borderRadius: '10px', overflow: 'hidden'}} className=" hover:transform hover:scale-105 transition-transform" >
+                    <Image unoptimized  src={bgTibufu}  alt="bemvindo" layout="fit" objectFit="cover"/>
                 </div>
                 }
                 {flipped &&
