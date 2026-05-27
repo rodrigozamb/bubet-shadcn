@@ -41,6 +41,7 @@ interface CardPackProps{
     description: string,
     image_url: string,
     album_id: string
+    created_at: string,
 }
 
 interface UserCardPackProps{
@@ -50,6 +51,7 @@ interface UserCardPackProps{
     image_url: string,
     album_id: string,
     quantity: number,
+    last_obtained_at: string,
     card_pack: {
       id: string,
       name: string,
@@ -708,7 +710,7 @@ export default function EventBookPage() {
                
                 <div className="w-full max-w-6xl px-4 py-10">
                   <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                    {cardPacks.map((item) => (
+                    {cardPacks.slice().sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((item) => (
                       <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
                         <div
                           className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
@@ -798,7 +800,7 @@ export default function EventBookPage() {
                     </div>
                   ) : (
                     <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                      {userCardPacks.map((item) => (
+                      {userCardPacks.sort((a, b) => new Date(b.last_obtained_at).getTime() - new Date(a.last_obtained_at).getTime()).map((item) => (
                         <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
                           <div
                             className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
