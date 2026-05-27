@@ -29,8 +29,6 @@ interface CarrousselProps{
 
 export function Carroussel({ items, categoryIndex }:CarrousselProps) {
 
-  console.log(categoryIndex)
-
   const router = useRouter()
 
   return (
@@ -77,7 +75,10 @@ export function Carroussel({ items, categoryIndex }:CarrousselProps) {
                           <p className=" font-mono mt-2 font-semibold " >{item.name}</p>
                         </>
                         :
-                        <AvatarIcon name={item.name} size={100} src={index == 1 ?  item.profile_url! : item.banner! } />
+                        categoryIndex == 1 ?
+                          <AvatarIcon name={item.name} size={100} src={item.banner!} />
+                        :
+                        <AvatarIcon name={item.name} size={100} src={item.profile_url!} />
                       }
 
                     </CardContent>

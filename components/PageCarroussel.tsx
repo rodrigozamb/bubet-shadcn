@@ -198,7 +198,7 @@ export function PageCarroussel({ competitors, events, guessEvents }:PageCarrouss
               </DialogContent>
 
               <div className="flex justify-center">
-                <Carroussel items={ index == 2 ? competitors : index == 1 ? events.slice(0,5) : allGuessEvents } categoryIndex={index} />
+                <Carroussel items={ index == 2 ? competitors : index == 1 ? events.slice(0,8) : allGuessEvents } categoryIndex={index} />
               </div>
             </div>
           </div>
