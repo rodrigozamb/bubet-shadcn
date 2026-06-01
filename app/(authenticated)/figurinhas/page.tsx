@@ -1212,7 +1212,7 @@ export default function EventBookPage() {
                                   })
                                   .map((item) => (
                                     <SelectItem key={item.id} value={item.id}>
-                                      {item.album_card.name} - {item.album_card.naipe}
+                                      {item.album_card.name} - {item.album_card.naipe} - {item.album_card.team}
                                     </SelectItem>
                                   ))}
                               </SelectContent>
