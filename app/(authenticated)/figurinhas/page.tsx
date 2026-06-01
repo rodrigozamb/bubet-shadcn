@@ -151,6 +151,8 @@ export default function EventBookPage() {
 
   // Trade-cards modal state
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false)
+  const [selectedOfferAlbum, setSelectedOfferAlbum] = useState<string | null>(null)
+  const [selectedTradeAlbum, setSelectedTradeAlbum] = useState<string | null>(null)
   const [selectedOfferSticker, setSelectedOfferSticker] = useState<UserAlbumCardProps | null>(null)
   const [selectedTradeSticker, setSelectedTradeSticker] = useState<UserAlbumCardProps | null>(null)
   const [offerQuantity, setOfferQuantity] = useState(1)
@@ -173,6 +175,36 @@ export default function EventBookPage() {
     ),
     [userAlbumCards, stickerFilter]
   )
+
+  const groupedUserAlbumCards = useMemo(() => {
+    const groups = new Map<string, UserAlbumCardProps[]>()
+
+    const sortedCards = filteredUserAlbumCards.slice().sort((a, b) => {
+      const albumCompare = a.album_card.album.name.localeCompare(b.album_card.album.name)
+      if (albumCompare !== 0) return albumCompare
+
+      const teamCompare = a.album_card.team.localeCompare(b.album_card.team)
+      if (teamCompare !== 0) return teamCompare
+
+      const naipeCompare = a.album_card.naipe.localeCompare(b.album_card.naipe)
+      if (naipeCompare !== 0) return naipeCompare
+
+      return a.album_card.name.localeCompare(b.album_card.name)
+    })
+
+    sortedCards.forEach((item) => {
+      const albumName = item.album_card.album.name || "Sem álbum"
+      const currentGroup = groups.get(albumName)
+
+      if (currentGroup) {
+        currentGroup.push(item)
+      } else {
+        groups.set(albumName, [item])
+      }
+    })
+
+    return Array.from(groups.entries())
+  }, [filteredUserAlbumCards])
 
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
@@ -397,8 +429,8 @@ export default function EventBookPage() {
 
   const handleCreateCardTradeOffer = async() => {
 
-    if(selectedOfferSticker?.id === selectedTradeSticker?.id){
-      toast.warn(`Você não pode oferecer uma figurinha em troca de si mesma`, {
+    if(!selectedOfferSticker){
+      toast.warn(`Você precisa escolher uma figurinha para oferecer nessa troca!`, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -412,8 +444,38 @@ export default function EventBookPage() {
       return
     }
 
-    if(!selectedTradeSticker || !selectedOfferSticker?.quantity || selectedOfferSticker.quantity <= 1){
+    if(!selectedTradeSticker){
+      toast.warn(`Você precisa escolher uma figurinha para trocar por ${offerQuantity}  "${selectedOfferSticker?.album_card.name}"`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      return
+    }
+
+    if(!selectedOfferSticker || !selectedOfferSticker?.quantity || selectedOfferSticker.quantity <= 1){
       toast.warn(`Você precisa ter mais de uma figurinha de "${selectedOfferSticker?.album_card.name}" para fazer a oferta de troca`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      })
+      return
+    }
+    
+    if(selectedOfferSticker?.album_card.id === selectedTradeSticker?.id){
+      toast.warn(`Você não pode oferecer uma figurinha em troca de si mesma`, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -897,43 +959,44 @@ export default function EventBookPage() {
                       <p className="font-extrabold text-xl">Nenhuma figurinha corresponde ao filtro</p>
                     </div>
                   ) : (
-                    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                      {filteredUserAlbumCards
-                      .sort((a, b) => {
-                        const albumCompare = a.album_card.album.name.localeCompare(b.album_card.album.name)
-                        if (albumCompare !== 0) return albumCompare
-
-                        const teamCompare = a.album_card.team.localeCompare(b.album_card.team)
-                        if (teamCompare !== 0) return teamCompare
-
-                        const naipeCompare = a.album_card.naipe.localeCompare(b.album_card.naipe)
-                        if (naipeCompare !== 0) return naipeCompare
-
-                        return a.album_card.name.localeCompare(b.album_card.name)
-                      })
-                      .map((item) => (
-                        <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
-                          <div
-                            className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
-                            onClick={() => openStickerModal(item)}
-                          >
-                            <Image
-                              src={item.album_card.imageUrl}
-                              alt={item.album_card.name}
-                              width={180}
-                              height={180}
-                              className="object-contain"
-                              unoptimized
-                            />
+                    <div className="space-y-4 w-218 ">
+                      {groupedUserAlbumCards.map(([albumName, cards], index) => (
+                        <details
+                          key={albumName}
+                          open={index === 0}
+                          className="overflow-hidden rounded-3xl border border-slate-200 bg-white"
+                        >
+                          <summary className="cursor-pointer flex items-center justify-between gap-4 px-5 py-4 text-lg font-semibold text-white bg-blue-900">
+                            <span>{albumName}</span>
+                            <span className="text-sm font-medium text-white">{cards.length} figurinhas</span>
+                          </summary>
+                          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 p-4 w-full">
+                            {cards.map((item) => (
+                              <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
+                                <div
+                                  className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
+                                  onClick={() => openStickerModal(item)}
+                                >
+                                  <Image
+                                    src={item.album_card.imageUrl}
+                                    alt={item.album_card.name}
+                                    width={180}
+                                    height={180}
+                                    className="object-contain"
+                                    unoptimized
+                                  />
+                                </div>
+                                <div className="flex flex-col justify-center items-center align-middle mt-2">
+                                  <p>{item.album_card.album.name}</p>
+                                  <div className="flex">
+                                    <p className="font-bold mr-2">{item.quantity} x </p>
+                                    <p className="text-center font-medium">{item.album_card.name} - {item.album_card.naipe}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                          <div className="flex flex-col justify-center items-center align-middle mt-2">
-                            <p>{item.album_card.album.name}</p>
-                            <div className="flex">
-                              <p className="font-bold mr-2" >{item.quantity} x </p>
-                              <p className="text-center font-medium">{item.album_card.name} - {item.album_card.naipe}</p>
-                            </div>
-                          </div>
-                        </div>
+                        </details>
                       ))}
                     </div>
                   )}
@@ -1002,8 +1065,10 @@ export default function EventBookPage() {
                   disabled={userAlbumCards.length === 0 || isTradeLoading}
                   className="w-35 h-12 mt-5 bg-blue-800 hover:bg-blue-700 cursor-pointer font-extrabold"
                   onClick={() => {
-                    setSelectedOfferSticker(userAlbumCards.length > 0 ? userAlbumCards[0] : null)
-                    setSelectedTradeSticker(userAlbumCards.length > 0 ? userAlbumCards[0] : null)
+                    setSelectedOfferAlbum(null)
+                    setSelectedTradeAlbum(null)
+                    setSelectedOfferSticker(null)
+                    setSelectedTradeSticker(null)
                     setIsTradeModalOpen(true)
                   }}
                 >
@@ -1077,7 +1142,12 @@ export default function EventBookPage() {
                   <Dialog
                     open={isTradeModalOpen}
                     onOpenChange={(open) => {
-                      if (!open) setSelectedTradeSticker(null)
+                      if (!open) {
+                        setSelectedOfferAlbum(null)
+                        setSelectedTradeAlbum(null)
+                        setSelectedOfferSticker(null)
+                        setSelectedTradeSticker(null)
+                      }
                       setIsTradeModalOpen(open)
                     }}
                   >
@@ -1093,22 +1163,45 @@ export default function EventBookPage() {
                         <div>
                           <div className="flex flex-col text-center justify-center">
                             <p className="font-bold mb-3" >Sua figurinha:</p>
+                            <p className="text-sm font-medium mb-2">Álbum:</p>
+                            <Select
+                              value={selectedOfferAlbum ?? ""}
+                              onValueChange={(value) => {
+                                setSelectedOfferAlbum(value)
+                                setSelectedOfferSticker(null)
+                              }}
+                            >
+                              <SelectTrigger className="w-52">
+                                <SelectValue placeholder="Selecione um álbum" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from(
+                                  new Set(userAlbumCards.map((item) => item.album_card.album.name))
+                                )
+                                  .sort()
+                                  .map((albumName) => (
+                                    <SelectItem key={albumName} value={albumName}>
+                                      {albumName}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <p className="text-sm font-medium mb-2 mt-3">Figurinha:</p>
                             <Select
                               value={selectedOfferSticker?.id ?? ""}
                               onValueChange={(value) => {
                                 const card = userAlbumCards.find((item) => item.id === value)
                                 if (card) setSelectedOfferSticker(card)
                               }}
+                              disabled={!selectedOfferAlbum}
                             >
                               <SelectTrigger className="w-52">
                                 <SelectValue placeholder="Selecione uma figurinha" />
                               </SelectTrigger>
                               <SelectContent>
                                 {userAlbumCards
-                                .sort((a, b) => {
-                                    const albumCompare = a.album_card.album.name.localeCompare(b.album_card.album.name)
-                                    if (albumCompare !== 0) return albumCompare
-
+                                  .filter((item) => !selectedOfferAlbum || item.album_card.album.name === selectedOfferAlbum)
+                                  .sort((a, b) => {
                                     const teamCompare = a.album_card.team.localeCompare(b.album_card.team)
                                     if (teamCompare !== 0) return teamCompare
 
@@ -1117,29 +1210,28 @@ export default function EventBookPage() {
 
                                     return a.album_card.name.localeCompare(b.album_card.name)
                                   })
-                                .map((item) => (
-                                  <SelectItem key={item.id} value={item.id}>
-                                    {item.album_card.name} - {item.album_card.naipe} - {item.album_card.album.name}
-                                  </SelectItem>
-                                ))}
+                                  .map((item) => (
+                                    <SelectItem key={item.id} value={item.id}>
+                                      {item.album_card.name} - {item.album_card.naipe}
+                                    </SelectItem>
+                                  ))}
                               </SelectContent>
                             </Select>
                             <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
-                              {selectedOfferSticker && (
-                                <Image
-                                  unoptimized
-                                  src={selectedOfferSticker.album_card.imageUrl}
-                                  alt={selectedOfferSticker.album_card.name}
-                                  fill
-                                  className="object-contain"
-                                />
-                              )}
+                              <Image
+                                unoptimized
+                                src={selectedOfferSticker?.album_card.imageUrl ?? "https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/24171c2e-0744-4582-8da1-f7d1bb48f114/cards/bg-card-empty.png"}
+                                alt={selectedOfferSticker?.album_card.name ?? "card-empty"}
+                                fill
+                                className="object-contain"
+                              />
                             </div>
                             <div className="flex flex-col items-center gap-2 mt-2">
                               <p className="font-semibold" >Quantidade:</p>
                               <Select
                                 value={String(offerQuantity)}
                                 onValueChange={(value) => setOfferQuantity(Number(value))}
+                                disabled={!selectedOfferSticker}
                               >
                                 <SelectTrigger className="w-52">
                                   <SelectValue />
@@ -1165,23 +1257,45 @@ export default function EventBookPage() {
                         <div>
                           <div className="flex flex-col text-center justify-center">
                             <p className="font-bold mb-3" >Troco por:</p>
+                            <p className="text-sm font-medium mb-2">Álbum:</p>
+                            <Select
+                              value={selectedTradeAlbum ?? ""}
+                              onValueChange={(value) => {
+                                setSelectedTradeAlbum(value)
+                                setSelectedTradeSticker(null)
+                              }}
+                            >
+                              <SelectTrigger className="w-52">
+                                <SelectValue placeholder="Selecione um álbum" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from(
+                                  new Set(allAlbumsCards.map((item) => item.album.name))
+                                )
+                                  .sort()
+                                  .map((albumName) => (
+                                    <SelectItem key={albumName} value={albumName}>
+                                      {albumName}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <p className="text-sm font-medium mb-2 mt-3">Figurinha:</p>
                             <Select
                               value={selectedTradeSticker?.id ?? ""}
                               onValueChange={(value) => {
                                 const card = allAlbumsCards.find((item) => item.id === value)
                                 if (card) setSelectedTradeSticker(mapAllAlbumCardToUserAlbumCard(card))
                               }}
+                              disabled={!selectedTradeAlbum}
                             >
                               <SelectTrigger className="w-52">
                                 <SelectValue placeholder="Selecione uma figurinha" />
                               </SelectTrigger>
                               <SelectContent>
                                 {allAlbumsCards
-                                  .filter((item) => item.id !== selectedOfferSticker?.id)
+                                  .filter((item) => item.id !== selectedOfferSticker?.id && (!selectedTradeAlbum || item.album.name === selectedTradeAlbum))
                                   .sort((a, b) => {
-                                    const albumCompare = a.album.name.localeCompare(b.album.name)
-                                    if (albumCompare !== 0) return albumCompare
-
                                     const teamCompare = a.team.localeCompare(b.team)
                                     if (teamCompare !== 0) return teamCompare
 
@@ -1192,27 +1306,26 @@ export default function EventBookPage() {
                                   })
                                   .map((item) => (
                                     <SelectItem key={item.id} value={item.id}>
-                                      {item.name} - {item.naipe} - {item.album.name}
+                                      {item.name} - {item.naipe}
                                     </SelectItem>
                                   ))}
                               </SelectContent>
                             </Select>
                             <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
-                              {selectedTradeSticker && (
-                                <Image
-                                  unoptimized
-                                  src={selectedTradeSticker.album_card.imageUrl}
-                                  alt={selectedTradeSticker.album_card.name}
-                                  fill
-                                  className="object-contain"
-                                />
-                              )}
+                              <Image
+                                unoptimized
+                                src={selectedTradeSticker?.album_card.imageUrl ?? "https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/24171c2e-0744-4582-8da1-f7d1bb48f114/cards/bg-card-empty.png"}
+                                alt={selectedTradeSticker?.album_card.name ?? "card-empty"}
+                                fill
+                                className="object-contain"
+                              />
                             </div>
                             <div className="flex flex-col items-center gap-2 mt-2">
                               <p className="font-semibold" >Quantidade:</p>
                               <Select
                                 value={String(tradeQuantity)}
                                 onValueChange={(value) => setTradeQuantity(Number(value))}
+                                disabled={!selectedTradeSticker}
                               >
                                 <SelectTrigger className="w-52">
                                   <SelectValue />
