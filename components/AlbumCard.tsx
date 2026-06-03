@@ -5,10 +5,10 @@ import bgTibufu from "@/public/albuns/bg-card-tibufu.png"
 
 interface AlbumCardProps {
     backgroundImage: string,
+    cardbackImage: string,
     name: string,
     competitor: string,
     instrument: string,
-    //type: string,
     onFlip?: () => void
 }
 
@@ -16,16 +16,7 @@ interface AlbumCardProps {
 export function AlbumCard({ backgroundImage, name, onFlip }: AlbumCardProps) {
 
     const [flipped, setFlipped] = useState(false)
-    /* const isHorizontal = type === 'HORIZONTAL'
-    const flippedImageWrapperStyle: React.CSSProperties = {
 
-        borderRadius: '10px',
-        overflow: 'hidden',
-        position: 'relative',
-        transform: isHorizontal ? 'rotate(90deg)' : undefined,
-        scale: isHorizontal ? '1.5' : undefined,
-        width: isHorizontal ? '270px' : '320px',
-    } */
     return (
         <div className="flex justify-center items-center my-15">
             {/* Cartinha! */}

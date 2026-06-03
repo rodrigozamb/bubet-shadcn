@@ -75,6 +75,7 @@ export default function EventBookPage() {
     return null
   }
 
+const bgImageUrl = cardPack.image_url.replace('/pack.png', '/bg.png')
 
 const handleOpenPack = async () => {
     if (isOpening) return
@@ -199,6 +200,7 @@ const handleOpenPack = async () => {
                         name={card.name}
                         competitor={card.competitor ?? "Desconhecido" }
                         backgroundImage={card.imageUrl}
+                        cardbackImage={bgImageUrl}
                         //type={card.type}
                         onFlip={() => {
                           if (!clickedCards.includes(card.id)) {
