@@ -1,8 +1,6 @@
 import { useState } from "react"
 import Image from "next/image"
 
-import bgTibufu from "@/public/albuns/bg-card-tibufu.png"
-
 interface AlbumCardProps {
     backgroundImage: string,
     cardbackImage: string,
@@ -13,7 +11,7 @@ interface AlbumCardProps {
 }
 
 
-export function AlbumCard({ backgroundImage, name, onFlip }: AlbumCardProps) {
+export function AlbumCard({ backgroundImage, name, cardbackImage, onFlip }: AlbumCardProps) {
 
     const [flipped, setFlipped] = useState(false)
 
@@ -31,7 +29,7 @@ export function AlbumCard({ backgroundImage, name, onFlip }: AlbumCardProps) {
             >   
                 {!flipped &&
                 <div style={{borderRadius: '10px', overflow: 'hidden'}} className=" hover:transform hover:scale-105 transition-transform" >
-                    <Image unoptimized  src={bgTibufu}  alt="bemvindo" layout="fit" objectFit="cover"/>
+                    <Image unoptimized  src={cardbackImage}  alt="bemvindo" layout="fit" objectFit="cover"/>
                 </div>
                 }
                 {flipped &&
