@@ -1308,7 +1308,6 @@ export default function EventBookPage() {
                                   })
                                   .map((item) => (
                                     <SelectItem key={item.id} value={item.id}>
-                                      //aqw
                                       {item.name} - {item.naipe} - {item.team}
                                     </SelectItem>
                                   ))}
