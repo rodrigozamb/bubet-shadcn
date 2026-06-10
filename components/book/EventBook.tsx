@@ -261,7 +261,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
               <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className="image-gallery">
                   {/* Placeholder for images */}
-                  <div className="grid grid-cols-3 gap-2 mt-4">
+                  <div className="grid grid-cols-3 gap-2 mt-39">
                     {item.cards
                     .sort((a, b) => {
                         const naipeCompare = a.naipe.localeCompare(b.naipe)
