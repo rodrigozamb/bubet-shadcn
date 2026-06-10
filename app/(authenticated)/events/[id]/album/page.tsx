@@ -25,6 +25,14 @@ interface albumProps{
       naipe: string,
       image_url: string,
       obtained_at: string
+      type: string
+    }[]
+    horizontal_cards: {
+      name: string,
+      naipe: string,
+      image_url: string,
+      obtained_at: string
+      type: string
     }[]
   }[],
   event:{
@@ -99,7 +107,6 @@ export default function EventBookPage() {
     (sum, page) => sum + (page.cards?.filter((c) => c.name === 'Cartinha Desconhecida').length || 0),
     0,
   ) ?? 0
-
   return (
     <>
 

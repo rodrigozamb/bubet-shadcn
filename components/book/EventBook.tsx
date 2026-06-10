@@ -18,6 +18,7 @@ interface AlbumPageProps {
   description: string
   type: string
   cards:StickerCard[]
+  horizontal_cards:StickerCard[]
 }
 
 interface StickerCard {
@@ -25,6 +26,7 @@ interface StickerCard {
   name: string
   naipe: string
   obtained_at: string
+  type: string
 }
 
 interface EventBookProps {
@@ -92,10 +94,55 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           (
             <div className="page bg-cover bg-center text-black " key={idx}>
               <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
-                <div className="image-gallery">
-                  <div className=" flex justify-end items-end align-bottom  bg-cover bg-center ">
-                    <div className=" page-content  rounded-md mr-5 h-35 w-55 bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
-                  </div>
+                <div className={`image-gallery ${item.horizontal_cards.length > 0 ? 'relative' : ''}`}>
+
+                  <>
+                    <div className={`flex  ${item.horizontal_cards.length > 0 ? 'h-55 w-35 absolute -top-10 right-15' : 'w-55 h-35'} items-center justify-center bg-cover bg-center `}>
+                      <div
+                        className={`page-content rounded-md p-4 ${item.horizontal_cards.length > 0 ? 'w-35 h-55 rotate-90 cursor-pointer' : item.cards.length > 0 ? 'cursor-pointer w-full h-full' : 'w-full h-full'} bg-cover bg-center`}
+                        style={{
+                          backgroundImage: item.horizontal_cards.length > 0
+                            ? `url(${item.horizontal_cards[0].image_url})`
+                            : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)`,
+                        }}
+                        onClick={item.horizontal_cards.length > 0 || item.cards.length > 0 ? () => openStickerModal(
+                          item.horizontal_cards.length > 0
+                            ? item.horizontal_cards[0]
+                            : {
+                                image_url: `https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png`,
+                                name: 'Figurinha Desconhecida',
+                                naipe: 'desconhecido',
+                                obtained_at: 'Desconhecido',
+                                type: 'DEFAULT',
+                              }
+                        ) : undefined}
+                        onKeyDown={item.horizontal_cards.length > 0 || item.cards.length > 0 ? (event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault()
+                            openStickerModal(
+                              item.horizontal_cards.length > 0
+                                ? item.horizontal_cards[0]
+                                : {
+                                    image_url: `https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png`,
+                                    name: 'Figurinha Desconhecida',
+                                    naipe: 'desconhecido',
+                                    obtained_at: 'Desconhecido',
+                                    type: 'DEFAULT',
+                                  }
+                            )
+                          }
+                        } : undefined}
+                        role={item.horizontal_cards.length > 0 || item.cards.length > 0 ? 'button' : undefined}
+                        tabIndex={item.horizontal_cards.length > 0 || item.cards.length > 0 ? 0 : undefined}
+                      ></div>
+                    </div>
+                    {
+                      item.horizontal_cards.length > 0 && (
+                        <div className='h-35' />
+                      )
+                    }
+                  </>
+                  
                   
                   <div className="grid grid-cols-3 gap-2 mt-4">
                     {item.cards
@@ -130,10 +177,55 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           (
             <div className="page bg-cover bg-center text-black" key={idx}>
               <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
-                <div className="image-gallery">
-                  <div className="flex h-35 w-55 items-center justify-center bg-cover bg-center ">
-                    <div className=" page-content  rounded-md p-4 w-full h-full bg-cover bg-center "  style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)` }}></div>
-                  </div>
+                <div className={`image-gallery ${item.horizontal_cards.length > 0 ? 'relative' : ''}`}>
+
+                  <>
+                    <div className={`flex  ${item.horizontal_cards.length > 0 ? 'h-55 w-35 absolute -top-10 left-10' : 'w-55 h-35'} items-center justify-center bg-cover bg-center `}>
+                      <div
+                        className={`page-content rounded-md p-4 ${item.horizontal_cards.length > 0 ? 'w-35 h-55 rotate-90 cursor-pointer' : item.cards.length > 0 ? 'cursor-pointer w-full h-full' : 'w-full h-full'} bg-cover bg-center`}
+                        style={{
+                          backgroundImage: item.horizontal_cards.length > 0
+                            ? `url(${item.horizontal_cards[0].image_url})`
+                            : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png)`,
+                        }}
+                        onClick={item.horizontal_cards.length > 0 || item.cards.length > 0 ? () => openStickerModal(
+                          item.horizontal_cards.length > 0
+                            ? item.horizontal_cards[0]
+                            : {
+                                image_url: `https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png`,
+                                name: 'Figurinha Desconhecida',
+                                naipe: 'desconhecido',
+                                obtained_at: 'Desconhecido',
+                                type: 'DEFAULT',
+                              }
+                        ) : undefined}
+                        onKeyDown={item.horizontal_cards.length > 0 || item.cards.length > 0 ? (event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault()
+                            openStickerModal(
+                              item.horizontal_cards.length > 0
+                                ? item.horizontal_cards[0]
+                                : {
+                                    image_url: `https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/cards/group-default.png`,
+                                    name: 'Figurinha Desconhecida',
+                                    naipe: 'desconhecido',
+                                    obtained_at: 'Desconhecido',
+                                    type: 'DEFAULT',
+                                  }
+                            )
+                          }
+                        } : undefined}
+                        role={item.horizontal_cards.length > 0 || item.cards.length > 0 ? 'button' : undefined}
+                        tabIndex={item.horizontal_cards.length > 0 || item.cards.length > 0 ? 0 : undefined}
+                      ></div>
+                    </div>
+                    {
+                      item.horizontal_cards.length > 0 && (
+                        <div className='h-35' />
+                      )
+                    }
+                  </>
+                  
                   {/* Placeholder for images */}
                   <div className="grid grid-cols-3 gap-2 mt-4">
                     {item.cards

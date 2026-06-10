@@ -73,6 +73,7 @@ interface UserAlbumCardProps{
         naipe: string,
         name: string,
         team:string,
+        type: string,
         album: {
             name: string
         }
@@ -84,6 +85,7 @@ interface AllAlbumCardsProps{
   name: string,
   naipe: string,
   team: string,
+  type: string,
   imageUrl?: string,
   album:{
     name: string
@@ -101,6 +103,7 @@ const mapAllAlbumCardToUserAlbumCard = (card: AllAlbumCardsProps): UserAlbumCard
     naipe: card.naipe ?? "Desconhecido",
     name: card.name,
     team: card.team,
+    type: card.type,
     album: {
       name: card.album.name,
     },
@@ -974,22 +977,21 @@ export default function EventBookPage() {
                             {cards.map((item) => (
                               <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
                                 <div
-                                  className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
+                                  className="h-[250px] w-[200px] rounded-md relative overflow-hidden border cursor-pointer"
                                   onClick={() => openStickerModal(item)}
                                 >
                                   <Image
                                     src={item.album_card.imageUrl}
                                     alt={item.album_card.name}
-                                    width={180}
-                                    height={180}
-                                    className="object-contain"
+                                    fill
+                                    className=""
                                     unoptimized
-                                  />
+                                  />  
                                 </div>
                                 <div className="flex flex-col justify-center items-center align-middle mt-2">
                                   <p>{item.album_card.album.name}</p>
                                   <div className="flex">
-                                    <p className="font-bold mr-2">{item.quantity} x </p>
+                                    <p className="font-bold mr-2 whitespace-nowrap">{item.quantity} x </p>
                                     <p className="text-center font-medium">{item.album_card.name} - {item.album_card.naipe}</p>
                                   </div>
                                 </div>
