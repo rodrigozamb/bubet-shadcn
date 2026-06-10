@@ -105,11 +105,11 @@ export default function EventBookPage() {
 
   // Quantas cards têm o nome "Cartinha Desconhecida"
   const unknownCards = album?.pages?.reduce(
-    (sum, page) => sum + (page.cards?.filter((c) => c.name === 'Cartinha Desconhecida').length || 0),
+    (sum, page) => sum + (page.cards?.filter((c) => c.obtained_at === 'Desconhecido').length || 0),
     0,
   ) ?? 0
   const unknownHCards = album?.pages?.reduce(
-    (sum, page) => sum + (page.horizontal_cards?.filter((c) => c.name === 'Cartinha Desconhecida').length || 0),
+    (sum, page) => sum + (page.horizontal_cards?.filter((c) => c.obtained_at === 'Desconhecido').length || 0),
     0,
   ) ?? 0
   return (
