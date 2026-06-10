@@ -101,10 +101,15 @@ export default function EventBookPage() {
   const tit = `${album.name || 'Album de Figurinhas'}`
   // Total de cards em todas as páginas do álbum
   const totalCards = album?.pages?.reduce((sum, page) => sum + (page.cards?.length || 0), 0) ?? 0
+  const totalHCards = album?.pages?.reduce((sum, page) => sum + (page.horizontal_cards?.length || 0), 0) ?? 0
 
   // Quantas cards têm o nome "Cartinha Desconhecida"
   const unknownCards = album?.pages?.reduce(
     (sum, page) => sum + (page.cards?.filter((c) => c.name === 'Cartinha Desconhecida').length || 0),
+    0,
+  ) ?? 0
+  const unknownHCards = album?.pages?.reduce(
+    (sum, page) => sum + (page.horizontal_cards?.filter((c) => c.name === 'Cartinha Desconhecida').length || 0),
     0,
   ) ?? 0
   return (
@@ -121,7 +126,7 @@ export default function EventBookPage() {
         <div className="flex justify-center my-5  ">
           <div className="flex flex-col text-center">
             <p className="text-xl font-bold" >{tit}</p>
-            <p className="text-gray-500 font-medium">{totalCards-unknownCards}/{totalCards}</p>
+            <p className="text-gray-500 font-medium">{(totalCards+totalHCards)-(unknownCards+unknownHCards)}/{(totalCards+totalHCards)}</p>
           </div>
         </div>
         
