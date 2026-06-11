@@ -217,6 +217,28 @@ export default function EventBookPage() {
     setIsModalOpen(true)
   }
 
+  const handleCopyAlbumSummary = async (albumName: string, cards: UserAlbumCardProps[]) => {
+    const repeatedCards = cards.filter((item) => item.quantity > 1)
+    const summaryLines = repeatedCards.map((item) => `*${item.quantity} x ${item.album_card.name}*`)
+    const summaryText = `Álbum: ${albumName}\n${summaryLines.join("\n")}`
+
+    try {
+      await navigator.clipboard.writeText(summaryText)
+      toast.success("Resumo copiado para a área de transferência!", {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    } catch (error) {
+      console.error("Erro ao copiar resumo:", error)
+      toast.error("Não foi possível copiar o resumo. Tente novamente.")
+    }
+  }
+
   useEffect(()=>{
     api.get(`/cards/album`,{withCredentials: true})
       .then((res)=>{
@@ -973,6 +995,14 @@ export default function EventBookPage() {
                             <span>{albumName}</span>
                             <span className="text-sm font-medium text-white">{cards.length} figurinhas</span>
                           </summary>
+                          <div className="flex justify-center align-middle items-center mt-4">
+                              <Button
+                                className="bg-blue-900 hover:bg-blue-800 font-bold cursor-pointer"
+                                onClick={() => handleCopyAlbumSummary(albumName, cards)}
+                              >
+                                Copiar Resumo
+                              </Button>
+                          </div>
                           <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 p-4 w-full">
                             {cards.map((item) => (
                               <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
