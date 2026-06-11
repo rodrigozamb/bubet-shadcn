@@ -1,7 +1,11 @@
+'use client'
+
 import { Crown } from 'lucide-react'
 import AvatarIcon from "./AvatarIcon";
 import Image from "next/image";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader } from './ui/dialog';
+import { DialogTitle } from '@radix-ui/react-dialog';
 
 
 interface UserData{
@@ -19,9 +23,10 @@ interface BadgeProps{
 
 
 export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
+    const [selectedBadge, setSelectedBadge] = useState<BadgeProps | null>(null);
     
     return(
-
+        <>
         <div className="flex flex-col items-center" >
 
                 <div className="flex content-center justify-center items-center">
@@ -53,22 +58,13 @@ export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
                         <div className="grid grid-cols-5 gap-4 justify-center" >
                             {
                                 badges.map((badge, index)=>(
-                                    <HoverCard openDelay={0} closeDelay={0} key={index}>
-                                        <HoverCardTrigger asChild>
-                                            <div className="flex justify-center items-center cursor-pointer mx-5" key={index}>
-                                                <Image unoptimized alt={badge.name} src={badge.image_url} width={130} height={130} />
-                                            </div>
-                                        </HoverCardTrigger>
-                                        <HoverCardContent className='w-60'>
-                                            <div className='flex flex-col items-center text-center'>
-                                            <span className='mb-2.5 flex items-center justify-center rounded-full'>
-                                                <Crown className='text-yellow-300 size-6' />
-                                            </span>
-                                            <div className='mb-1 text-lg font-medium'>{badge.name}</div>
-                                            <p className='text-sm'>{badge.description}</p>
-                                            </div>
-                                        </HoverCardContent>
-                                    </HoverCard>
+                                    <div 
+                                        onClick={() => setSelectedBadge(badge)}
+                                        className="flex justify-center items-center cursor-pointer mx-5 hover:opacity-80 transition-opacity" 
+                                        key={index}
+                                    >
+                                        <Image unoptimized alt={badge.name} src={badge.image_url} width={130} height={130} />
+                                    </div>
                                 ))
                             }
                         </div>
@@ -78,5 +74,35 @@ export function ProfileBadgesPage({ name, profile_url, badges }:UserData){
 
           
         </div>
+
+        <Dialog open={!!selectedBadge} onOpenChange={(open) => !open && setSelectedBadge(null)}>
+           <DialogContent className="flex flex-col items-center w-130 gap-6">
+                {selectedBadge && (
+                    <>
+                        <DialogHeader>
+                            <DialogTitle className="text-center">
+                                Detalhes da Medalha
+                            </DialogTitle>
+                        </DialogHeader>
+                        
+                        <Image 
+                            unoptimized 
+                            alt={selectedBadge.name} 
+                            src={selectedBadge.image_url} 
+                            width={200} 
+                            height={200} 
+                        />
+                        <div className="text-center">
+                            <div className="flex items-center justify-center mb-3">
+                                <Crown className="text-yellow-300 size-6 mr-2" />
+                                <h2 className="text-2xl font-bold">{selectedBadge.name}</h2>
+                            </div>
+                            <p className="text-sm text-gray-600">{selectedBadge.description}</p>
+                        </div>
+                    </>
+                )}
+            </DialogContent>
+        </Dialog>
+        </>
     )
 }
