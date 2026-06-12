@@ -16,7 +16,7 @@ export function AlbumCard({ backgroundImage, name, cardbackImage, onFlip }: Albu
     const [flipped, setFlipped] = useState(false)
 
     return (
-        <div className="flex justify-center items-center my-15">
+        <div className="flex justify-center items-center my-4">
             {/* Cartinha! */}
             <div 
                 className={`w-80 h-100 ${flipped ? 'bg-white' : 'bg-gray-300'} overflow-hidden rounded-lg shadow-lg flex items-center justify-center mx-4 cursor-pointer transition-transform ${flipped ? '[transform:rotateY(360deg)]' : ''}`} 

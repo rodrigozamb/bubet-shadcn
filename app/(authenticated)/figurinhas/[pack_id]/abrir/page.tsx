@@ -192,7 +192,28 @@ const handleOpenPack = async () => {
             </div>
 
             <div className={`transition-all duration-500 ease-in-out ${cards.length > 0 ? 'max-h-[1200px] opacity-100 translate-y-0' : 'max-h-0 opacity-0 translate-y-5 overflow-hidden pointer-events-none'}`}>
-              <div className="flex justify-center align-center items-center mt-8">
+              <div className="grid grid-cols-1 grid-rows-5 md:grid-cols-12 md:grid-rows-2 2xl:grid-cols-5 2xl:grid-rows-1">
+                {cards.map((card, index) => {
+                  return (
+                    <div key={card.id} className={`sm:col-span-1 md:col-span-4 ${index === 3 && 'md:col-start-3'} 2xl:col-span-1`}>
+                      <AlbumCard
+                          instrument={card.naipe}
+                          name={card.name}
+                          competitor={card.competitor ?? "Desconhecido" }
+                          backgroundImage={card.imageUrl}
+                          cardbackImage={bgImageUrl}
+                          //type={card.type}
+                          onFlip={() => {
+                            if (!clickedCards.includes(card.id)) {
+                              setClickedCards((prev) => [...prev, card.id])
+                            }
+                          }}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+              {/* <div className="flex justify-center align-center items-center mt-8">
                 {cards.map((card) => (
                     <AlbumCard
                         key={card.id}
@@ -209,8 +230,8 @@ const handleOpenPack = async () => {
                         }}
                     />
                 ))}
-              </div>
-              <div className="flex  justify-between px-50">
+              </div> */}
+              <div className="flex flex-col md:flex-row  justify-between gap-4 py-10 px-50">
                 <Button onClick={()=>{ router.push('/figurinhas') }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 ">Voltar a coleção</Button>
                 <Button disabled={!allCardsClicked} onClick={()=>{ setCards([]); setClickedCards([]); }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed ">Abrir outro Pacote</Button>
                 <Button onClick={()=>{ router.push(`/events/${album?.event_id}/album`) }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-orange-800 to-orange-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 ">Ver Album</Button>
