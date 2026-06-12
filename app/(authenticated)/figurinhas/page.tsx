@@ -173,9 +173,13 @@ export default function EventBookPage() {
   }, [selectedOfferSticker])
 
   const filteredUserAlbumCards = useMemo(
-    () => userAlbumCards.filter((item) =>
-      item.album_card.name.toLowerCase().includes(stickerFilter.toLowerCase())
-    ),
+    () => userAlbumCards.filter((item) => {
+      const query = stickerFilter.toLowerCase()
+      return (
+        item.album_card.name.toLowerCase().includes(query) ||
+        item.album_card.team.toLowerCase().includes(query)
+      )
+    }),
     [userAlbumCards, stickerFilter]
   )
 
