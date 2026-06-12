@@ -219,7 +219,7 @@ export default function EventBookPage() {
 
   const handleCopyAlbumSummary = async (albumName: string, cards: UserAlbumCardProps[]) => {
     const repeatedCards = cards.filter((item) => item.quantity > 1)
-    const summaryLines = repeatedCards.map((item) => `*${item.quantity} x ${item.album_card.name}*`)
+    const summaryLines = repeatedCards.map((item) => `*${item.quantity} x ${item.album_card.name} - ${item.album_card.naipe} - ${item.album_card.team}*`)
     const summaryText = `Álbum: ${albumName}\n${summaryLines.join("\n")}`
 
     try {
