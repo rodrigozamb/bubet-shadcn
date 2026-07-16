@@ -42,6 +42,7 @@ interface CardPackProps{
     image_url: string,
     album_id: string
     created_at: string,
+    price: number
 }
 
 interface UserCardPackProps{
@@ -151,6 +152,7 @@ export default function EventBookPage() {
   const [isUserPackModalOpen, setIsUserPackModalOpen] = useState(false)
   const [selectedSticker, setSelectedSticker] = useState<UserAlbumCardProps | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [buyQuantity, setBuyQuantity] = useState<string>("1");
 
   // Trade-cards modal state
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false)
@@ -311,12 +313,12 @@ export default function EventBookPage() {
     })
     // Faça algo com o selectedIndex
     try{
-      const newResult = await api.post(`/cards/${buyPackItem!.id}/buy`,{"quantity": 3}, { withCredentials: true })
+      const newResult = await api.post(`/cards/${buyPackItem!.id}/buy`,{"quantity": Number(buyQuantity)}, { withCredentials: true })
       if(newResult.status != 201){
         console.log('Falha na compra do pacote') 
       }else{
         
-        toast.success('Pacote comprado com sucesso!!', {
+        toast.success('Pedido de compra feito com sucesso!!', {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -328,7 +330,87 @@ export default function EventBookPage() {
           transition: Bounce,
         })
         setRefresh((refresh) => !refresh)
+        setBuyQuantity("1")
+        window.open(newResult.data.ticketUrl, "_blank", "noopener,noreferrer");
 
+
+      }
+      
+    }catch(error:any){
+      if (error instanceof AxiosError) {
+        
+        toast.error(error.response?.data?.message || 'Erro desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      } else {
+        toast.error('Erro Desconhecido', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+      }
+    }
+  }
+
+  const handleReedeemAlbumPacks = async() => {
+
+    toast.info("Realizando resgate...", {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+      transition: Bounce,
+    })
+    // Faça algo com o selectedIndex
+    try{
+      const newResult = await api.post(`/cards/${buyPackItem!.id}/reedeem`,{"quantity": 3}, { withCredentials: true })
+      if(newResult.status != 201){
+        console.log('Falha no resgate do pacote') 
+      }else{
+        
+        toast.success('Pacote(s) resgatado com sucesso!!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+          transition: Bounce,
+        })
+        setRefresh((refresh) => !refresh)
 
       }
       
@@ -850,10 +932,35 @@ export default function EventBookPage() {
                         </div>
                         <div className="space-y-4">
                           <p className="text-sm text-muted-foreground">Item selecionado</p>
+                          <p className="text-base leading-6 text-gray-600">Valor: R$ {buyPackItem.price}</p>
                           <p className="text-base leading-6">{buyPackItem.description}</p>
-                          <div className="flex justify-center mt-5">
-                              <Button className="w-25 mr-4 bg-orange-600 cursor-pointer" onClick={handleBuyAlbumPacks}>Comprar</Button>
-                              <Button className="w-35 ml-4 bg-green-600 cursor-pointer" onClick={handleBuyAlbumPackAndOpen}>Comprar e Abrir</Button>
+                          <div className="flex flex-col justify-center mt-5">
+                              <Button className="w-50  bg-green-600 cursor-pointer hover:bg-green-700" onClick={handleReedeemAlbumPacks}>Resgatar 3 pacotes Gratuitos</Button>
+
+                              
+                              <div className="mt-5">
+                                <div>
+                                  Compre pacotinhos:
+                                </div>
+                                <Select value={buyQuantity} onValueChange={setBuyQuantity}>
+                                <SelectTrigger className="w-32">
+                                  <SelectValue placeholder="Selecione" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                  {Array.from({ length: 30 }, (_, index) => (
+                                    <SelectItem
+                                      key={index + 1}
+                                      value={String(index + 1)}
+                                    >
+                                      {index + 1}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                                <p className="text-gray-700 mt-2">Total : R${Number(buyQuantity)*buyPackItem.price} reais</p>
+                                <Button className="w-25 bg-orange-600 hover:bg-orange-700 cursor-pointer mt-3" onClick={handleBuyAlbumPacks}>Comprar</Button>
+                              </div>
                           </div>
                         </div>
                       </div>

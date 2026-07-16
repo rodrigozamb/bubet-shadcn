@@ -20,6 +20,7 @@ interface albumProps{
   pages:{
     type:string,
     description:string,
+    bg_image: string | null ,
     cards: {
       name: string,
       naipe: string,

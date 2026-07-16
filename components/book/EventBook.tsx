@@ -18,6 +18,7 @@ interface AlbumPageProps {
   description: string
   type: string
   cards:StickerCard[]
+  bg_image: string | null
   horizontal_cards:StickerCard[]
 }
 
@@ -93,7 +94,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           item.type === "IMAGESR" ?
           (
             <div className="page bg-cover bg-center text-black " key={idx}>
-              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className={`image-gallery ${item.horizontal_cards.length > 0 ? 'relative' : ''}`}>
 
                   <>
@@ -176,7 +177,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           item.type === "IMAGESL" ? 
           (
             <div className="page bg-cover bg-center text-black" key={idx}>
-              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className={`image-gallery ${item.horizontal_cards.length > 0 ? 'relative' : ''}`}>
 
                   <>
@@ -258,7 +259,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           ) :
           ( 
             <div className="page bg-cover bg-center text-black" key={idx}>
-              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className="image-gallery">
                   {/* Placeholder for images */}
                   <div className="grid grid-cols-3 gap-2 mt-39">
@@ -302,7 +303,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
       {
         items.length % 2 != 0 ? (
           <div className="page bg-blue-950" key="semi-final-page">
-            <div className="flex flex-col justify-center items-center  page-content bg-cover bg-center h-full w-full" style={{ backgroundImage: `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+            <div className="flex flex-col justify-center items-center  page-content bg-cover bg-center h-full w-full" style={{ backgroundImage:  `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
             </div>
           </div>
         ):(
