@@ -159,8 +159,8 @@ export function DropdownConfig() {
         transition: Bounce,
       })
     } catch(error: any){
-      if (error instanceof Error) {
-        toast.error(error.message, {
+      if (error) {
+        toast.error(error.response.data.message, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -171,18 +171,7 @@ export function DropdownConfig() {
           theme: 'dark',
           transition: Bounce,
         })
-      } else {
-        toast.error('Erro Desconhecido', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-          transition: Bounce,
-        })
+      
       }
     }
 }
