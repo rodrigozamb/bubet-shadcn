@@ -852,7 +852,7 @@ export default function EventBookPage() {
                         </div>
                         <div className="space-y-4">
                           <p className="text-sm text-muted-foreground">Item selecionado</p>
-                          <p className="text-base leading-6 text-gray-600">Valor: R$ {buyPackItem.price}</p>
+                          <p className="text-base leading-6 text-gray-600">Valor: R$ {buyPackItem.price.toFixed(2)}</p>
                           <p className="text-base leading-6">{buyPackItem.description}</p>
                           <div className="flex flex-col justify-center mt-5">
                               <Button className="w-50  bg-green-600 cursor-pointer hover:bg-green-700" onClick={handleReedeemAlbumPacks}>Resgatar 3 pacotes Gratuitos</Button>
@@ -878,7 +878,7 @@ export default function EventBookPage() {
                                   ))}
                                 </SelectContent>
                               </Select>
-                                <p className="text-gray-700 mt-2">Total : R${Number(buyQuantity)*buyPackItem.price} reais</p>
+                                <p className="text-gray-700 mt-2">Total : R${(Number(buyQuantity) * buyPackItem.price).toFixed(2)} reais</p>
                                 <Button className="w-25 bg-orange-600 hover:bg-orange-700 cursor-pointer mt-3" onClick={handleBuyAlbumPacks}>Comprar</Button>
                               </div>
                           </div>
