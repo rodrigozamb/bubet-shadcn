@@ -92,7 +92,7 @@ export default function ComprasPage() {
 
   const handleCreateCodigo = async () => {
     try {
-      const response = await api.post("/codigos", formData, { withCredentials: true })
+      await api.post("/codigos", formData, { withCredentials: true })
       
       // Reset form
       setFormData({
