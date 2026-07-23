@@ -3,6 +3,7 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { AuthContext } from "@/context/AuthContext";
+import Cookies from 'js-cookie'
 import { api } from "@/services/api";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 
 interface CodigosProps{
@@ -48,6 +50,7 @@ export default function ComprasPage() {
 
   useContext(AuthContext)
 
+  const router = useRouter()
   const [codigos, setCodigos] = useState<CodigosProps[]>([])
   const [items, setItems] = useState<ItemsProps[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -61,6 +64,16 @@ export default function ComprasPage() {
 
 
     useEffect(()=>{
+      const token = Cookies.get('bubet.token')
+      const base64Url = token!.split('.')[1]
+      const base64 = base64Url.replace('-', '+').replace('_', '/')
+      const tok =  JSON.parse(window.atob(base64))
+
+      if (tok.role!="ADMIN") {
+        // Not logged in → send to login
+        router.replace('/dashboard')
+      }
+
       api.get(`/codigos`, { withCredentials: true })
         .then((res)=>{
           setCodigos(res.data.codigos)
