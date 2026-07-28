@@ -45,6 +45,10 @@ interface ItemsProps{
   id:string
 }
 
+const generateRandomCode = () => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join("")
+}
 
 export default function ComprasPage() {
 
@@ -56,7 +60,7 @@ export default function ComprasPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [itemSearch, setItemSearch] = useState("")
   const [formData, setFormData] = useState({
-    code: "",
+    code: generateRandomCode(),
     item: "",
     item_id: "",
     quantity: 1,
@@ -109,7 +113,7 @@ export default function ComprasPage() {
       
       // Reset form
       setFormData({
-        code: "",
+        code: generateRandomCode(),
         item: "",
         item_id: "",
         quantity: 1,
@@ -141,7 +145,16 @@ export default function ComprasPage() {
         <div className="font-extrabold text-2xl flex flex-col justify-center align-middle items-center my-5">
           Codigos Promocionais
         <Button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setFormData({
+              code: generateRandomCode(),
+              item: "",
+              item_id: "",
+              quantity: 1,
+            })
+            setItemSearch("")
+            setIsModalOpen(true)
+          }}
           className=" bg-blue-500 text-white hover:bg-blue-600 mt-4 w-50">
           Criar Código
         </Button>
