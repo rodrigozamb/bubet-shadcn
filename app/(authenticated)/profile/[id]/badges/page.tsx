@@ -15,6 +15,7 @@ interface UserData{
   profile_url:string
   position: string
   badges: BadgeProps[]
+  not_obtained_badges: BadgeProps[]
 } 
 
 interface BadgeProps{
@@ -61,6 +62,7 @@ export default function ProfileUserBadgesPage() {
         <div className="flex justify-center items-center h-screen ">
           <ProfileBadgesPage
             badges={profile.badges}
+            not_obtained_badges={profile.not_obtained_badges}
             name={profile.name}
             profile_url={profile.profile_url}
             id={profile.id}
