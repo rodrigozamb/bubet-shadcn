@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
+import Cookies from 'js-cookie'
 import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -17,6 +18,7 @@ interface albumProps{
   id: string,
   name: string,
   description: string,
+  available: boolean,
   pages:{
     type:string,
     description:string,
@@ -54,6 +56,10 @@ export default function EventBookPage() {
   const params = useParams<{id: string}>()
   const { id } = params
 
+  const token = Cookies.get('bubet.token')
+  const base64Url = token!.split('.')[1]
+  const base64 = base64Url.replace('-', '+').replace('_', '/')
+  const tok =  JSON.parse(window.atob(base64))
 
   useEffect(() => {
 
@@ -71,7 +77,7 @@ export default function EventBookPage() {
     return null
   }
 
-  if(!album){
+  if(!album || (album.available === false && tok.role!="ADMIN" )){
     return (
           <>
 
