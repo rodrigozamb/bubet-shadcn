@@ -68,9 +68,19 @@ interface BetsPanelProps{
         used_at:string,
         betId: string
     }[],
-    event_active?: boolean 
+    event_active?: boolean,
+    results: {
+        id: string,
+        name: string,
+        profile_url: string,
+        score: string,
+        estandartes: {
+            name: string
+        }[]
+    }[]
     
 }
+
 
 const colors1 = ["#FF0000","#00FF00","#0000FF","#FFFF00","#00FFFF","#FF00FF","#FFA500","#800080","#8B4513","#808080"]
 
@@ -88,13 +98,18 @@ const colors = [
 ];
 
 
-export function BetPanel({ allBets, userBet, competitors, estandartes, event_active = true , cupons}:BetsPanelProps){
+export function BetPanel({ allBets, userBet, competitors, estandartes, event_active = true , cupons, results}:BetsPanelProps){
 
     const [searchTerm, setSearchTerm] = useState("");
     const router = useRouter()
     const apostas = allBets.filter((item) =>
       item.user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const getPlacementPoints = (index: number) => {
+        if (results.length === 0) return 0
+        return results.length - index
+    }
 
     return (
 
@@ -109,35 +124,56 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                         {
 
                             userBet ? 
-                            <div className="flex flex-col justify-center items-center py-5 bg-zinc-100 rounded-3xl w-230">
+                            <div className="flex flex-col justify-center items-center py-5 bg-zinc-100 rounded-3xl w-230 p-4">
                                 <div className="flex ">
                                     <div>
                                         <div className="flex justify-center font-bold text-xl mb-3">
-                                            <div className="flex justify-center items-center mx-5">
-                                                <div className="flex justify-center items-center text-gray-900 text-sm bg-[#FFD700] rounded-full mx-2 size-7">1º</div>
-                                                <div>{ userBet.bets[0].name }</div> 
-                                            </div>
-                                            <div className="flex justify-center items-center  mx-5">
-                                                <div className="flex justify-center items-center text-gray-900 text-sm bg-[#C0C0C0] rounded-full mx-2 size-7">2º</div>
-                                                <div>
-                                                    { userBet.bets[1].name }
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-center items-center mx-5">
-                                                <div className="flex justify-center items-center text-gray-900 text-sm bg-[#cd7f32] rounded-full mx-2 size-7">3º</div>
-                                                <div>
-                                                    {userBet.bets[2].name}
-                                                </div>
-                                            </div>
+                                            {[0,1,2].map((position) => {
+                                                const isCorrectPosition = results.length > 0 && results[position]?.name === userBet.bets[position].name
+                                                const placementPoints = isCorrectPosition ? getPlacementPoints(position) : 0
+
+                                                return (
+                                                    <div
+                                                        key={position}
+                                                        className={`flex justify-center items-center mx-5 rounded-full px-2 ${isCorrectPosition ? "bg-green-200 border border-green-600 text-green-900" : ""}`}
+                                                    >
+                                                        <div className={`flex justify-center items-center text-gray-900 text-sm rounded-full mx-2 size-7 ${position === 0 ? "bg-[#FFD700]" : position === 1 ? "bg-[#C0C0C0]" : "bg-[#cd7f32]"}`}>
+                                                            {position + 1}º
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span>{userBet.bets[position].name}</span>
+                                                            {isCorrectPosition && (
+                                                                <span className="text-xs font-bold text-green-800">+{placementPoints}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })}
                                         </div>
-                                        <div className="flex bg-zinc-200 w-3xl rounded-3xl p-1">
-                                            <div className="justify-center content-center m-h-20 grid grid-cols-5">
+                                        <div className="flex w-full max-w-[720px] overflow-x-auto rounded-3xl bg-zinc-200 p-2">
+                                            <div className="grid min-w-[540px] grid-cols-5 gap-1 content-center justify-center m-h-20">
                                                 {
-                                                    userBet.bets.slice(3).map((competitor, index) => (
-                                                        <div className="px-1 text-center truncate" key={index+4}>{index+4}º - {competitor.name}</div>    
-                                                    ))
+                                                    userBet.bets.slice(3).map((competitor, index) => {
+                                                        const actualIndex = index + 3
+                                                        const isCorrectPosition = results.length > 0 && results[actualIndex]?.name === competitor.name
+                                                        const placementPoints = isCorrectPosition ? getPlacementPoints(actualIndex) : 0
+
+                                                        return (
+                                                            <div
+                                                                className={`min-h-[52px] rounded-md px-2 py-1 text-center ${isCorrectPosition ? "bg-green-200 text-green-900 font-semibold" : ""}`}
+                                                                key={actualIndex}
+                                                            >
+                                                                <div className="flex h-full flex-col items-center justify-center gap-1">
+                                                                    <span className="text-[11px] font-medium">{actualIndex + 1}º</span>
+                                                                    <span className="break-words text-center text-[11px] leading-tight font-bold">{competitor.name}</span>
+                                                                    {isCorrectPosition && (
+                                                                        <span className="text-[9px] font-bold">(+{placementPoints})</span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })
                                                 }
-                                                
                                             </div>
                                         </div>
                                     </div>
@@ -152,8 +188,8 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                                     </div>
                                     
                                 </div>
-                                
-                                <div className="">
+
+                                <div className="mt-2">
                                     <span className="flex justify-center font-bold text-xl text-center">
                                         Estandartes
                                     </span>
@@ -230,19 +266,51 @@ export function BetPanel({ allBets, userBet, competitors, estandartes, event_act
                                                                 <DialogHeader>
                                                                     <DialogTitle>Aposta de {bet.user.name}</DialogTitle>
                                                                 </DialogHeader>
-                                                                <div className="flex justify-between">
-
+                                                                <div className="flex justify-between gap-4">
                                                                     <div className="flex flex-col items-start w-70">
-                                                                        {
-                                                                            bet.bets.map((competitor, i) =>(
-                                                                                <span key={i}>{i+1}º - {competitor.name}</span>  
-                                                                            ))
-                                                                        }
+                                                                        {bet.bets.map((competitor, i) => {
+                                                                            const isCorrectPosition = results.length > 0 && results[i]?.name === competitor.name
+                                                                            const placementPoints = isCorrectPosition ? getPlacementPoints(i) : 0
+
+                                                                            return (
+                                                                                <div
+                                                                                    key={i}
+                                                                                    className={`flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 ${isCorrectPosition ? "bg-green-200 text-green-900 font-semibold" : "bg-transparent"}`}
+                                                                                >
+                                                                                    <span>{i + 1}º - {competitor.name}</span>
+                                                                                    {isCorrectPosition && (
+                                                                                        <span className="text-xs font-bold">(+{placementPoints})</span>
+                                                                                    )}
+                                                                                </div>
+                                                                            )
+                                                                        })}
                                                                     </div>
 
                                                                     <div className="flex flex-col justify-center items-center mr-10">
                                                                         <span className="font-bold  text-xl">Pontos</span>
                                                                         <span className=" text-xl">{bet.points}</span>
+                                                                        {results.length > 0 && (
+                                                                            <div className="mt-3 flex flex-col items-center gap-1 text-center">
+                                                                                {(() => {
+                                                                                    const correctOnThisBet = bet.bets.reduce<{ position: number; points: number }[]>((acc, competitor, i) => {
+                                                                                        if (results[i]?.name === competitor.name) {
+                                                                                            acc.push({ position: i + 1, points: getPlacementPoints(i) })
+                                                                                        }
+                                                                                        return acc
+                                                                                    }, [])
+
+                                                                                    return correctOnThisBet.length > 0 ? (
+                                                                                        correctOnThisBet.map((placement) => (
+                                                                                            <span key={placement.position} className="rounded-full border border-green-600 bg-green-    00 px-2 py-1 text-[10px] font-semibold text-green-800">
+                                                                                                {placement.position}º: +{placement.points} pts
+                                                                                            </span>
+                                                                                        ))
+                                                                                    ) : (
+                                                                                        <span className="text-xs text-gray-500">Nenhuma colocação acertada</span>
+                                                                                    )
+                                                                                })()}
+                                                                            </div>
+                                                                        )}
                                                                         {
                                                                             bet?.cupons ? 
                                                                             <span className="text-sm text-green-700">Cupon de {bet.cupons.value}% aplicado!</span>
