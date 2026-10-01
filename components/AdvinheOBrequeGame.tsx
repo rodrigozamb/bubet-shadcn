@@ -255,6 +255,7 @@ export function AdvinheOBrequeGame() {
   const selectedDateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
   const today = new Date();
   today.setHours(23, 59, 59, 999);
+  const firstSelectableDate = new Date(2026, 9, 1);
 
   return (
     <>
@@ -463,9 +464,12 @@ export function AdvinheOBrequeGame() {
             {calendarDays.map((day, index) => {
               const dateKey = day === null ? "" : `${calendarMonth.getFullYear()}-${calendarMonth.getMonth()}-${day}`;
               const isSelected = dateKey === selectedDateKey;
-              const isFutureDate = day !== null && new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day) > today;
+              const calendarDate = day === null ? null : new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+              const isBeforeFirstSelectableDate = calendarDate !== null && calendarDate < firstSelectableDate;
+              const isFutureDate = calendarDate !== null && calendarDate > today;
+              const isUnavailableDate = day === null || isBeforeFirstSelectableDate || isFutureDate;
               return (
-                <button key={`${dateKey}-${index}`} disabled={day === null || isFutureDate} onClick={() => day !== null && !isFutureDate && setSelectedDate(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day))} className={`flex aspect-square items-center justify-center rounded-[4px] text-[12px] transition ${day === null ? "cursor-default" : isFutureDate ? "cursor-not-allowed text-[#4b5559]" : isSelected ? "bg-[#303f8f] font-semibold text-white" : "text-[#c5cbcd] hover:bg-[#303638] cursor-pointer"}`}>
+                <button key={`${dateKey}-${index}`} disabled={isUnavailableDate} onClick={() => calendarDate && !isUnavailableDate && setSelectedDate(calendarDate)} className={`flex aspect-square items-center justify-center rounded-[4px] text-[12px] transition ${day === null ? "cursor-default" : isUnavailableDate ? "cursor-not-allowed text-[#4b5559]" : isSelected ? "bg-[#303f8f] font-semibold text-white" : "text-[#c5cbcd] hover:bg-[#303638] cursor-pointer"}`}>
                   {day ?? ""}
                 </button>
               );
