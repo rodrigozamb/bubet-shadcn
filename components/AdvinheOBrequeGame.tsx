@@ -280,12 +280,12 @@ export function AdvinheOBrequeGame() {
               })}
             </div>
           </div>
-          {isRoundOver && (
+          {/* {isRoundOver && (
             <button onClick={() => setIsStatsModalOpen(true)} className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-[4px] bg-[#303f8f] px-4 text-[12px] font-medium text-white transition hover:bg-[#3b4daa]">
               <BarChart3 size={16} />
               Ver estatísticas
             </button>
-          )}
+          )} */}
             </>
           )}
         </aside>

@@ -5,7 +5,7 @@ import { AuthContext } from "@/context/AuthContext";
 import Image from "next/image";
 import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from "react";
-import { FaBell, FaCheckCircle } from "react-icons/fa";
+import { FaBell, FaCheckCircle, FaMusic } from "react-icons/fa";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { api } from "@/services/api";
 interface Notification{
@@ -51,7 +51,9 @@ export function Header(){
           
           <div className="flex justify-end items-center content-center w-100 ">
             
+            <FaMusic className="text-white cursor-pointer mr-8" onClick={()=>{router.push(`/advinhe-o-breque`)}}/>
             <div>
+
               <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <div className="flex">
