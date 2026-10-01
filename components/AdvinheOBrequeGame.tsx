@@ -1,7 +1,7 @@
 "use client"
 
 import { api } from "@/services/api";
-import { ArrowLeft, ArrowRight, BarChart3, Clock3, Lightbulb, Pause, Play, Search, Target, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock3, Lightbulb, Pause, Play, Search, Target, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const DICAS_UNLOCK_AT = [3, 5, 6];
