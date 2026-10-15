@@ -1,7 +1,7 @@
 "use client"
 
 import { api } from "@/services/api";
-import { ArrowLeft, ArrowRight, Clock3, Lightbulb, Pause, Play, Search, Target, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Clock3, Lightbulb, Pause, Play, Search, Target, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const DICAS_UNLOCK_AT = [3, 5, 6];
@@ -12,14 +12,8 @@ type GuessHistory = {
   acertou?: boolean;
   finished_at?: string | null;
 };
-const ESTATISTICAS_ACERTOS = [
-  { attempts: 1, users: 18 },
-  { attempts: 2, users: 31 },
-  { attempts: 3, users: 26 },
-  { attempts: 4, users: 15 },
-  { attempts: 5, users: 8 },
-  { attempts: 6, users: 4 },
-];  
+type BrequeMetricUser = { name: string; profile_url: string };
+type BrequeMetrics = Record<string, BrequeMetricUser[]>;
 
 function tentativaOrdinal(attempt: number) {
   return `${attempt}ª`;
@@ -68,6 +62,9 @@ export function AdvinheOBrequeGame() {
   const [isRoundLost, setIsRoundLost] = useState(false);
   const [videoRef, setVideoRef] = useState<string | null>(null);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
+  const [brequeMetrics, setBrequeMetrics] = useState<BrequeMetrics>({});
+  const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
+  const [metricsError, setMetricsError] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [brequeId, setBrequeId] = useState<string | number | null>(null);
   const [noChallenge, setNoChallenge] = useState(false);
@@ -101,6 +98,9 @@ export function AdvinheOBrequeGame() {
     setAudioUrl(null);
     setBrequeId(null);
     setNoChallenge(false);
+    setIsStatsModalOpen(false);
+    setBrequeMetrics({});
+    setMetricsError(false);
 
     api.get(`/breques/${date}`, { withCredentials: true }).then(async (res) => {
       setBrequeId(res.data.id);
@@ -244,7 +244,6 @@ export function AdvinheOBrequeGame() {
   const displayedAttempt = correctAnswer
     ? wrongAnswers.length + 1
     : Math.min(attemptIndex + 1, revealPoints.length);
-  const maxUsers = Math.max(...ESTATISTICAS_ACERTOS.map((stat) => stat.users));
   const firstWeekday = (calendarMonth.getDay() + 6) % 7;
   const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
   const calendarDays = Array.from({ length: Math.ceil((firstWeekday + daysInMonth) / 7) * 7 }, (_, index) => {
@@ -271,7 +270,7 @@ export function AdvinheOBrequeGame() {
             </div>
             <div className="mt-3 flex flex-col gap-2">
               {dicas.map((dica, index) => {
-                const isUnlocked = attemptIndex + 1 >= dica.unlockAt;
+                const isUnlocked = correctAnswer !== null || attemptIndex + 1 >= dica.unlockAt;
                 return (
                   <div key={dica.unlockAt} className={`rounded-[4px] border px-3 py-2 text-[13px] leading-5 ${isUnlocked ? "border-[#465d36] bg-[#253124] text-[#dbead5]" : "border-[#303638] bg-[#202526] text-[#879195]"}`}>
                     <span className="mr-1 font-semibold text-[#aeb8bb]">{index + 1}.</span>
@@ -281,12 +280,27 @@ export function AdvinheOBrequeGame() {
               })}
             </div>
           </div>
-          {/* {isRoundOver && (
-            <button onClick={() => setIsStatsModalOpen(true)} className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-[4px] bg-[#303f8f] px-4 text-[12px] font-medium text-white transition hover:bg-[#3b4daa]">
+          {isRoundOver && (
+            <button onClick={async () => {
+              setIsStatsModalOpen(true);
+              setIsLoadingMetrics(true);
+              setMetricsError(false);
+              try {
+                const date = formatarDataParaApi(selectedDate);
+                const response = await api.get<BrequeMetrics>(`/adivinhe/${date}/${brequeId}/metrics`, { withCredentials: true });
+                setBrequeMetrics(response.data);
+              } catch (error) {
+                console.error("Não foi possível carregar as estatísticas do breque.", error);
+                setBrequeMetrics({});
+                setMetricsError(true);
+              } finally {
+                setIsLoadingMetrics(false);
+              }
+            }} className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-[4px] bg-[#303f8f] px-4 text-[12px] font-medium text-white transition hover:bg-[#3b4daa]">
               <BarChart3 size={16} />
               Ver estatísticas
             </button>
-          )} */}
+          )}
             </>
           )}
         </aside>
@@ -506,18 +520,36 @@ export function AdvinheOBrequeGame() {
               <X size={18} />
             </button>
             <h2 id="stats-title" className="pr-8 text-xl font-semibold text-[#f4f4f4]">Acertos por tentativa</h2>
-            <p className="mt-2 text-sm text-[#aeb5b8]">Quantidade de usuários que acertaram o breque em cada tentativa.</p>
-            <div className="mt-6 flex flex-col gap-3">
-              {ESTATISTICAS_ACERTOS.map((stat) => (
-                <div key={stat.attempts} className="grid grid-cols-[72px_1fr_38px] items-center gap-3 text-sm">
-                  <span className="text-[#c5cbcd]">{stat.attempts}</span>
-                  <div className="h-5 overflow-hidden rounded-[3px] bg-[#303638]">
-                    <div className="h-full rounded-[3px] bg-blue-900 transition-[width]" style={{ width: `${(stat.users / maxUsers) * 100}%` }} />
-                  </div>
-                  <span className="text-right font-semibold text-[#f0f0f0]">{stat.users}</span>
-                </div>
-              ))}
-            </div>
+            <p className="mt-2 text-sm text-[#aeb5b8]">Usuários que acertaram em cada tentativa ou não concluíram o desafio.</p>
+            {isLoadingMetrics ? (
+              <p className="mt-6 text-sm text-[#aeb5b8]">Carregando estatísticas...</p>
+            ) : metricsError ? (
+              <p className="mt-6 text-sm text-[#f0a3a3]">Não foi possível carregar as estatísticas.</p>
+            ) : (
+              <div className="mt-6 flex max-h-[60vh] flex-col gap-4 overflow-y-auto">
+                {[...Array.from({ length: 6 }, (_, index) => [String(index + 1), `${index + 1}ª tentativa`] as const), ["failed", "Não concluíram"] as const].map(([key, label]) => {
+                  const users = brequeMetrics[key] ?? [];
+                  return (
+                    <section key={key} className="border-b border-[#353a3d] pb-3 last:border-0">
+                      <h3 className="flex justify-between text-sm font-semibold text-[#f0f0f0]">
+                        <span>{label}</span>
+                        <span>{users.length}</span>
+                      </h3>
+                      {users.length > 0 && (
+                        <ul className="mt-2 flex flex-col gap-2">
+                          {users.map((user, index) => (
+                            <li key={`${key}-${user.name}-${index}`} className="flex items-center gap-2 text-sm text-[#c5cbcd]">
+                              <img src={user.profile_url} alt="" className="h-7 w-7 rounded-full object-cover" />
+                              <span>{user.name}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </section>
+                  );
+                })} 
+              </div>
+            )}
           </div>
         </div>
       )}
