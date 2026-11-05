@@ -10,6 +10,8 @@ import AvatarIcon from "@/components/AvatarIcon";
 import { api } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Bounce, toast } from "react-toastify";
+import { Award, CalendarDays, Check, Clock3, ImagePlus, MapPin, Search, Users } from "lucide-react";
+import { Header } from "@/components/Header";
 
 interface Competitor{
   id: string,
@@ -27,6 +29,124 @@ interface Estandarte{
     id: string,
     name: string,
     description: string
+}
+
+interface SelectionPanelProps<T extends { id: string }> {
+  title: string;
+  description: string;
+  items: T[];
+  selectedItems: T[];
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  onToggle: (item: T) => void;
+  getLabel: (item: T) => string;
+  renderItem: (item: T) => React.ReactNode;
+  accent: "blue" | "violet" | "amber";
+}
+
+function SelectionPanel<T extends { id: string }>({
+  title,
+  description,
+  items,
+  selectedItems,
+  searchTerm,
+  onSearchChange,
+  onToggle,
+  getLabel,
+  renderItem,
+  accent,
+}: SelectionPanelProps<T>) {
+  const accentStyles = {
+    blue: { icon: "bg-blue-100 text-blue-700", count: "bg-blue-50 text-blue-700" },
+    violet: { icon: "bg-violet-100 text-violet-700", count: "bg-violet-50 text-violet-700" },
+    amber: { icon: "bg-amber-100 text-amber-700", count: "bg-amber-50 text-amber-700" },
+  }[accent];
+  const SelectionIcon = accent === "amber" ? Award : Users;
+
+  const listClassName = "min-h-36 max-h-64 space-y-2 overflow-y-auto p-3";
+
+  return (
+    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <header className="flex items-center justify-between gap-3 border-b border-slate-100 p-5">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${accentStyles.icon}`}>
+            <SelectionIcon size={19} aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="font-semibold text-slate-900">{title}</h2>
+            <p className="text-sm text-slate-500">{description}</p>
+          </div>
+        </div>
+        <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-semibold ${accentStyles.count}`}>
+          {selectedItems.length} selecionado{selectedItems.length === 1 ? "" : "s"}
+        </span>
+      </header>
+
+      <div className="grid gap-4 p-4 md:grid-cols-2 md:p-5">
+        <div className="min-w-0">
+          <label className="mb-2 block text-sm font-medium text-slate-700">
+            Disponíveis <span className="text-slate-400">({items.length})</span>
+          </label>
+          <div className="relative mb-2">
+            <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+            <Input
+              type="search"
+              value={searchTerm}
+              onChange={(event) => onSearchChange(event.target.value)}
+              placeholder={`Buscar ${title.toLowerCase()}...`}
+              aria-label={`Buscar ${title.toLowerCase()} disponíveis`}
+              className="h-10 border-slate-200 bg-slate-50 pl-9 text-slate-900 placeholder:text-slate-400"
+            />
+          </div>
+          <div className={`${listClassName} rounded-xl bg-slate-50`}>
+            {items.length > 0 ? items.map((item) => (
+              <button
+                type="button"
+                key={item.id}
+                onClick={() => onToggle(item)}
+                className="flex w-full items-center gap-3 rounded-xl border border-transparent bg-white p-2.5 text-left text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                aria-label={`Adicionar ${getLabel(item)}`}
+              >
+                <span className="min-w-0 flex-1">{renderItem(item)}</span>
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                  <span aria-hidden="true" className="text-lg leading-none">+</span>
+                </span>
+              </button>
+            )) : (
+              <p className="px-2 py-6 text-center text-sm text-slate-500">
+                {searchTerm ? "Nenhum resultado para essa busca." : "Todos já foram selecionados."}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="min-w-0">
+          <p className="mb-2 block text-sm font-medium text-slate-700">No evento</p>
+          <div className={`${listClassName} rounded-xl border border-dashed border-slate-200 bg-white`}>
+            {selectedItems.length > 0 ? selectedItems.map((item) => (
+              <button
+                type="button"
+                key={item.id}
+                onClick={() => onToggle(item)}
+                className="flex w-full items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50/70 p-2.5 text-left text-slate-700 transition hover:border-rose-200 hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                aria-label={`Remover ${getLabel(item)}`}
+              >
+                <span className="min-w-0 flex-1">{renderItem(item)}</span>
+                <Check size={18} className="shrink-0 text-emerald-600" aria-hidden="true" />
+              </button>
+            )) : (
+              <p className="px-2 py-6 text-center text-sm text-slate-500">
+                Selecione itens disponíveis para adicioná-los aqui.
+              </p>
+            )}
+          </div>
+          {selectedItems.length > 0 && (
+            <p className="mt-2 text-xs text-slate-500">Clique em um item para removê-lo.</p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 
@@ -241,311 +361,207 @@ export default function AdminCreateEventPage({}) {
   }
 
   return (
-      <>
-        <div className="flex flex-col justify-center items-center justify-begin bg-blue-900 w-screen h-300">
-            <title>BUBet | ADMIN</title>
+    <>
+      <Header />
+      <main className="min-h-screen bg-blue-950 pb-12">
+        <title>BUBet | Criar evento</title>
 
-            <div className="flex flex-col items-center bg-amber-100 w-350 py-5">
-                <span className="font-medium text-2xl my-4">Crie um novo evento</span>
-
-                <div className="flex justify-between w-230">
-                    
-                    <div className="my-3">
-                    <Label className="flex items-center justify-center mb-1" htmlFor="email">Nome</Label>
-                    <Input 
-                        className="bg-white text-black w-75"
-                        id="name"
-                        value={name}
-                        type="text"
-                        placeholder="Nome do evento"
-                        onChange={(e)=>setName(e.target.value)}
-                        required
-                    />
-                    </div>
-                    <div className="my-3">
-                    <Label className="flex items-center justify-center mb-1" htmlFor="description">Descrição</Label>
-                    <Input
-                        className="bg-white text-black w-80"
-                        id="description"
-                        value={description}
-                        type="text"
-                        placeholder="Descrição do evento"
-                        onChange={(e)=>setDescripion(e.target.value)}
-                        required
-                    />
-                    </div>
-                    <div className="my-3">
-                    <Label className="flex items-center justify-center mb-1" htmlFor="description">Local</Label>
-                    <Input
-                        className="bg-white text-black w-70"
-                        id="location"
-                        value={location}
-                        type="text"
-                        placeholder="Local do evento"
-                        onChange={(e)=>setLocation(e.target.value)}
-                        required
-                    />
-                    </div>
-                </div>
-
-                <div className="flex justify-center w-230">
-                
-                    <div className="m-3">
-                    <Label className="flex items-center justify-center" htmlFor="description">Data</Label>
-                    <Input 
-                        id="date"
-                        className="bg-white text-black"
-                        value={date}
-                        type="text"
-                        placeholder="Data do evento"
-                        onChange={(e)=>setDate(e.target.value)}
-                        required
-                    />
-                    </div>
-                    <div className="m-3">
-                    <Label className="flex items-center justify-center" htmlFor="description">Horário de Início</Label>
-                    <Input 
-                        className="bg-white text-black"
-                        id="starts_at"
-                        value={starts_at}
-                        type="text"
-                        placeholder="Horário de início do evento"
-                        onChange={(e)=>setStartsAt(e.target.value)}
-                        required
-                    />
-                    </div>
-                    <div className="m-3">
-                    <Label className="flex items-center justify-center" htmlFor="description">Horário de Término</Label>
-                    <Input 
-                        className="bg-white text-black"
-                        id="ends_at"
-                        value={ends_at}
-                        type="text"
-                        placeholder="Horário de Término do evento"
-                        onChange={(e)=>setEndsAt(e.target.value)}
-                        required
-                    />
-                    </div>
-                
-                </div>
-
-
-                <div className="my-3">
-                  <Label className="flex items-center justify-center" htmlFor="avatar">Foto de Evento</Label>
-                  <Input
-                    className="bg-white text-black"
-                    id="avatar" 
-                    type="file"
-                    onChange={handleFileChange}
-                    required
-                  />
-                </div>
-
-                <div className="flex justify-center mb-5"> 
-                    {/* COMPETIDORES */}
-                    <div className="flex ">
-                        <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                        {/* Header */}
-                        <div className="flex justify-between rounded-t-2xl py-2 bg-blue-900 text-white">
-                            <span className="content-center ml-5 text-mk font-bold">Competidores</span>
-                        </div>
-                        <div className="flex justify-center py-2 bg-blue-900">
-                            <Input className="w-60  bg-amber-50" type="search" placeholder="Pesquise aqui...." value={searchCompetitorTerm} onChange={(e) => setSearchCompetitorhTerm(e.target.value)}/>         
-                        </div>
-                        
-                        <div className="flex justify-center">
-                            <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5 shadow">
-                                
-                                <div className="space-y-2 h-64 overflow-auto">
-                                {
-                                    availableCompetitors.map((competitor, i) => (
-                                        <div 
-                                            key={i} 
-                                            className="flex p-2 bg-gray-100 rounded-xl cursor-pointer"
-                                            onClick={()=> toggleCompetitor(competitor)}
-                                        >
-                                            <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url}  className="mx-2"  />
-                                            <span className="content-center truncate">
-                                                {competitor.name}
-                                            </span>  
-                                        </div>
-                                    ))
-                                }
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                        {/* Header */}
-                        <div className="flex justify-between rounded-t-2xl h-15 bg-blue-900 text-white">
-                            <span className="content-center ml-5 text-mk font-bold">Selecionados</span>
-                            <div className="flex flex-col mr-5 justify-center align-middle content-center ">
-                            <span className="flex justify-center  content-center border-2 rounded-xl w-7 h-7 shadow-2xl font-bold"> {selectedCompetitorsCount} </span>
-                            </div>
-                        </div>
-    
-                        <div className="flex justify-center">
-                            <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5">
-                                
-                                <div className="space-y-2 h-64 overflow-auto">
-                                {
-                                    selectedCompetitors.map((competitor, i) => (
-                                        <div 
-                                            key={i} 
-                                            className="flex p-2 bg-gray-100 rounded-xl cursor-pointer shadow"
-                                            onClick={()=> toggleCompetitor(competitor)}
-                                        >
-                                            <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} className="mx-2" />
-                                            <span className="content-center truncate">
-                                                {competitor.name}
-                                            </span>  
-                                        </div>
-                                    ))
-                                }
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    {/* JURADOS */}
-                    <div className="flex ">
-                        <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                        {/* Header */}
-                        <div className="flex justify-between rounded-t-2xl py-2 bg-purple-900 text-white">
-                            <span className="content-center ml-5 text-mk font-bold">Jurados</span>
-                        </div>
-                        <div className="flex justify-center py-2 bg-purple-900">
-                            <Input className="w-60  bg-amber-50" type="search" placeholder="Pesquise aqui...." value={searchJudgeTerm} onChange={(e) => setSearchJudgeTerm(e.target.value)}/>         
-                        </div>
-                        
-                        <div className="flex justify-center">
-                            <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5 shadow">
-                                
-                                <div className="space-y-2 h-64 overflow-auto">
-                                {
-                                    availableJudges.map((judge, i) => (
-                                        <div 
-                                            key={i} 
-                                            className="flex p-2 bg-gray-100 rounded-xl cursor-pointer"
-                                            onClick={()=> toggleJudge(judge)}
-                                        >
-                                            <AvatarIcon name={judge.nickname} size={40} src={judge.avatar}  className="mx-2"  />
-                                            <span className="content-center truncate">
-                                                {judge.nickname}
-                                            </span>  
-                                        </div>
-                                    ))
-                                }
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                        {/* Header */}
-                        <div className="flex justify-between rounded-t-2xl h-15 bg-purple-900 text-white">
-                            <span className="content-center ml-5 text-mk font-bold">Selecionados</span>
-                            <div className="flex flex-col mr-5 justify-center align-middle content-center ">
-                            <span className="flex justify-center  content-center border-2 rounded-xl w-7 h-7 shadow-2xl font-bold"> {selectedJudgesCount} </span>
-                            </div>
-                        </div>
-    
-                        <div className="flex justify-center">
-                            <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5">
-                                
-                                <div className="space-y-2 h-64 overflow-auto">
-                                {
-                                    selectedJudges.map((judge, i) => (
-                                        <div 
-                                            key={i} 
-                                            className="flex p-2 bg-gray-100 rounded-xl cursor-pointer shadow"
-                                            onClick={()=> toggleJudge(judge)}
-                                        >
-                                            <AvatarIcon name={judge.nickname} size={40} src={judge.avatar} className="mx-2" />
-                                            <span className="content-center truncate">
-                                                {judge.nickname}
-                                            </span>  
-                                        </div>
-                                    ))
-                                }
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {/* ESTANDARTES */}
-                <div className="flex mb-5">
-                    <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                    {/* Header */}
-                    <div className="flex justify-between rounded-t-2xl py-2 bg-purple-900 text-white">
-                        <span className="content-center ml-5 text-mk font-bold">Estandartes</span>
-                    </div>
-                    <div className="flex justify-center py-2 bg-purple-900">
-                        <Input className="w-60  bg-amber-50" type="search" placeholder="Pesquise aqui...." value={searchEstandatesTerm} onChange={(e) => setSearchEstandarteTerm(e.target.value)}/>         
-                    </div>
-                    
-                    <div className="flex justify-center">
-                        <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5 shadow">
-                            
-                            <div className="space-y-2 h-64 overflow-auto">
-                            {
-                                availableEstandartes.map((estandarte, i) => (
-                                    <div 
-                                        key={i} 
-                                        className="flex p-2 bg-gray-100 rounded-xl cursor-pointer"
-                                        onClick={()=> toggleEstandarte(estandarte)}
-                                    >
-                                        <span className="content-center truncate">
-                                            {estandarte.name}
-                                        </span>  
-                                    </div>
-                                ))
-                            }
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="w-65 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                    {/* Header */}
-                    <div className="flex justify-between rounded-t-2xl h-15 bg-purple-900 text-white">
-                        <span className="content-center ml-5 text-mk font-bold">Selecionados</span>
-                        <div className="flex flex-col mr-5 justify-center align-middle content-center ">
-                        <span className="flex justify-center  content-center border-2 rounded-xl w-7 h-7 shadow-2xl font-bold"> {selectedEstandartesCount} </span>
-                        </div>
-                    </div>
-
-                    <div className="flex justify-center">
-                        <div className="w-85 h-90 overflow-hidden bg-gray-300 rounded p-5">
-                            
-                            <div className="space-y-2 h-64 overflow-auto">
-                            {
-                                selectedEstandartes.map((estandarte, i) => (
-                                    <div 
-                                        key={i} 
-                                        className="flex p-2 bg-gray-100 rounded-xl cursor-pointer shadow"
-                                        onClick={()=> toggleEstandarte(estandarte)}
-                                    >
-                                        <span className="content-center truncate">
-                                            {estandarte.name}
-                                        </span>  
-                                    </div>
-                                ))
-                            }
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                    <Button className="w-65 h-20 cursor-pointer bg-yellow-500 hover:bg-yellow-600 font-extrabold text-3xl"
-                    onClick={handleCreate}
-                >
-                Criar Evento
-                </Button>
-            </div>
+      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-blue-900 px-5 pb-20 pt-10 text-white sm:px-8 sm:pt-14">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-blue-200">Painel administrativo</p>
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Crie um novo evento</h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">
+            Informe os dados principais e escolha quem vai participar. Você poderá revisar suas seleções antes de criar o evento.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-blue-100">
+            <span className="inline-flex items-center gap-2"><CalendarDays size={16} aria-hidden="true" /> Informações do evento</span>
+            <span className="inline-flex items-center gap-2"><Users size={16} aria-hidden="true" /> Participantes e estandartes</span>
+          </div>
         </div>
-      </>
+      </div>
+
+      <div className="mx-auto -mt-10 max-w-6xl space-y-6 px-4 sm:px-8">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-slate-900">Informações do evento</h2>
+            <p className="mt-1 text-sm text-slate-500">Defina os detalhes que serão exibidos para os participantes.</p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-slate-700">Nome do evento</Label>
+              <Input
+                id="name"
+                value={name}
+                type="text"
+                placeholder="Ex.: Campeonato de inverno"
+                onChange={(event) => setName(event.target.value)}
+                required
+                className="h-11 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-slate-700">Descrição</Label>
+              <Input
+                id="description"
+                value={description}
+                type="text"
+                placeholder="Conte um pouco sobre o evento"
+                onChange={(event) => setDescripion(event.target.value)}
+                required
+                className="h-11 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400"
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="location" className="flex items-center gap-2 text-slate-700">
+                <MapPin size={16} aria-hidden="true" /> Local
+              </Label>
+              <Input
+                id="location"
+                value={location}
+                type="text"
+                placeholder="Endereço, cidade ou link do local"
+                onChange={(event) => setLocation(event.target.value)}
+                required
+                className="h-11 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-5 sm:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="date" className="flex items-center gap-2 text-slate-700">
+                <CalendarDays size={16} aria-hidden="true" /> Data
+              </Label>
+              <Input
+                id="date"
+                value={date}
+                type="text"
+                placeholder="DD/MM/AAAA"
+                onChange={(event) => setDate(event.target.value)}
+                required
+                className="h-11 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400"
+              />
+              <p className="text-xs text-slate-500">Use o formato dia/mês/ano.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="starts_at" className="flex items-center gap-2 text-slate-700">
+                <Clock3 size={16} aria-hidden="true" /> Horário de início
+              </Label>
+              <Input
+                id="starts_at"
+                value={starts_at}
+                type="text"
+                placeholder="HH:MM"
+                onChange={(event) => setStartsAt(event.target.value)}
+                required
+                className="h-11 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ends_at" className="flex items-center gap-2 text-slate-700">
+                <Clock3 size={16} aria-hidden="true" /> Horário de término
+              </Label>
+              <Input
+                id="ends_at"
+                value={ends_at}
+                type="text"
+                placeholder="HH:MM"
+                onChange={(event) => setEndsAt(event.target.value)}
+                required
+                className="h-11 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 space-y-2">
+            <Label htmlFor="avatar" className="flex items-center gap-2 text-slate-700">
+              <ImagePlus size={16} aria-hidden="true" /> Foto do evento
+            </Label>
+            <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4">
+              <Input
+                id="avatar"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                required
+                className="border-0 bg-transparent text-slate-700 shadow-none file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:font-semibold file:text-blue-800 hover:file:bg-blue-200"
+              />
+              <p className="mt-2 text-xs text-slate-500">
+                {avatar ? `Imagem selecionada: ${avatar.name}` : "Escolha uma imagem para identificar seu evento."}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SelectionPanel
+            title="Competidores"
+            description="Quem vai competir neste evento"
+            items={availableCompetitors}
+            selectedItems={selectedCompetitors}
+            searchTerm={searchCompetitorTerm}
+            onSearchChange={setSearchCompetitorhTerm}
+            onToggle={toggleCompetitor}
+            getLabel={(competitor) => competitor.name}
+            renderItem={(competitor) => (
+              <span className="flex min-w-0 items-center gap-3">
+                <AvatarIcon name={competitor.name} size={36} src={competitor.profile_url} />
+                <span className="truncate">{competitor.name}</span>
+              </span>
+            )}
+            accent="blue"
+          />
+          <SelectionPanel
+            title="Jurados"
+            description="Quem vai avaliar as apresentações"
+            items={availableJudges}
+            selectedItems={selectedJudges}
+            searchTerm={searchJudgeTerm}
+            onSearchChange={setSearchJudgeTerm}
+            onToggle={toggleJudge}
+            getLabel={(judge) => judge.nickname}
+            renderItem={(judge) => (
+              <span className="flex min-w-0 items-center gap-3">
+                <AvatarIcon name={judge.nickname} size={36} src={judge.avatar} />
+                <span className="truncate">{judge.nickname}</span>
+              </span>
+            )}
+            accent="violet"
+          />
+        </div>
+
+        <SelectionPanel
+          title="Estandartes"
+          description="Escolha os estandartes disponíveis neste evento"
+          items={availableEstandartes}
+          selectedItems={selectedEstandartes}
+          searchTerm={searchEstandatesTerm}
+          onSearchChange={setSearchEstandarteTerm}
+          onToggle={toggleEstandarte}
+          getLabel={(estandarte) => estandarte.name}
+          renderItem={(estandarte) => <span className="truncate">{estandarte.name}</span>}
+          accent="amber"
+        />
+
+        <div className="flex flex-col items-stretch justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:px-8">
+          <div>
+            <p className="font-semibold text-slate-900">Tudo pronto?</p>
+            <p className="mt-1 text-sm text-slate-500">
+              {selectedCompetitorsCount} competidor{selectedCompetitorsCount === 1 ? "" : "es"},{" "}
+              {selectedJudgesCount} jurado{selectedJudgesCount === 1 ? "" : "s"} e{" "}
+              {selectedEstandartesCount} estandarte{selectedEstandartesCount === 1 ? "" : "s"} selecionado{selectedEstandartesCount === 1 ? "" : "s"}.
+            </p>
+          </div>
+          <Button
+            className="h-12 w-full cursor-pointer bg-amber-400 px-8 font-bold text-slate-950 shadow-sm transition hover:bg-amber-300 sm:w-auto"
+            onClick={handleCreate}
+          >
+            Criar evento
+          </Button>
+        </div>
+      </div>
+      </main>
+    </>
     );
   }

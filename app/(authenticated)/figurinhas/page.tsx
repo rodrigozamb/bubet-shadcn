@@ -142,6 +142,7 @@ export default function EventBookPage() {
   const [cardPacks, setCardPacks] = useState<CardPackProps[]>([])
   const [buyPackItem, setbuyPackItem] = useState<typeof cardPacks[number] | null>(null)
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false)
+  const [isBuyConfirmationOpen, setIsBuyConfirmationOpen] = useState(false)
 
   const [userCardPacks, setUserCardPacks] = useState<UserCardPackProps[]>([])
   const [userAlbumCards, setUserAlbumCards] = useState<UserAlbumCardProps[]>([])
@@ -279,11 +280,13 @@ export default function EventBookPage() {
 
   const handleOpenModal = (item: typeof cardPacks[number]) => {
     setbuyPackItem(item)
+    setIsBuyConfirmationOpen(false)
     setIsBuyModalOpen(true)
   }
 
   const handleCloseModal = () => {
     setIsBuyModalOpen(false)
+    setIsBuyConfirmationOpen(false)
     setbuyPackItem(null)
   }
 
@@ -834,11 +837,41 @@ export default function EventBookPage() {
                 >
                   <DialogContent className="max-w-xl">
                     <DialogHeader>
-                      <DialogTitle>{buyPackItem?.name ?? "Detalhes do item"}</DialogTitle>
-                      
+                      <DialogTitle>
+                        {isBuyConfirmationOpen ? "Confirmar compra" : buyPackItem?.name ?? "Detalhes do item"}
+                      </DialogTitle>
                     </DialogHeader>
 
-                    {buyPackItem && (
+                    {buyPackItem && isBuyConfirmationOpen ? (
+                      <div className="space-y-4">
+                        <DialogDescription>
+                          Você está prestes a comprar:
+                        </DialogDescription>
+                        <div className="rounded-md border p-4 space-y-2">
+                          <p className="font-medium">{buyPackItem.name}</p>
+                          <p>Quantidade: {buyQuantity} {Number(buyQuantity) === 1 ? "pacote" : "pacotes"}</p>
+                          <p>Total: R$ {(Number(buyQuantity) * buyPackItem.price).toFixed(2)}</p>
+                        </div>
+                        <p>Tem certeza que deseja fazer essa compra?</p>
+                        <DialogFooter>
+                          <Button
+                            variant="secondary"
+                            onClick={() => setIsBuyConfirmationOpen(false)}
+                          >
+                            Não
+                          </Button>
+                          <Button
+                            className="bg-orange-600 hover:bg-orange-700"
+                            onClick={() => {
+                              setIsBuyConfirmationOpen(false)
+                              void handleBuyAlbumPacks()
+                            }}
+                          >
+                            Sim
+                          </Button>
+                        </DialogFooter>
+                      </div>
+                    ) : buyPackItem && (
                       <div className="grid gap-4 md:grid-cols-[160px_1fr] items-center">
                         <div className="rounded-3xl overflow-hidden p-3">
                           <Image
@@ -879,20 +912,27 @@ export default function EventBookPage() {
                                 </SelectContent>
                               </Select>
                                 <p className="text-gray-700 mt-2">Total : R${(Number(buyQuantity) * buyPackItem.price).toFixed(2)} reais</p>
-                                <Button className="w-25 bg-orange-600 hover:bg-orange-700 cursor-pointer mt-3" onClick={handleBuyAlbumPacks}>Comprar</Button>
+                                <Button
+                                  className="w-25 bg-orange-600 hover:bg-orange-700 cursor-pointer mt-3"
+                                  onClick={() => setIsBuyConfirmationOpen(true)}
+                                >
+                                  Comprar
+                                </Button>
                               </div>
                           </div>
                         </div>
                       </div>
                     )}
 
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button variant="secondary" className="w-full sm:w-auto mt-4">
-                          Fechar
-                        </Button>
-                      </DialogClose>
-                    </DialogFooter>
+                    {!isBuyConfirmationOpen && (
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant="secondary" className="w-full sm:w-auto mt-4">
+                            Fechar
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    )}
                   </DialogContent>
                 </Dialog>
 

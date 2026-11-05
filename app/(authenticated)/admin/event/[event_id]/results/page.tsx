@@ -12,6 +12,8 @@ import { api } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Bounce, toast } from "react-toastify";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Award, Check, Medal, Search, Send, Sparkles, Trophy, Users } from "lucide-react";
+import { Header } from "@/components/Header";
 
 interface EstandarteProps{
     id: string
@@ -232,111 +234,175 @@ export default function AdminCreateEventPage({}) {
   }
 
   return (
-      <>
-        <div className="flex flex-col justify-center items-center justify-begin bg-blue-900 w-screen h-300">
-            <title>BUBet | ADMIN</title>
-
-            <div className="flex flex-col items-center bg-amber-100 w-350 py-5">
-                <span className="font-medium text-2xl my-4">Crie um resultado para {event_name}</span>
-
-
-
-                <div className="flex justify-center mb-5"> 
-                    {/* COMPETIDORES */}
-                    <div className="flex ">
-                        <div className="w-165 h-90 overflow-hidden shadow rounded-2xl mx-2">
-                        {/* Header */}
-                            <div className="flex justify-between rounded-t-2xl py-2 bg-blue-900 text-white">
-                                <span className="content-center ml-5 text-mk font-bold">Competidores</span>
-                            </div>
-                            <div className="flex justify-center py-2 bg-blue-900">
-                                <Input className="w-150  bg-amber-50" type="search" placeholder="Pesquise aqui...." value={searchCompetitorRankingTerm} onChange={(e) => setSearchCompetitorRankingTerm(e.target.value)}/>         
-                            </div>
-                        
-                            <div className="flex justify-center">
-                                <div className="w-165 h-90 overflow-hidden bg-gray-300 rounded p-5 shadow">
-                                    
-                                    <div className="space-y-2 h-64 overflow-auto">
-                                    {
-                                        searchCompetitorsRanking.map((competitor, i) => (
-                                            <div 
-                                                key={i} 
-                                                className="flex p-2 justify-between bg-gray-100 rounded-xl cursor-pointer"
-                                            >
-                                                <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url}  className="mx-2"  />
-                                                <span className="content-center truncate">
-                                                    {competitor.name}
-                                                </span>
-                                                <div className="flex justify-center text-center">
-                                                    <span className="mr-3 items-center">Pontos</span>
-                                                    <Input className="w-20  bg-amber-50" type="text" value={competitor.score} onChange={e => handleScoreChange(competitor.id, e.target.value)}  />
-                                                
-                                                </div>  
-                                            </div>
-                                        ))
-                                    }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-
-
-                </div>
-
-                {/* ESTANDARTES */}
-                
-                <div className="flex flex-col justify-center w-200 ml-15">
-                
-                <div className="text-center">
-                    <div className="text-xl font-semibold">Estandartes</div>
-                </div>
-                
-                <div className="grid grid-cols-3 my-5 ">
-
-                    {
-                    estandartes.map((est,idx)=>(
-                        <div className="flex flex-col items-center text-center py-3 my-3 mx-2 border-2 bg-gray-100 rounded-2xl" key={idx}>
-                        <div className="text-md font-medium py-2">{est.name}</div>
-                          <Select 
-                            key={est.id}
-                            value={selections[est.id]}
-                            onValueChange={(v) => handleChange(est.id, v)}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select competitor" />
-                              </SelectTrigger>
-
-                              <SelectContent>
-                                {searchCompetitorsRanking.map(c => (
-                                  <SelectItem key={c.id} value={c.id}>
-                                    {c.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                        </div>
-                    ))
-                    }
-
-                </div>
-
-                </div>
-
-
-                <Button className="w-65 h-20 cursor-pointer bg-yellow-500 hover:bg-yellow-600 font-extrabold text-3xl"
-                    onClick={handleCreate}
-                >
-                Atualizar Evento
-                </Button>
-                <Button className="w-65 h-20 cursor-pointer bg-orange-500 hover:bg-orange-600 font-extrabold text-3xl my-5"
-                    onClick={handleGivePoints}
-                >
-                Entregar Pontos
-                </Button>
+    <>
+      <title>BUBet | Resultados</title>
+      <Header />
+      <main className="min-h-screen bg-blue-950 px-4 py-8 text-slate-900 sm:px-6 lg:py-12">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+          <header className="overflow-hidden rounded-3xl bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 px-6 py-8 text-white shadow-lg sm:px-9 sm:py-10">
+            <div className="flex items-center gap-2 text-sm font-medium text-blue-200">
+              <Trophy size={17} aria-hidden="true" />
+              <span>Área administrativa · Resultados</span>
             </div>
+            <h1 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">
+              Configurar resultado
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">
+              {event_name ? `Registre as pontuações e os estandartes de ${event_name}.` : "Registre as pontuações e os estandartes do evento."}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-blue-50 ring-1 ring-white/15">
+                <Users size={15} aria-hidden="true" />
+                {ranking.length} competidor{ranking.length === 1 ? "" : "es"}
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-blue-50 ring-1 ring-white/15">
+                <Award size={15} aria-hidden="true" />
+                {estandartes.length} estandarte{estandartes.length === 1 ? "" : "s"}
+              </span>
+            </div>
+          </header>
+
+          <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex flex-col gap-4 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+              <div className="flex items-center gap-3">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                  <Users size={21} aria-hidden="true" />
+                </div>
+                <div>
+                  <h2 className="font-semibold text-slate-900">Pontuação dos competidores</h2>
+                  <p className="mt-1 text-sm text-slate-500">Informe os pontos de cada participante.</p>
+                </div>
+              </div>
+              <div className="relative w-full sm:max-w-xs">
+                <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                <Input
+                  className="h-10 border-slate-200 bg-slate-50 pl-9 text-slate-900 placeholder:text-slate-400"
+                  type="search"
+                  aria-label="Buscar competidor"
+                  placeholder="Buscar competidor..."
+                  value={searchCompetitorRankingTerm}
+                  onChange={(e) => setSearchCompetitorRankingTerm(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between bg-slate-50/80 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">
+              <span>Competidor</span>
+              <span className="pr-1">Pontos</span>
+            </div>
+            <div className="max-h-[28rem] space-y-2 overflow-y-auto p-3 sm:p-4">
+              {searchCompetitorsRanking.length > 0 ? searchCompetitorsRanking.map((competitor) => (
+                <div
+                  key={competitor.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-white p-3 transition-colors hover:border-blue-100 hover:bg-blue-50/30 sm:px-4"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <AvatarIcon name={competitor.name} size={42} src={competitor.profile_url} />
+                    <span className="truncate text-sm font-medium text-slate-800">{competitor.name}</span>
+                  </div>
+                  <label className="flex shrink-0 items-center gap-2 text-sm text-slate-500">
+                    <span className="hidden sm:inline">Pontos</span>
+                    <Input
+                      className="h-10 w-20 border-slate-200 bg-slate-50 text-center font-semibold text-slate-900 focus-visible:bg-white"
+                      type="text"
+                      aria-label={`Pontos de ${competitor.name}`}
+                      value={competitor.score}
+                      onChange={e => handleScoreChange(competitor.id, e.target.value)}
+                    />
+                  </label>
+                </div>
+              )) : (
+                <div className="rounded-xl border border-dashed border-slate-200 px-4 py-10 text-center">
+                  <Search size={20} className="mx-auto text-slate-400" aria-hidden="true" />
+                  <p className="mt-2 text-sm font-medium text-slate-700">Nenhum competidor encontrado</p>
+                  <p className="mt-1 text-sm text-slate-500">Tente buscar por outro nome.</p>
+                </div>
+              )}
+            </div>
+          </section>
+
+          <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex items-center gap-3 border-b border-slate-100 p-5 sm:px-6">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                <Medal size={21} aria-hidden="true" />
+              </div>
+              <div>
+                <h2 className="font-semibold text-slate-900">Estandartes</h2>
+                <p className="mt-1 text-sm text-slate-500">Escolha um competidor para cada reconhecimento.</p>
+              </div>
+              <span className="ml-auto shrink-0 rounded-full bg-amber-50 px-3 py-1 text-sm font-semibold text-amber-800">
+                {Object.values(selections).filter(Boolean).length}/{estandartes.length}
+              </span>
+            </div>
+
+            {estandartes.length > 0 ? (
+              <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
+                {estandartes.map((est) => (
+                  <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4" key={est.id}>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800">
+                      <Award size={16} className="shrink-0 text-amber-600" aria-hidden="true" />
+                      {est.name}
+                    </label>
+                    <Select
+                      value={selections[est.id]}
+                      onValueChange={(v) => handleChange(est.id, v)}
+                    >
+                      <SelectTrigger aria-label={`Selecionar competidor para ${est.name}`} className="h-10 border-slate-200 bg-white">
+                        <SelectValue placeholder="Selecionar competidor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {searchCompetitorsRanking.map(c => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {selections[est.id] && (
+                      <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-emerald-700">
+                        <Check size={14} aria-hidden="true" />
+                        Competidor selecionado
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="px-5 py-8 text-center text-sm text-slate-500">
+                Este evento não possui estandartes para configurar.
+              </div>
+            )}
+          </section>
+
+          <section className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div className="flex items-start gap-3 px-1">
+              <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                <Sparkles size={18} aria-hidden="true" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-slate-900">Pronto para concluir?</h2>
+                <p className="mt-1 text-sm text-slate-500">Salve o resultado ou entregue os pontos aos participantes.</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button
+                className="h-11 cursor-pointer bg-blue-900 px-5 font-semibold text-white hover:bg-blue-800"
+                onClick={handleCreate}
+              >
+                <Check size={17} aria-hidden="true" />
+                Atualizar Evento
+              </Button>
+              <Button
+                className="h-11 cursor-pointer bg-orange-500 px-5 font-semibold text-white hover:bg-orange-600"
+                onClick={handleGivePoints}
+              >
+                <Send size={17} aria-hidden="true" />
+                Entregar Pontos
+              </Button>
+            </div>
+          </section>
         </div>
-      </>
-    );
-  }
+      </main>
+    </>
+  );
+}
