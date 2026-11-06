@@ -274,6 +274,8 @@ export default function ComprasPage() {
               <ul className="divide-y divide-slate-100">
                 {visibleTransactions.map((transaction) => {
                   const paid = isPaid(transaction);
+                  const expired = isExpired(transaction);
+                  const pending = transaction.status?.toUpperCase() === "PENDING";
 
                   return (
                     <li
@@ -308,17 +310,21 @@ export default function ComprasPage() {
                           </span>
                           <span
                             className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                              paid
-                                ? "bg-emerald-50 text-emerald-700"
-                                : "bg-amber-50 text-amber-700"
+                              expired
+                                ? "bg-red-50 text-red-700"
+                                : paid
+                                  ? "bg-emerald-50 text-emerald-700"
+                                  : "bg-amber-50 text-amber-700"
                             }`}
                           >
-                            {paid ? (
+                            {expired ? (
+                              <CircleX aria-hidden="true" className="h-3.5 w-3.5" />
+                            ) : paid ? (
                               <CircleCheck aria-hidden="true" className="h-3.5 w-3.5" />
                             ) : (
                               <Clock3 aria-hidden="true" className="h-3.5 w-3.5" />
                             )}
-                            {paid ? "Pago" : "Não pago"}
+                            {expired ? "Expirado" : paid ? "Pago" : pending ? "Pendente" : "Não pago"}
                           </span>
                         </div>
                       </div>
