@@ -150,6 +150,7 @@ export default function EventBookPage() {
   const [userCardPacks, setUserCardPacks] = useState<UserCardPackProps[]>([])
   const [userAlbumCards, setUserAlbumCards] = useState<UserAlbumCardProps[]>([])
   const [allAlbumsCards, setAllAlbumsCards] = useState<AllAlbumCardsProps[]>([])
+  const [albumEventIds, setAlbumEventIds] = useState<Record<string, string>>({})
   const [trades, setTrades] = useState<TradeProps[]>([])
   const [stickerFilter, setStickerFilter] = useState("")
   const [stickerAlbumFilter, setStickerAlbumFilter] = useState("all")
@@ -275,6 +276,26 @@ export default function EventBookPage() {
             .then((res2) => {
                 setUserCardPacks(res2.data.packs)
                 setUserAlbumCards(res2.data.cards)
+                const packIds = Array.from(new Set([
+                  ...res.data.map((pack: CardPackProps) => pack.id),
+                  ...res2.data.packs.map((pack: UserCardPackProps) => pack.card_pack.id),
+                ]))
+                void Promise.allSettled(
+                  packIds.map((packId) => api.get(`/packs/album/${packId}`, { withCredentials: true }))
+                ).then((albumResults) => {
+                  const eventIds: Record<string, string> = {}
+                  albumResults.forEach((result, index) => {
+                    if (result.status === "fulfilled") {
+                      const album = result.value.data
+                      if (album?.name && album?.event_id) {
+                        eventIds[album.name] = album.event_id
+                      }
+                    } else {
+                      console.error(`Erro ao buscar o álbum do pacote ${packIds[index]}:`, result.reason)
+                    }
+                  })
+                  setAlbumEventIds(eventIds)
+                })
               api.get("/cards/trades", {withCredentials: true})
                 .then((res3) => {
                     setTrades(res3.data)
@@ -1147,7 +1168,8 @@ export default function EventBookPage() {
                                 variant="outline"
                                 className="h-9 border-blue-200 font-semibold text-blue-900 hover:bg-blue-50"
                                 onClick={() => {
-                                  const eventId = cards[0]?.album_card.album.event_id ??
+                                  const eventId = albumEventIds[albumName] ??
+                                    cards[0]?.album_card.album.event_id ??
                                     allAlbumsCards.find((card) => card.album.name === albumName)?.album.event_id
                                   if (eventId) router.push(`/events/${eventId}/album`)
                                   else toast.error("Não foi possível encontrar a página deste álbum.")
