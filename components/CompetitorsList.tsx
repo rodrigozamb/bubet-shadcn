@@ -1,56 +1,45 @@
-import Link from "next/link";
-import AvatarIcon from "./AvatarIcon";
+import Link from "next/link"
+import AvatarIcon from "./AvatarIcon"
 
-interface CompetitorsListProps{
-    competitors:{
+interface CompetitorsListProps {
+    competitors: {
         id: string,
         profile_url: string,
         name: string,
     }[]
 }
 
-export function CompetitorsList({ competitors }:CompetitorsListProps){
-
-
-    if(!competitors || competitors.length == 0){
-        return(
-            <div className="flex justify-center content-center">
-            <div className="w-85 h-130 overflow-hidden bg-blue-900 shadow rounded-4xl p-5">
-                <span className="flex justify-center text-xl font-bold text-white mb-4 ">Participantes</span>
-                
-                <div className="content-center h-56 overflow-auto">
-                    <div className="flex justify-center content-center text-white font-semibold">
-                        Nenhum participante cadastrado
-                    </div>
-                </div>
-            </div>
-        </div>
-        )
-    }
-
+export function CompetitorsList({ competitors }: CompetitorsListProps) {
     return (
-        <div className="flex justify-center">
-            <div className="w-85 h-130 overflow-hidden bg-blue-900 rounded-4xl p-5 shadow">
-                <span className="flex justify-center text-xl font-bold text-white mb-4 shadow">Participantes</span>
-                
-                <div className="space-y-2 h-100 overflow-auto">
-                {
-                    competitors.map((competitor, i) => (
-                        <div key={i} className="p-2 bg-gray-100 rounded cursor-pointer">
-                            <Link href={`/competitors/${competitor.id}`} className="flex justify-start content-center">
-                                <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} />
-                                <span className="content-center ml-3 truncate">
-                                    {competitor.name}
-                                </span>
-                            </Link>
-                        </div>
-                    ))
-                }
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">Quem participa</p>
+                    <h2 className="mt-1 text-xl font-extrabold text-slate-900">Participantes</h2>
                 </div>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-600">{competitors.length}</span>
             </div>
-        </div>
 
+            {competitors.length > 0 ? (
+                <ul className="max-h-[28rem] space-y-2 overflow-y-auto pr-1">
+                    {competitors.map((competitor) => (
+                        <li key={competitor.id}>
+                            <Link
+                                href={`/competitors/${competitor.id}`}
+                                className="flex items-center gap-3 rounded-xl border border-transparent bg-slate-50 p-2.5 transition hover:border-blue-200 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                            >
+                                <AvatarIcon name={competitor.name} size={40} src={competitor.profile_url} />
+                                <span className="min-w-0 truncate font-medium text-slate-800">{competitor.name}</span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <div className="rounded-2xl bg-slate-50 px-4 py-8 text-center">
+                    <p className="font-semibold text-slate-800">Nenhum participante cadastrado</p>
+                    <p className="mt-1 text-sm text-slate-500">A lista será exibida quando os participantes forem adicionados.</p>
+                </div>
+            )}
+        </section>
     )
-
-
 }

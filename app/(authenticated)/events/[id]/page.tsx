@@ -78,7 +78,14 @@ interface ResultProps{
   name: string,
   profile_url: string
   score: string,
+  estandartes: {
+    name: string
+  }[]
+}
+
+interface EventResultProps{
   competitor: CompetitorProps,
+  score: string,
   estandartes: {
     name: string
   }[]
@@ -134,7 +141,7 @@ export default function Home() {
           
           api.get(`/results/${id}`,{withCredentials: true})
           .then((res)=>{
-            const ranking = res.data.map((cmp: ResultProps)=>{
+            const ranking = res.data.map((cmp: EventResultProps)=>{
               return {
                 id: cmp.competitor.id,
                 name:cmp.competitor.name,
@@ -177,7 +184,7 @@ export default function Home() {
     .finally(()=>{
       setIsLoading(false)
     })
-  }, [])
+  }, [id])
 
   if(isloading || !event){
     return null
@@ -190,27 +197,33 @@ export default function Home() {
       <title>{tit}</title>
       <meta name="event" content="Conheça o evento!"/>
       
-      <div className="h-screen flex flex-col">
-        <div>
-          <Header />
-        </div>
-        <div className="flex items-center justify-center">
-          <div>
-              <InfoPanel 
-                name={event!.name} 
-                date={event!.date.split("T")[0].split("-")[2]+"/"+event!.date.split("T")[0].split("-")[1]+"/"+event!.date.split("T")[0].split("-")[0]} 
-                local={event!.local}
-                event_id={event!.id}
-                time={event!.starts_at.substring(11,16)+' - '+event!.ends_at.substring(11,16)}
-                judges={event.judges}
-              />
-              <BetPanel results={results} cupons={cupons} allBets={ allBets } userBet={ userBet } competitors={ competitors } estandartes={ bannersTypes } event_active={ new Date(event.starts_at) >= new Date() } />
+      <div className="min-h-screen bg-slate-50">
+        <Header />
+        <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:gap-8 lg:px-8">
+          <InfoPanel
+            name={event.name}
+            date={event.date.split("T")[0].split("-").reverse().join("/")}
+            local={event.local}
+            event_id={event.id}
+            time={`${event.starts_at.substring(11, 16)} - ${event.ends_at.substring(11, 16)}`}
+            judges={event.judges}
+          />
+          <div className="grid min-w-0 grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(20rem,0.85fr)] xl:gap-8">
+            <BetPanel
+              results={results}
+              cupons={cupons}
+              allBets={allBets}
+              userBet={userBet}
+              competitors={competitors}
+              estandartes={bannersTypes}
+              event_active={new Date(event.starts_at) >= new Date()}
+            />
+            <aside className="flex min-w-0 flex-col gap-6">
+              <Podium ranking={results} />
+              <CompetitorsList competitors={competitors} />
+            </aside>
           </div>
-          <div className="flex mx-4 flex-col">
-            <Podium ranking={results}/>
-            <CompetitorsList competitors={ competitors }/>
-          </div>
-        </div>
+        </main>
       </div>
     </>
   );
