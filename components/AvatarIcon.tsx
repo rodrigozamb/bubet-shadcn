@@ -65,7 +65,7 @@ export default function AvatarIcon({ src, name, size, className = "" }: avatarIc
   if (!src || imgError) {
     return (
       <div
-        className={clsx("flex items-center justify-center rounded-full", className)}
+        className={clsx("flex shrink-0 items-center justify-center rounded-full", className)}
         style={{
           width: size,
           height: size,
@@ -86,7 +86,7 @@ export default function AvatarIcon({ src, name, size, className = "" }: avatarIc
       alt={name}
       width={size}
       height={size}
-      className={clsx("rounded-full object-cover", className)}
+      className={clsx("aspect-square shrink-0 rounded-full object-cover", className)}
       onError={() => setImgError(true)}
       unoptimized // optional: skip built-in optimization if loading external
     />
