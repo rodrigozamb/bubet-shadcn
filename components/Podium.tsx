@@ -82,14 +82,19 @@ export function Podium({ ranking }: PodiumProps) {
                                 <Icon size={20} className={position === 1 ? "mb-2 text-amber-600" : "mb-2 text-slate-500"} aria-hidden="true" />
                                 {competitor ? (
                                     <>
-                                        <Link href={`/competitors/${competitor.id}`} className="flex min-w-0 flex-col items-center gap-2">
+                                        <Link href={`/competitors/${competitor.id}`} className="flex w-full min-w-0 flex-col items-center gap-2">
                                             <AvatarIcon
                                                 name={competitor.name}
                                                 size={avatarSize}
                                                 src={competitor.profile_url}
                                                 className="ring-4 ring-white"
                                             />
-                                            <span className="w-full truncate text-xs font-bold text-slate-900 sm:text-sm">{competitor.name}</span>
+                                            <span
+                                                title={competitor.name}
+                                                className="line-clamp-2 min-h-10 w-full break-words text-xs font-bold leading-5 text-slate-900 [overflow-wrap:anywhere] sm:text-sm"
+                                            >
+                                                {competitor.name}
+                                            </span>
                                         </Link>
                                         <span className="mt-1 text-xs font-semibold text-slate-600 sm:text-sm">{competitor.score} pts</span>
                                     </>

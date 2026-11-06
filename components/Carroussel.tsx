@@ -1,102 +1,117 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */ 
 "use client"
- 
-import * as React from "react"
-import Autoplay from "embla-carousel-autoplay"
-import { Card, CardContent } from "@/components/ui/card"
+
+import Autoplay from "embla-carousel-autoplay";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
-import { useRouter } from 'next/navigation'
+} from "@/components/ui/carousel";
 import AvatarIcon from "./AvatarIcon";
 
-interface CarrousselItem{
-  id: string
-  name: string
-  profile_url?: string
-  banner?: string
-} 
-
-interface CarrousselProps{
-  items: CarrousselItem[]
-  categoryIndex: number
+interface CarrousselItem {
+  id: string;
+  name: string;
+  profile_url?: string;
+  banner?: string;
 }
 
-export function Carroussel({ items, categoryIndex }:CarrousselProps) {
+interface CarrousselProps {
+  items: CarrousselItem[];
+  categoryIndex: number;
+}
 
-  const router = useRouter()
+export function Carroussel({ items, categoryIndex }: CarrousselProps) {
+  const router = useRouter();
+  const autoplay = useMemo(
+    () =>
+      Autoplay({
+        delay: 5000,
+        playOnInit: true,
+        stopOnInteraction: false,
+        stopOnMouseEnter: false,
+        stopOnFocusIn: false,
+      }),
+    [],
+  );
+  const slideBasis =
+    items.length === 2
+      ? "basis-[85%] sm:basis-[65%]"
+      : items.length === 3
+        ? "basis-[85%] sm:basis-1/2 lg:basis-[45%]"
+        : items.length === 4
+          ? "basis-[85%] sm:basis-1/2 lg:basis-1/3"
+          : "basis-[85%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4";
+
+  const openItem = (id: string) => {
+    if (categoryIndex === 0) router.push(`/palpites/${id}`);
+    else if (categoryIndex === 2) router.push(`/competitors/${id}`);
+    else router.push(`/events/${id}`);
+  };
 
   return (
-    <Carousel 
-
-        plugins={[
-          Autoplay({
-            delay: 4000,
-            stopOnInteraction: false,
-            stopOnMouseEnter: true
-          }),
-        ]}
-        className="w-full max-w-4xl"
-        opts={{
-            align:"start",
-            loop: true
-        }}
+    <Carousel
+      plugins={[autoplay]}
+      className="mx-auto w-full max-w-6xl px-10 sm:px-12"
+      opts={{
+        align: "start",
+        loop: items.length > 1,
+        slidesToScroll: 1,
+      }}
     >
-      <CarouselContent className="-ml-1 cursor-pointer">
-        {items.map((item, index) => (
-          <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/4 ">
-            <div className="p-1">
-              <Card 
-                className="cursor-pointer" 
-                onClick={() => {
-                    categoryIndex == 0 ?
-                      router.push(`/palpites/${item.id}`)
-                    :
-                    categoryIndex == 2 ?
-                      router.push(`/competitors/${item.id}`)
-                    :
-                      router.push(`/events/${item.id}`)
-                  }}
+      <CarouselContent className="-ml-3 py-2">
+        {items.map((item) => (
+          <CarouselItem key={item.id} className={`${slideBasis} pl-3`}>
+            <Card className="h-full overflow-hidden rounded-2xl border-slate-200 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg">
+              <button
+                type="button"
+                onClick={() => openItem(item.id)}
+                aria-label={`Abrir ${item.name}`}
+                className="group flex h-full w-full flex-col items-center justify-center rounded-2xl text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-700"
               >
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-
-                    <CardContent className="flex flex-col items-center justify-center h-30 cursor-pointer">
-                      {
-                        categoryIndex == 0 ?
-                        <>
-                          <p className="text-sm text-gray-500">Qual o seu palpite sobre:</p>
-                          <p className=" font-mono mt-2 font-semibold " >{item.name}</p>
-                        </>
-                        :
-                        categoryIndex == 1 ?
-                          <AvatarIcon name={item.name} size={100} src={item.banner!} />
-                        :
-                        <AvatarIcon name={item.name} size={100} src={item.profile_url!} />
-                      }
-
-                    </CardContent>
-                      
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{item.name}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                
-              </Card>
-            </div>
+                <CardContent className="flex min-h-48 w-full flex-col items-center justify-center gap-3 p-5">
+                  {categoryIndex === 0 ? (
+                    <>
+                      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-800 transition-transform group-hover:scale-105">
+                        <span className="text-2xl font-bold" aria-hidden="true">?</span>
+                      </span>
+                      <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Deixe seu palpite
+                      </span>
+                    </>
+                  ) : (
+                    <AvatarIcon
+                      name={item.name}
+                      size={categoryIndex === 1 ? 112 : 96}
+                      src={categoryIndex === 1 ? item.banner ?? "" : item.profile_url ?? ""}
+                      className="transition-transform duration-200 group-hover:scale-105"
+                    />
+                  )}
+                  <span className="line-clamp-2 max-w-full text-base font-semibold leading-snug text-slate-800 group-hover:text-blue-900">
+                    {item.name}
+                  </span>
+                </CardContent>
+              </button>
+            </Card>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="cursor-pointer"/>
-      <CarouselNext className="cursor-pointer"/>
+      {items.length > 1 && (
+        <>
+          <CarouselPrevious
+            aria-label="Item anterior"
+            className="left-0 h-9 w-9 border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50"
+          />
+          <CarouselNext
+            aria-label="Próximo item"
+            className="right-0 h-9 w-9 border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50"
+          />
+        </>
+      )}
     </Carousel>
-  )
+  );
 }
