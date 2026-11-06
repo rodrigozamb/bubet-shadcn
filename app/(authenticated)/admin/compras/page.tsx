@@ -141,7 +141,7 @@ export default function ComprasPage() {
 
   const paidTransactions = transactions.filter(isPaid);
   const unpaidTransactions = transactions.filter((transaction) => !isPaid(transaction));
-  const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0);
+  const totalAmount = transactions.reduce((total, transaction) => total + transaction.value, 0);
   const paidAmount = paidTransactions.reduce((total, transaction) => total + transaction.amount, 0);
   const unpaidAmount = unpaidTransactions.reduce(
     (total, transaction) => total + transaction.amount,
