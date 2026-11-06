@@ -181,7 +181,7 @@ export function DropdownConfig({ trigger }: { trigger: React.ReactNode }) {
       <DropdownMenuTrigger asChild>
         {trigger}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40">
+      <DropdownMenuContent className="w-56 max-h-[calc(100dvh-1rem)] overflow-y-auto">
         <DropdownMenuLabel className=" flex justify-center">Menu</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuLabel className=" text-gray-500 text-sm ">Conta</DropdownMenuLabel>
@@ -222,7 +222,7 @@ export function DropdownConfig({ trigger }: { trigger: React.ReactNode }) {
                   <DialogTrigger>
                     <span className="cursor-pointer">Resgatar Código</span>
                   </DialogTrigger>
-                  <DialogContent className="w-150 ">
+                  <DialogContent className="w-full max-w-[min(28rem,calc(100vw-2rem))] max-h-[calc(100dvh-2rem)] overflow-y-auto">
                       <DialogHeader>
                           <DialogTitle className="flex justify-center"> Digite seu código </DialogTitle>
                       </DialogHeader>
@@ -234,7 +234,7 @@ export function DropdownConfig({ trigger }: { trigger: React.ReactNode }) {
                           value={codeText} 
                           placeholder="Deixe aqui o seu código"
                           onChange={(e)=>setCodeText(e.target.value)}
-                          className="h-10 w-80"
+                          className="h-10 w-full max-w-80"
                           required
                         />
                         <Button 
@@ -258,7 +258,7 @@ export function DropdownConfig({ trigger }: { trigger: React.ReactNode }) {
                 <DialogTrigger>
                   <span className="cursor-pointer">Enviar feedback</span>
                 </DialogTrigger>
-                <DialogContent className="w-250 h-120">
+                <DialogContent className="w-full max-w-[min(40rem,calc(100vw-2rem))] max-h-[calc(100dvh-2rem)] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle className="flex justify-center"> Dê seu feedback </DialogTitle>
                     </DialogHeader>
@@ -271,7 +271,7 @@ export function DropdownConfig({ trigger }: { trigger: React.ReactNode }) {
                         value={feedbackText} 
                         placeholder="Deixe aqui o seu feedback"
                         onChange={(e)=>setFeedBackText(e.target.value)}
-                        className="h-30"
+                        className="h-30 w-full"
                         required
                       />
                       <Label className="flex items-center justify-center my-5"  htmlFor="feedbackImage">Imagem*</Label>

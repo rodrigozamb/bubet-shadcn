@@ -259,8 +259,8 @@ export function AdvinheOBrequeGame() {
   return (
     <>
 
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-stretch gap-6 pt-3 sm:pt-4 lg:flex-row lg:items-start lg:gap-8">
-        <aside className="order-2 w-full lg:order-1 lg:w-[245px] lg:pt-[230px]" aria-label="Dicas">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col items-stretch gap-6 px-4 pt-3 sm:px-6 sm:pt-4 lg:px-8 xl:flex-row xl:items-start xl:gap-8">
+        <aside className="order-2 w-full xl:order-1 xl:w-[245px] xl:shrink-0 xl:pt-[230px]" aria-label="Dicas">
           {!noChallenge && (
             <>
           <div className="rounded-[5px] border border-[#303638] bg-[#1b1f20] p-4">
@@ -305,9 +305,9 @@ export function AdvinheOBrequeGame() {
           )}
         </aside>
 
-      <section className="order-1 mx-auto flex w-full max-w-[575px] flex-col items-center lg:order-2">
+      <section className="order-1 mx-auto flex w-full min-w-0 max-w-[575px] flex-col items-center xl:order-2 xl:shrink-0">
         {noChallenge ? (
-          <p className="mt-[230px] text-center text-base font-medium text-[#d7d9da]">
+          <p className="mt-8 text-center text-base font-medium text-[#d7d9da] xl:mt-[230px]">
             Não há desafio para o dia selecionado. Por favor escolha outro dia
           </p>
         ) : (
@@ -341,7 +341,7 @@ export function AdvinheOBrequeGame() {
 
         <div className="mt-[52px] flex w-full flex-col gap-[7px]">
           {Array.from({ length: 6 }, (_, index) => (
-            <div key={index} className={`flex h-[40px] items-center justify-center rounded-[5px] border text-[16px] transition ${wrongAnswers[index] === "Pulou o palpite" ? "border-transparent bg-[#303436] text-[#e2e2e2]" : wrongAnswers[index] ? "border-[#dd2929] bg-[#d62020] text-white" : correctAnswer && index === wrongAnswers.length ? "border-[#4cbe1d] bg-[#3b9f19] text-white" : "border-[#2d3234] bg-transparent text-transparent"}`}>
+            <div key={index} className={`flex min-h-10 min-w-0 items-center justify-center break-words rounded-[5px] border px-2 py-1 text-center text-[16px] transition ${wrongAnswers[index] === "Pulou o palpite" ? "border-transparent bg-[#303436] text-[#e2e2e2]" : wrongAnswers[index] ? "border-[#dd2929] bg-[#d62020] text-white" : correctAnswer && index === wrongAnswers.length ? "border-[#4cbe1d] bg-[#3b9f19] text-white" : "border-[#2d3234] bg-transparent text-transparent"}`}>
               {wrongAnswers[index] ?? (correctAnswer && index === wrongAnswers.length ? correctAnswer : "")}
             </div>
           ))}
@@ -373,7 +373,7 @@ export function AdvinheOBrequeGame() {
 
         <div className="mt-[28px] w-full">
           <div className="relative h-[67px]">
-            <div className="absolute top-0 flex -translate-x-1/2 flex-col items-center whitespace-nowrap text-[15px] text-[#d7d9da] transition-[left]" style={{ left: `${(visibleTime / trackLength) * 100}%` }}>
+            <div className="absolute top-0 flex -translate-x-1/2 flex-col items-center whitespace-nowrap text-[15px] text-[#d7d9da] transition-[left]" style={{ left: `clamp(4.5rem, ${(visibleTime / trackLength) * 100}%, calc(100% - 4.5rem))` }}>
               <span>{visibleTime < 1 ? `${visibleTime.toFixed(1)} segundos` : `${Number(visibleTime.toFixed(1))} segundos`}</span>
               <span className="mt-[2px] h-0 w-0 border-l-[6px] border-r-[6px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#d7d9da]" />
             </div>
@@ -398,9 +398,9 @@ export function AdvinheOBrequeGame() {
         </div>
 
         <div className="relative mt-[27px] flex w-full gap-[7px]">
-          <label className="flex h-10 flex-1 items-center rounded-[3px] bg-[#272a2c] px-3 text-[#8d979c]">
+          <label className="flex h-10 min-w-0 flex-1 items-center rounded-[3px] bg-[#272a2c] px-3 text-[#8d979c]">
             <Search size={21} strokeWidth={2} />
-            <input disabled={isRoundOver} list="breque-options" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquise o breque" className="w-full bg-transparent px-3 text-[15px] outline-none placeholder:text-[#8d979c] disabled:cursor-not-allowed disabled:opacity-50" />
+            <input disabled={isRoundOver} list="breque-options" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquise o breque" className="w-full min-w-0 bg-transparent px-3 text-[15px] outline-none placeholder:text-[#8d979c] disabled:cursor-not-allowed disabled:opacity-50" />
           </label>
           <datalist id="breque-options">
             {availableOptions.map((option) => <option key={option.nome} value={option.nome} />)}
@@ -460,7 +460,7 @@ export function AdvinheOBrequeGame() {
         )}
       </section>
 
-      <aside className="order-3 w-full lg:w-[245px] lg:pt-[230px]" aria-label="Calendário">
+      <aside className="order-3 w-full xl:w-[245px] xl:shrink-0 xl:pt-[230px]" aria-label="Calendário">
         <div className="rounded-[5px] border border-[#303638] bg-[#1b1f20] p-4">
           <div className="flex items-center justify-between gap-2">
             <button aria-label="Mês anterior" onClick={() => setCalendarMonth((current) => new Date(current.getFullYear(), current.getMonth() - 1, 1))} className="flex h-8 w-8 items-center justify-center rounded-[4px] text-[#aeb5b8] transition hover:bg-[#303638] hover:text-white">

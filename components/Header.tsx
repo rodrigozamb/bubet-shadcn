@@ -233,7 +233,7 @@ export function Header(){
                   <button
                     type="button"
                     aria-label={`Menu da conta de ${user.name}`}
-                    className="ml-1 inline-flex min-w-0 items-center gap-2 rounded-full p-1 pr-1.5 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 sm:ml-2 sm:gap-2.5 sm:pr-3"
+                    className="ml-1 inline-flex min-w-0 items-center gap-2 rounded-full p-1 pr-1.5 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 sm:ml-2 sm:gap-2.5 sm:pl-4 sm:pr-3"
                   >
                     <span className="hidden min-w-0 text-right sm:block">
                       <span className="block max-w-28 truncate text-sm font-semibold leading-tight md:max-w-44">
