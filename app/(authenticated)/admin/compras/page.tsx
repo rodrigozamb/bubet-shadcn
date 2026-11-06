@@ -46,6 +46,10 @@ function isPaid(transaction: TransactionsProps) {
   return Boolean(transaction.payed) || status === "PAYED" || status === "PAID";
 }
 
+function isExpired(transaction: TransactionsProps) {
+  return transaction.status?.toUpperCase() === "EXPIRED";
+}
+
 function formatDate(value?: string | null) {
   if (!value) return "Pagamento pendente";
 
@@ -141,10 +145,17 @@ export default function ComprasPage() {
 
   const paidTransactions = transactions.filter(isPaid);
   const unpaidTransactions = transactions.filter((transaction) => !isPaid(transaction));
-  const totalAmount = transactions.reduce((total, transaction) => total + transaction.value, 0);
-  const paidAmount = paidTransactions.reduce((total, transaction) => total + transaction.amount, 0);
+  const nonExpiredTransactions = transactions.filter((transaction) => !isExpired(transaction));
+  const totalAmount = nonExpiredTransactions.reduce(
+    (total, transaction) => total + transaction.value,
+    0,
+  );
+  const paidAmount = paidTransactions.reduce(
+    (total, transaction) => total + (isExpired(transaction) ? 0 : transaction.amount),
+    0,
+  );
   const unpaidAmount = unpaidTransactions.reduce(
-    (total, transaction) => total + transaction.amount,
+    (total, transaction) => total + (isExpired(transaction) ? 0 : transaction.amount),
     0,
   );
 
