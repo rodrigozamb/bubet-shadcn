@@ -26,10 +26,8 @@ export function SelectCompetitor({ options, value, onValueChange }:SelectProps) 
 
   return (
     <ShadcnSelect value={value} onValueChange={onValueChange} >
-      <SelectTrigger className="w-[180px] text-white bg-gray-100">
-        <div className="text-black">
-          <SelectValue placeholder="Escolha uma bateria"/>
-        </div>
+      <SelectTrigger className="w-full bg-white text-slate-900">
+        <SelectValue placeholder="Escolha uma bateria"/>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
