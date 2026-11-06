@@ -5,7 +5,7 @@
 import { Header } from "@/components/Header";
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { ArrowRightLeftIcon } from "lucide-react"
+import { ArrowRightLeftIcon, ImageIcon, Package, Search } from "lucide-react"
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -149,6 +149,7 @@ export default function EventBookPage() {
   const [allAlbumsCards, setAllAlbumsCards] = useState<AllAlbumCardsProps[]>([])
   const [trades, setTrades] = useState<TradeProps[]>([])
   const [stickerFilter, setStickerFilter] = useState("")
+  const [stickerAlbumFilter, setStickerAlbumFilter] = useState("all")
   const [userPackItem, setUserPackItem] = useState<typeof userCardPacks[number] | null>(null)
   const [isUserPackModalOpen, setIsUserPackModalOpen] = useState(false)
   const [selectedSticker, setSelectedSticker] = useState<UserAlbumCardProps | null>(null)
@@ -179,11 +180,19 @@ export default function EventBookPage() {
     () => userAlbumCards.filter((item) => {
       const query = stickerFilter.toLowerCase()
       return (
-        item.album_card.name.toLowerCase().includes(query) ||
-        item.album_card.team.toLowerCase().includes(query)
+        (item.album_card.name.toLowerCase().includes(query) ||
+          item.album_card.team.toLowerCase().includes(query) ||
+          item.album_card.naipe.toLowerCase().includes(query)) &&
+        (stickerAlbumFilter === "all" ||
+          item.album_card.album.name === stickerAlbumFilter)
       )
     }),
-    [userAlbumCards, stickerFilter]
+    [userAlbumCards, stickerFilter, stickerAlbumFilter]
+  )
+
+  const albumOptions = useMemo(
+    () => Array.from(new Set(userAlbumCards.map((item) => item.album_card.album.name))).sort(),
+    [userAlbumCards]
   )
 
   const groupedUserAlbumCards = useMemo(() => {
@@ -273,7 +282,17 @@ export default function EventBookPage() {
   }, [refresh])
 
   if(isLoading ){
-    return null
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <Header />
+        <main className="mx-auto flex min-h-[50vh] max-w-7xl items-center justify-center px-4">
+          <div className="flex items-center gap-3 text-sm font-medium text-slate-600" role="status">
+            <span className="size-5 animate-spin rounded-full border-2 border-blue-900 border-t-transparent" />
+            Carregando suas figurinhas...
+          </div>
+        </main>
+      </div>
+    )
   }
 
   const tit = `Figurinhas`
@@ -781,50 +800,81 @@ export default function EventBookPage() {
       <title>{tit}</title>
       <meta name="event" content="Conheça o evento!"/>
       
-      <div className="h-screen flex flex-col">
-        <div>
-          <Header />
-        </div>  
-        
+      <div className="min-h-screen bg-slate-50">
+        <Header />
+        <main className="mx-auto w-full max-w-7xl px-3 pb-12 pt-6 sm:px-6 lg:pt-10">
+          <section className="mb-7 space-y-5">
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-blue-800">Sua coleção, do seu jeito</p>
+              <h1 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Banca de figurinhas</h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                Compre pacotinhos, acompanhe sua coleção e encontre figurinhas para trocar.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-900"><Package className="size-5" /></span>
+                <div><p className="text-xl font-bold text-slate-900">{cardPacks.length}</p><p className="text-xs text-slate-500 sm:text-sm">Pacotinhos disponíveis</p></div>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-700"><ImageIcon className="size-5" /></span>
+                <div><p className="text-xl font-bold text-slate-900">{userAlbumCards.reduce((total, item) => total + item.quantity, 0)}</p><p className="text-xs text-slate-500 sm:text-sm">Figurinhas na coleção</p></div>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700"><ArrowRightLeftIcon className="size-5" /></span>
+                <div><p className="text-xl font-bold text-slate-900">{trades.length}</p><p className="text-xs text-slate-500 sm:text-sm">Ofertas de troca</p></div>
+              </div>
+            </div>
+          </section>
 
-        <div className="flex flex-col justify-center items-center align-middle mt-5">
-            
-          <Tabs defaultValue="store" className="  ">
-          <TabsList className="grid w-full bg-blue-900 h-15 grid-cols-4">
-            <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="store" >Comprar Figurinhas</TabsTrigger>
-            <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="collection" >Minha Coleção</TabsTrigger>
-            <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="my-cards" >Minhas Figurinhas</TabsTrigger>
-            <TabsTrigger className="cursor-pointer h-13 font-bold text-xl" value="trade-cards" >Troca de Figurinhas</TabsTrigger>
+          <Tabs defaultValue="store" className="w-full">
+          <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm md:grid-cols-4">
+            <TabsTrigger className="min-h-12 cursor-pointer whitespace-normal rounded-xl px-2 py-2 text-xs font-bold leading-tight text-slate-600 data-[state=active]:bg-blue-950 data-[state=active]:text-white data-[state=active]:shadow-sm sm:text-sm" value="store">Comprar Figurinhas</TabsTrigger>
+            <TabsTrigger className="min-h-12 cursor-pointer whitespace-normal rounded-xl px-2 py-2 text-xs font-bold leading-tight text-slate-600 data-[state=active]:bg-blue-950 data-[state=active]:text-white data-[state=active]:shadow-sm sm:text-sm" value="collection">Minha Coleção</TabsTrigger>
+            <TabsTrigger className="min-h-12 cursor-pointer whitespace-normal rounded-xl px-2 py-2 text-xs font-bold leading-tight text-slate-600 data-[state=active]:bg-blue-950 data-[state=active]:text-white data-[state=active]:shadow-sm sm:text-sm" value="my-cards">Minhas Figurinhas</TabsTrigger>
+            <TabsTrigger className="min-h-12 cursor-pointer whitespace-normal rounded-xl px-2 py-2 text-xs font-bold leading-tight text-slate-600 data-[state=active]:bg-blue-950 data-[state=active]:text-white data-[state=active]:shadow-sm sm:text-sm" value="trade-cards">Troca de Figurinhas</TabsTrigger>
           </TabsList>
-          <TabsContent value="store">
-            <Card>
-              <CardHeader className="flex items-center justify-center cursor-default" >
-                <CardTitle className=" text-2xl">Banca de Figurinhas</CardTitle>
-                <CardDescription>Compre e colecione figurinhas para completar seus álbuns favoritos</CardDescription>
+          <TabsContent value="store" className="mt-4">
+            <Card className="gap-0 overflow-hidden rounded-2xl border-slate-200 py-0 shadow-sm">
+              <CardHeader className="border-b border-slate-100 px-4 py-5 sm:px-6">
+                <CardTitle className="text-xl font-bold text-slate-900 sm:text-2xl">Comprar pacotinhos</CardTitle>
+                <CardDescription>Escolha um pacotinho para ver detalhes, resgatar ou comprar.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-5">
+              <CardContent className="px-4 py-5 sm:px-6 sm:py-7">
                
-                <div className="w-full max-w-6xl px-4 py-10">
-                  <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+                <div className="w-full">
+                  {cardPacks.length === 0 ? (
+                    <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 text-center">
+                      <Package className="mb-3 size-8 text-slate-400" />
+                      <p className="font-semibold text-slate-800">Nenhum pacotinho disponível no momento</p>
+                      <p className="mt-1 text-sm text-slate-500">Volte mais tarde para conferir as novidades.</p>
+                    </div>
+                  ) : (
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
                     {cardPacks.slice().sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((item) => (
-                      <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
-                        <div
-                          className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
-                          onClick={() => handleOpenModal(item)}
-                        >
+                      <button
+                        key={item.id}
+                        type="button"
+                        className="group min-w-0 rounded-2xl border border-slate-200 bg-white p-2 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 sm:p-3"
+                        onClick={() => handleOpenModal(item)}
+                        aria-label={`Ver detalhes de ${item.name}`}
+                      >
+                        <span className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-slate-50 p-2">
                           <Image
                             unoptimized
                             src={item.image_url}
                             alt={item.name}
-                            width={180}
-                            height={180}
-                            className="object-contain"
+                            width={220}
+                            height={220}
+                            className="h-full w-full object-contain transition-transform group-hover:scale-105"
                           />
-                        </div>
-                        <p className="text-center mt-2 font-medium">{item.name}</p>
-                      </div>
+                        </span>
+                        <span className="mt-3 block truncate text-center text-sm font-semibold text-slate-800 sm:text-base">{item.name}</span>
+                        <span className="mt-1 block text-center text-xs text-slate-500">R$ {item.price.toFixed(2)}</span>
+                      </button>
                     ))}
                   </div>
+                  )}
                 </div>
 
                 <Dialog
@@ -835,7 +885,7 @@ export default function EventBookPage() {
                     }
                   }}
                 >
-                  <DialogContent className="max-w-xl">
+                  <DialogContent className="max-h-[90vh] max-w-[calc(100vw-1.5rem)] overflow-y-auto sm:max-w-xl">
                     <DialogHeader>
                       <DialogTitle>
                         {isBuyConfirmationOpen ? "Confirmar compra" : buyPackItem?.name ?? "Detalhes do item"}
@@ -942,43 +992,46 @@ export default function EventBookPage() {
             </Card>
 
           </TabsContent>
-          <TabsContent value="collection">
-            <Card>
-              <CardHeader className="flex items-center justify-center" >
-                <CardTitle className="text-2xl">Coleção</CardTitle>
-                <CardDescription>Aqui estão todos os pacotes que você possui</CardDescription>
+          <TabsContent value="collection" className="mt-4">
+            <Card className="gap-0 overflow-hidden rounded-2xl border-slate-200 py-0 shadow-sm">
+              <CardHeader className="border-b border-slate-100 px-4 py-5 sm:px-6">
+                <CardTitle className="text-xl font-bold text-slate-900 sm:text-2xl">Minha coleção</CardTitle>
+                <CardDescription>Seus pacotinhos disponíveis para abrir e as respectivas quantidades.</CardDescription>
               </CardHeader>
               
-              <CardContent className="space-y-5">
+              <CardContent className="px-4 py-5 sm:px-6 sm:py-7">
                 
-                <div className="w-full max-w-6xl px-4 py-10">
+                <div className="w-full">
                   {userCardPacks.length === 0 ? (
-                    <div className="flex items-center w-218 h-50 justify-center">
-                      <p className="font-extrabold text-xl">Você ainda não possui pacotinhos</p>
+                    <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 text-center">
+                      <Package className="mb-3 size-8 text-slate-400" />
+                      <p className="font-semibold text-slate-800">Você ainda não possui pacotinhos</p>
+                      <p className="mt-1 text-sm text-slate-500">Encontre novos pacotinhos na área de compra.</p>
                     </div>
                   ) : (
-                    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                      {userCardPacks.sort((a, b) => new Date(b.last_obtained_at).getTime() - new Date(a.last_obtained_at).getTime()).map((item) => (
-                        <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
-                          <div
-                            className="rounded-3xl overflow-hidden border p-3 flex items-center justify-center cursor-pointer"
-                            onClick={() => handleOpenUserPacksModal(item)}
-                          >
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+                      {userCardPacks.slice().sort((a, b) => new Date(b.last_obtained_at).getTime() - new Date(a.last_obtained_at).getTime()).map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          className="group min-w-0 rounded-2xl border border-slate-200 bg-white p-2 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 sm:p-3"
+                          onClick={() => handleOpenUserPacksModal(item)}
+                          aria-label={`Ver ${item.quantity} pacotes de ${item.card_pack.name}`}
+                        >
+                          <span className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-slate-50 p-2">
                             <Image
                               unoptimized
                               src={item.card_pack.image_url}
                               alt={item.card_pack.name}
-                              width={180}
-                              height={180}
-                              className="object-contain"
+                              fill
+                              className="object-contain p-2 transition-transform group-hover:scale-105"
                             />
-                          </div>
-                          <div className="flex justify-center items-center align-middle mt-2">
-                            <p className="font-bold">{item.quantity}</p>
-                            <p className="ml-0.5 mr-2">x</p>
-                            <p className="text-center font-medium">{item.card_pack.name}</p>
-                          </div>
-                        </div>
+                          </span>
+                          <span className="mt-3 flex items-center justify-center gap-1 text-center">
+                            <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-900">{item.quantity}x</span>
+                            <span className="min-w-0 truncate text-sm font-semibold text-slate-800">{item.card_pack.name}</span>
+                          </span>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -992,7 +1045,7 @@ export default function EventBookPage() {
                       }
                     }}
                   >
-                    <DialogContent className="flex flex-col justify-center align-middle items-center max-w-xl">
+                    <DialogContent className="max-h-[90vh] max-w-[calc(100vw-1.5rem)] overflow-y-auto sm:max-w-xl">
                       <DialogHeader>
                         <DialogTitle>{userPackItem?.card_pack.name ?? "Detalhes do item"}</DialogTitle>
                         
@@ -1029,72 +1082,93 @@ export default function EventBookPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="my-cards">
-            <Card>
-              <CardHeader className="flex items-center justify-center" >
-                <CardTitle className="text-2xl">Suas Figurinhas</CardTitle>
-                <CardDescription>Aqui estão todos as figurinhas que você possui</CardDescription>
+          <TabsContent value="my-cards" className="mt-4">
+            <Card className="gap-0 overflow-hidden rounded-2xl border-slate-200 py-0 shadow-sm">
+              <CardHeader className="border-b border-slate-100 px-4 py-5 sm:px-6">
+                <CardTitle className="text-xl font-bold text-slate-900 sm:text-2xl">Minhas figurinhas</CardTitle>
+                <CardDescription>Consulte seus itens por álbum, quantidade ou nome.</CardDescription>
               </CardHeader>
               
-              <CardContent className="space-y-5">
-                <div className="flex justify-center align-middle items-center flex-col w-full px-4 ">
-                  <div className=" mb-5 w-70">
-                    <Input
-                      placeholder="Filtrar figurinhas por nome..."
-                      value={stickerFilter}
-                      onChange={(event) => setStickerFilter(event.target.value)}
-                    />
+              <CardContent className="px-4 py-5 sm:px-6 sm:py-7">
+                <div className="w-full">
+                  <div className="mb-5 flex flex-col gap-3 sm:flex-row">
+                    <div className="relative min-w-0 flex-1">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                      <Input
+                        className="h-11 pl-9"
+                        aria-label="Filtrar figurinhas"
+                        placeholder="Buscar por figurinha, time ou naipe..."
+                        value={stickerFilter}
+                        onChange={(event) => setStickerFilter(event.target.value)}
+                      />
+                    </div>
+                    <Select value={stickerAlbumFilter} onValueChange={setStickerAlbumFilter}>
+                      <SelectTrigger className="h-11 w-full bg-white sm:w-64" aria-label="Filtrar por álbum">
+                        <SelectValue placeholder="Todos os álbuns" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos os álbuns</SelectItem>
+                        {albumOptions.map((albumName) => (
+                          <SelectItem key={albumName} value={albumName}>{albumName}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {userAlbumCards.length === 0 ? (
-                    <div className="flex items-center w-218 h-50 justify-center">
-                      <p className="font-extrabold text-xl">Você ainda não possui figurinhas</p>
+                    <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 text-center">
+                      <ImageIcon className="mb-3 size-8 text-slate-400" />
+                      <p className="font-semibold text-slate-800">Você ainda não possui figurinhas</p>
+                      <p className="mt-1 text-sm text-slate-500">Abra um pacotinho para começar sua coleção.</p>
                     </div>
                   ) : filteredUserAlbumCards.length === 0 ? (
-                    <div className="flex items-center w-218 h-50 justify-center">
-                      <p className="font-extrabold text-xl">Nenhuma figurinha corresponde ao filtro</p>
+                    <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 text-center">
+                      <Search className="mb-3 size-8 text-slate-400" />
+                      <p className="font-semibold text-slate-800">Nenhuma figurinha encontrada</p>
+                      <p className="mt-1 text-sm text-slate-500">Ajuste sua busca ou escolha outro álbum.</p>
                     </div>
                   ) : (
-                    <div className="space-y-4 w-218 ">
+                    <div className="space-y-4">
                       {groupedUserAlbumCards.map(([albumName, cards], index) => (
                         <details
                           key={albumName}
                           open={index === 0}
-                          className="overflow-hidden rounded-3xl border border-slate-200 bg-white"
+                          className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
                         >
-                          <summary className="cursor-pointer flex items-center justify-between gap-4 px-5 py-4 text-lg font-semibold text-white bg-blue-900">
-                            <span>{albumName}</span>
-                            <span className="text-sm font-medium text-white">{cards.length} figurinhas</span>
+                          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 bg-blue-950 px-4 py-4 text-base font-semibold text-white marker:hidden sm:px-5 sm:text-lg">
+                            <span className="min-w-0 truncate">{albumName}</span>
+                            <span className="shrink-0 rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium text-white sm:text-sm">{cards.length} figurinhas</span>
                           </summary>
-                          <div className="flex justify-center align-middle items-center mt-4">
+                          <div className="flex justify-end px-3 pt-3 sm:px-4">
                               <Button
-                                className="bg-blue-900 hover:bg-blue-800 font-bold cursor-pointer"
+                                variant="outline"
+                                className="h-9 border-blue-200 font-semibold text-blue-900 hover:bg-blue-50"
                                 onClick={() => handleCopyAlbumSummary(albumName, cards)}
                               >
                                 Copiar Resumo
                               </Button>
                           </div>
-                          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 p-4 w-full">
+                          <div className="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3 sm:gap-4 sm:p-4 lg:grid-cols-4 xl:grid-cols-5">
                             {cards.map((item) => (
-                              <div key={item.id} className="hover:transform hover:scale-105 transition-transform">
-                                <div
-                                  className="h-[250px] w-[200px] rounded-md relative overflow-hidden border cursor-pointer"
+                              <div key={item.id} className="min-w-0">
+                                <button
+                                  type="button"
+                                  className="group relative block aspect-[4/5] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
                                   onClick={() => openStickerModal(item)}
+                                  aria-label={`Ver figurinha ${item.album_card.name}, quantidade ${item.quantity}`}
                                 >
                                   <Image
                                     src={item.album_card.imageUrl}
                                     alt={item.album_card.name}
                                     fill
-                                    className=""
+                                    className="object-contain transition-transform group-hover:scale-105"
                                     unoptimized
                                   />  
-                                </div>
-                                <div className="flex flex-col justify-center items-center align-middle mt-2">
-                                  <p>{item.album_card.album.name}</p>
-                                  <div className="flex">
-                                    <p className="font-bold mr-2 whitespace-nowrap">{item.quantity} x </p>
-                                    <p className="text-center font-medium">{item.album_card.name} - {item.album_card.naipe}</p>
-                                  </div>
+                                  <span className="absolute right-2 top-2 rounded-full bg-blue-950 px-2 py-1 text-xs font-bold text-white shadow">{item.quantity}x</span>
+                                </button>
+                                <div className="mt-2 min-w-0">
+                                  <p className="truncate text-sm font-semibold text-slate-800">{item.album_card.name}</p>
+                                  <p className="truncate text-xs text-slate-500">{item.album_card.naipe} · {item.album_card.team}</p>
                                 </div>
                               </div>
                             ))}
@@ -1112,7 +1186,7 @@ export default function EventBookPage() {
                       setIsModalOpen(open)
                     }}
                   >
-                    <DialogContent className="sm:max-w-md">
+                    <DialogContent className="max-h-[90vh] max-w-[calc(100vw-1.5rem)] overflow-y-auto sm:max-w-md">
                       <DialogHeader>
                         <DialogTitle className="text-center">Figurinha</DialogTitle>
                         <DialogDescription className="text-center">
@@ -1120,7 +1194,7 @@ export default function EventBookPage() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="flex flex-col items-center gap-4">
-                        <div className="relative h-102 w-82 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                        <div className="relative aspect-[4/5] max-h-[60vh] w-full max-w-72 overflow-hidden rounded-xl border border-slate-200 bg-white">
                           {selectedSticker && (
                             <Image
                               unoptimized
@@ -1159,14 +1233,16 @@ export default function EventBookPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="trade-cards">
-            <Card>
-                <CardHeader className="flex items-center justify-center" >
-                <CardTitle className="text-2xl">Troca de Figurinhas</CardTitle>
-                <CardDescription>Aqui você pode trocar suas figurinhas com outros usuários</CardDescription>
+          <TabsContent value="trade-cards" className="mt-4">
+            <Card className="gap-0 overflow-hidden rounded-2xl border-slate-200 py-0 shadow-sm">
+                <CardHeader className="flex flex-col gap-3 border-b border-slate-100 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div className="space-y-1">
+                  <CardTitle className="text-xl font-bold text-slate-900 sm:text-2xl">Troca de figurinhas</CardTitle>
+                  <CardDescription>Encontre ofertas da comunidade ou publique a sua.</CardDescription>
+                </div>
                 <Button
-                  disabled={userAlbumCards.length === 0 || isTradeLoading}
-                  className="w-35 h-12 mt-5 bg-blue-800 hover:bg-blue-700 cursor-pointer font-extrabold"
+                  disabled={!userAlbumCards.some((item) => item.quantity > 1) || isTradeLoading}
+                  className="h-11 w-full shrink-0 bg-blue-950 font-bold hover:bg-blue-900 sm:w-auto"
                   onClick={() => {
                     setSelectedOfferAlbum(null)
                     setSelectedTradeAlbum(null)
@@ -1175,65 +1251,70 @@ export default function EventBookPage() {
                     setIsTradeModalOpen(true)
                   }}
                 >
-                  Criar troca
+                  Criar oferta de troca
                 </Button>
               </CardHeader>
               
-              <CardContent className="space-y-5">
-                <div className="flex justify-center align-middle items-center flex-col w-full px-4 ">
+              <CardContent className="px-4 py-5 sm:px-6 sm:py-7">
+                <div className="flex w-full flex-col items-center">
 
                     {trades.length === 0 ? (
-                      <div className="flex flex-col items-center w-218 h-50 justify-center">
-                        <p className="font-extrabold text-xl">Nenhuma oferta de troca disponível</p>
+                      <div className="flex min-h-48 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 text-center">
+                        <ArrowRightLeftIcon className="mb-3 size-8 text-slate-400" />
+                        <p className="font-semibold text-slate-800">Nenhuma oferta de troca disponível</p>
+                        <p className="mt-1 text-sm text-slate-500">Seja o primeiro a publicar uma oferta.</p>
                       </div>
                     ) : (
-                      trades.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((trade) => (
-                        <div key={trade.id} className="flex justify-between w-218 h-60 align-middle items-center border-2 border-gray-300 rounded-lg px-12 mb-3">
+                      trades.slice().sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((trade) => (
+                        <div key={trade.id} className="mb-3 flex w-full max-w-6xl flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 lg:flex-row lg:items-center lg:justify-between">
                           
-                          <div className="flex flex-col justify-center align-middle items-center">
-                            <p className="mb-2">{trade.from_user.name}</p>
-                            <AvatarIcon name={trade.from_user.name} size={60} src={trade.from_user.profile_url}  className="mx-2 h-[60px] w-[60px] "  />
+                          <div className="flex items-center gap-3 lg:w-36 lg:flex-col lg:justify-center">
+                            <AvatarIcon name={trade.from_user.name} size={52} src={trade.from_user.profile_url} className="h-[52px] w-[52px] shrink-0" />
+                            <div className="min-w-0">
+                              <p className="text-xs text-slate-500">Oferta de</p>
+                              <p className="truncate font-semibold text-slate-800">{trade.from_user.name}</p>
+                            </div>
                           </div>
                           
-                          <div className="flex flex-col justify-center align-middle items-center text-center">
-                            <p className="font-bold mb-3" >Oferta de troca</p>
-                            <div className="flex justify-center align-middle items-center text-center">
+                          <div className="flex min-w-0 flex-1 flex-col items-center text-center">
+                            <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">Oferta de troca</p>
+                            <div className="flex w-full items-center justify-center gap-3 sm:gap-6">
                               <div className="flex flex-col justify-center align-middle items-center">
-                                <p className="font-extralight">Oferecendo:</p>
-                                <div className="relative h-32 w-22 overflow-hidden rounded-xl ">
+                                <p className="mb-1 text-xs text-slate-500">Oferece</p>
+                                <div className="relative h-28 w-20 overflow-hidden rounded-lg bg-slate-50 sm:h-32 sm:w-24">
                                   <Image
                                     unoptimized
                                     src={trade.offered_card.imageUrl}
                                     alt={trade.offered_card.name}   
                                     fill
-                                    className="object-contain"
+                                    className="object-contain p-1"
                                   />
                                 </div>
-                                <p className="font-bold text-xl">{trade.offered_quantity} x {trade.offered_card.name}</p>
+                                <p className="mt-2 max-w-32 text-sm font-semibold text-slate-800">{trade.offered_quantity}x {trade.offered_card.name}</p>
                               </div>
-                              <ArrowRightLeftIcon className="size-10 text-black mx-4 " />
+                              <ArrowRightLeftIcon className="size-6 shrink-0 text-blue-800 sm:size-8" />
                               <div className="flex flex-col justify-center align-middle items-center">
-                                <p className="font-extralight">Pedindo:</p>
-                                <div className="relative  h-32 w-22 overflow-hidden rounded-xl ">
+                                <p className="mb-1 text-xs text-slate-500">Em troca por</p>
+                                <div className="relative h-28 w-20 overflow-hidden rounded-lg bg-slate-50 sm:h-32 sm:w-24">
                                   <Image
                                     unoptimized
                                     src={trade.trade_card.imageUrl}
                                     alt={trade.trade_card.name}
                                     fill
-                                    className="object-contain"
+                                    className="object-contain p-1"
                                   />
                                 </div>
-                                <p className="font-bold text-xl">{trade.trade_quantity} x {trade.trade_card.name}</p>
+                                <p className="mt-2 max-w-32 text-sm font-semibold text-slate-800">{trade.trade_quantity}x {trade.trade_card.name}</p>
                               </div>
                             </div>
                           </div>
                           
-                          <div className="flex flex-col">
+                          <div className="flex w-full flex-col sm:flex-row lg:w-36 lg:flex-col">
                             {
                               trade.from_user.id === user!.id ? (
-                                <Button disabled={isTradeLoading} className="mt-4 bg-red-700 hover:bg-red-800 cursor-pointer" onClick={() => handleDeleteTroca(trade.id)}>Excluir troca</Button>
+                                <Button disabled={isTradeLoading} className="w-full bg-red-700 hover:bg-red-800" onClick={() => handleDeleteTroca(trade.id)}>Excluir oferta</Button>
                               ):(
-                                <Button disabled={trade.from_user.id === user!.id || isTradeLoading} className=" bg-green-600 hover:bg-green-700 cursor-pointer" onClick={() => handleFazerTroca(trade.id)}> Fazer Troca</Button>
+                                <Button disabled={trade.from_user.id === user!.id || isTradeLoading} className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => handleFazerTroca(trade.id)}>Fazer troca</Button>
                               )
                             }
                           </div>
@@ -1254,18 +1335,18 @@ export default function EventBookPage() {
                       setIsTradeModalOpen(open)
                     }}
                   >
-                    <DialogContent className="w-220 flex flex-col justify-center align-middle items-center">
-                      <DialogHeader>
+                    <DialogContent className="max-h-[90vh] w-[calc(100vw-1.5rem)] max-w-5xl overflow-y-auto">
+                      <DialogHeader className="text-left">
                         <DialogTitle className="text-center">Qual a sua troca?</DialogTitle>
                         <DialogDescription className="text-center">
-                          Ofereça uma figurinha que você tem
+                          Escolha o que vai oferecer e a figurinha que deseja receber.
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="flex items-between gap-10 justify-center items-center align-middle ">
+                      <div className="grid w-full grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-5">
                         
-                        <div>
+                        <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
                           <div className="flex flex-col text-center justify-center">
-                            <p className="font-bold mb-3" >Sua figurinha:</p>
+                            <p className="mb-3 font-bold text-slate-900">Sua figurinha</p>
                             <p className="text-sm font-medium mb-2">Álbum:</p>
                             <Select
                               value={selectedOfferAlbum ?? ""}
@@ -1274,12 +1355,12 @@ export default function EventBookPage() {
                                 setSelectedOfferSticker(null)
                               }}
                             >
-                              <SelectTrigger className="w-52">
+                              <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Selecione um álbum" />
                               </SelectTrigger>
                               <SelectContent>
                                 {Array.from(
-                                  new Set(userAlbumCards.map((item) => item.album_card.album.name))
+                                  new Set(userAlbumCards.filter((item) => item.quantity > 1).map((item) => item.album_card.album.name))
                                 )
                                   .sort()
                                   .map((albumName) => (
@@ -1298,12 +1379,12 @@ export default function EventBookPage() {
                               }}
                               disabled={!selectedOfferAlbum}
                             >
-                              <SelectTrigger className="w-52">
+                              <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Selecione uma figurinha" />
                               </SelectTrigger>
                               <SelectContent>
                                 {userAlbumCards
-                                  .filter((item) => !selectedOfferAlbum || item.album_card.album.name === selectedOfferAlbum)
+                                  .filter((item) => item.quantity > 1 && (!selectedOfferAlbum || item.album_card.album.name === selectedOfferAlbum))
                                   .sort((a, b) => {
                                     const teamCompare = a.album_card.team.localeCompare(b.album_card.team)
                                     if (teamCompare !== 0) return teamCompare
@@ -1320,7 +1401,7 @@ export default function EventBookPage() {
                                   ))}
                               </SelectContent>
                             </Select>
-                            <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
+                            <div className="relative mx-auto mt-3 aspect-[4/5] w-full max-w-52 overflow-hidden rounded-xl bg-white">
                               <Image
                                 unoptimized
                                 src={selectedOfferSticker?.album_card.imageUrl ?? "https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/24171c2e-0744-4582-8da1-f7d1bb48f114/cards/bg-card-empty.png"}
@@ -1336,7 +1417,7 @@ export default function EventBookPage() {
                                 onValueChange={(value) => setOfferQuantity(Number(value))}
                                 disabled={!selectedOfferSticker}
                               >
-                                <SelectTrigger className="w-52">
+                                <SelectTrigger className="w-full">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1355,11 +1436,11 @@ export default function EventBookPage() {
                           </div>
                         </div>
                         
-                        <ArrowRightLeftIcon className="size-10 text-muted-foreground" />
+                        <ArrowRightLeftIcon className="mx-auto my-1 size-7 rotate-90 text-blue-800 lg:my-0 lg:rotate-0" />
                         
-                        <div>
+                        <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
                           <div className="flex flex-col text-center justify-center">
-                            <p className="font-bold mb-3" >Troco por:</p>
+                            <p className="mb-3 font-bold text-slate-900">Quero receber</p>
                             <p className="text-sm font-medium mb-2">Álbum:</p>
                             <Select
                               value={selectedTradeAlbum ?? ""}
@@ -1368,7 +1449,7 @@ export default function EventBookPage() {
                                 setSelectedTradeSticker(null)
                               }}
                             >
-                              <SelectTrigger className="w-52">
+                              <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Selecione um álbum" />
                               </SelectTrigger>
                               <SelectContent>
@@ -1392,7 +1473,7 @@ export default function EventBookPage() {
                               }}
                               disabled={!selectedTradeAlbum}
                             >
-                              <SelectTrigger className="w-52">
+                              <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Selecione uma figurinha" />
                               </SelectTrigger>
                               <SelectContent>
@@ -1414,7 +1495,7 @@ export default function EventBookPage() {
                                   ))}
                               </SelectContent>
                             </Select>
-                            <div className="relative h-72 w-52 overflow-hidden rounded-xl ">
+                            <div className="relative mx-auto mt-3 aspect-[4/5] w-full max-w-52 overflow-hidden rounded-xl bg-white">
                               <Image
                                 unoptimized
                                 src={selectedTradeSticker?.album_card.imageUrl ?? "https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/24171c2e-0744-4582-8da1-f7d1bb48f114/cards/bg-card-empty.png"}
@@ -1430,7 +1511,7 @@ export default function EventBookPage() {
                                 onValueChange={(value) => setTradeQuantity(Number(value))}
                                 disabled={!selectedTradeSticker}
                               >
-                                <SelectTrigger className="w-52">
+                                <SelectTrigger className="w-full">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1453,7 +1534,7 @@ export default function EventBookPage() {
                         
                       </div>
 
-                      <Button className="w-80 my-8 cursor-pointer bg-blue-950 hover:bg-blue-900 font-bold" onClick={handleCreateCardTradeOffer} >Fazer Oferta de Troca</Button>
+                      <Button className="my-2 w-full bg-blue-950 font-bold hover:bg-blue-900 sm:mx-auto sm:max-w-sm" onClick={handleCreateCardTradeOffer}>Publicar oferta de troca</Button>
                       
                     </DialogContent>
                   </Dialog>
@@ -1462,7 +1543,7 @@ export default function EventBookPage() {
             </Card>
           </TabsContent>
         </Tabs>
-        </div>
+        </main>
       </div>
     </>
   );
