@@ -5,7 +5,7 @@
 import { Header } from "@/components/Header";
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { ArrowRightLeftIcon, ImageIcon, Package, Search } from "lucide-react"
+import { ArrowRightLeftIcon, BookOpen, ImageIcon, Package, Search } from "lucide-react"
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,7 +76,8 @@ interface UserAlbumCardProps{
         team:string,
         type: string,
         album: {
-            name: string
+            name: string,
+            event_id?: string
         }
     }
 }
@@ -89,7 +90,8 @@ interface AllAlbumCardsProps{
   type: string,
   imageUrl?: string,
   album:{
-    name: string
+    name: string,
+    event_id?: string
   }
 }
 
@@ -107,6 +109,7 @@ const mapAllAlbumCardToUserAlbumCard = (card: AllAlbumCardsProps): UserAlbumCard
     type: card.type,
     album: {
       name: card.album.name,
+      event_id: card.album.event_id,
     },
   },
 })
@@ -1139,7 +1142,20 @@ export default function EventBookPage() {
                             <span className="min-w-0 truncate">{albumName}</span>
                             <span className="shrink-0 rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium text-white sm:text-sm">{cards.length} figurinhas</span>
                           </summary>
-                          <div className="flex justify-end px-3 pt-3 sm:px-4">
+                          <div className="flex flex-wrap justify-end gap-2 px-3 pt-3 sm:px-4">
+                              <Button
+                                variant="outline"
+                                className="h-9 border-blue-200 font-semibold text-blue-900 hover:bg-blue-50"
+                                onClick={() => {
+                                  const eventId = cards[0]?.album_card.album.event_id ??
+                                    allAlbumsCards.find((card) => card.album.name === albumName)?.album.event_id
+                                  if (eventId) router.push(`/events/${eventId}/album`)
+                                  else toast.error("Não foi possível encontrar a página deste álbum.")
+                                }}
+                              >
+                                <BookOpen className="mr-2 size-4" aria-hidden="true" />
+                                Ver álbum
+                              </Button>
                               <Button
                                 variant="outline"
                                 className="h-9 border-blue-200 font-semibold text-blue-900 hover:bg-blue-50"
