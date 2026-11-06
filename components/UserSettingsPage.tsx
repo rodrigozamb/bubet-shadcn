@@ -217,12 +217,12 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
     
     return(
 
-        <div className="flex items-center space-x-5" >
+        <div className="flex w-full max-w-6xl flex-col items-stretch gap-4 lg:flex-row lg:items-start" >
 
-            <div className='flex flex-col items-center'>
+            <div className="grid w-full gap-4 sm:grid-cols-2 lg:w-[400px] lg:flex-none lg:grid-cols-1">
 
                 {/* Profile Picture Card */}
-                <Card className='w-[400px]'>
+                <Card className="w-full min-w-0">
                   <CardHeader className='pt-4'>
                     <CardTitle>Foto de Perfil</CardTitle>
                     <CardDescription>
@@ -281,10 +281,8 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
                   </CardContent>
                 </Card>
                 
-                <Separator className='my-4'/>
-
                 {/* Bateria Favorita Card */}
-                <Card className='w-[400px] h-[280px] flex items-center justify-center   '>
+                <Card className="flex h-auto w-full min-w-0 flex-col">
                   <CardHeader className='text-center'>
                     <CardTitle>Bateria Favorita</CardTitle>
                     <CardDescription>
@@ -295,7 +293,7 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
                     <div className="space-y-4">
                     {/* Selected Competitor Preview */}
                       {selectedCompetitor ? (
-                        <div className="flex items-center gap-3 rounded-lg border border-border bg-muted p-3 w-[350px]">
+                        <div className="flex min-w-0 items-center gap-3 rounded-lg border border-border bg-muted p-3">
                           <Avatar className="h-12 w-12">
                             <AvatarImage
                               src={competitors.find(c => c.id === selectedCompetitor)?.profile_url}
@@ -311,7 +309,7 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
-                            <p className="text-sm font-medium">
+                            <p className="truncate text-sm font-medium">
                               {competitors.find(c => c.id === selectedCompetitor)?.name}
                             </p>
                           </div>
@@ -402,7 +400,7 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
             </div>
         
                 {/* Account Information Card */}
-                <Card className='h-[600px] justify-center'>
+                <Card className="h-fit w-full min-w-0 lg:flex-1">
                     <CardHeader className='text-center'>
                     <CardTitle>Informações da Conta</CardTitle>
                     <CardDescription>
@@ -482,7 +480,7 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
                         <Separator />
         
                         {/* Submit Button */}
-                        <div className="flex gap-2 justify-center">
+                        <div className="flex flex-wrap justify-center gap-2">
                             <Button
                             type="submit"
                             disabled={isSaving}

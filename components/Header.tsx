@@ -90,15 +90,15 @@ export function Header(){
     }
 
     return (
-        <div className="flex justify-between items-center pr-10 bg-cover bg-center h-16 w-screen bg-blue-900" >
+        <div className="flex h-16 w-full items-center justify-between bg-cover bg-center bg-blue-900 px-3 sm:px-6 lg:px-10" >
           
           <div className="flex justify-center items-center">
-            <Image unoptimized className="p-[5px] cursor-pointer ml-10" src="/logoRetoSemSombra2.png" alt="BUBet logo" width={100} height={100} onClick={()=>{ router.push("/dashboard") }}/>
+            <Image unoptimized className="w-20 cursor-pointer p-1 sm:w-[100px] sm:p-[5px]" src="/logoRetoSemSombra2.png" alt="BUBet logo" width={100} height={100} onClick={()=>{ router.push("/dashboard") }}/>
           </div>
           
-          <div className="flex justify-end items-center content-center w-100 ">
+          <div className="flex min-w-0 items-center justify-end gap-2 sm:gap-4">
             
-            <FaMusic className="text-white cursor-pointer mr-8" onClick={()=>{router.push(`/advinhe-o-breque`)}}/>
+            <FaMusic className="shrink-0 cursor-pointer text-white sm:mr-2 lg:mr-8" onClick={()=>{router.push(`/advinhe-o-breque`)}}/>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -208,16 +208,16 @@ export function Header(){
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="justify-center items-center m-5">
-              <div className="flex justify-center items-center text-white font-medium ">{user.name.length > 30 ? user.name.substring(0,30)+"..." : user.name}</div>
+            <div className="mx-1 min-w-0 sm:m-5">
+              <div className="max-w-20 truncate text-center text-xs font-medium text-white sm:max-w-48 sm:text-base">{user.name}</div>
               <div className="flex justify-end items-center">
                 <DropdownConfig/>
               </div>
             </div>
             
 
-            <div className=" h-[50px] w-[50px]">
-              <Image unoptimized={true} className="h-[50px] w-[50px] rounded-full border-1 border-[#000000] object-cover " src={user.profile_url} alt="user" width={50} height={50}/>
+            <div className="h-10 w-10 shrink-0 sm:h-[50px] sm:w-[50px]">
+              <Image unoptimized={true} className="h-10 w-10 rounded-full border-1 border-[#000000] object-cover sm:h-[50px] sm:w-[50px]" src={user.profile_url} alt="user" width={50} height={50}/>
             </div>
           </div>
         

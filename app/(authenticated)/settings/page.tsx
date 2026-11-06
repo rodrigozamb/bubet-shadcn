@@ -69,13 +69,11 @@ export default function UserSettingsPage() {
       <title>{tit}</title>
       <meta key="profile-page" name="profile" content="Conheça essa pessoa!"/>
       
-      <div className="flex flex-col h-screen bg-gray-100">
-        <div>
-          <Header />
-        </div>
-        <div className="flex justify-center items-center h-screen ">
+      <div className="flex min-h-screen flex-col bg-gray-100">
+        <Header />
+        <main className="flex flex-1 justify-center px-4 py-6 sm:px-6 lg:items-center">
           <UserSettingsConfigPage competitors={competitors} favoriteCompetitor={favoriteCompetitor}/>
-        </div>
+        </main>
       </div>
     </>
   );
