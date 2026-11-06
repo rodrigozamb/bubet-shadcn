@@ -293,7 +293,7 @@ export default function ComprasPage() {
 
                         <div className="flex shrink-0 flex-col sm:items-end">
                           <span className="text-lg font-bold text-slate-900">
-                            {currencyFormatter.format(transaction.amount)}
+                            {currencyFormatter.format(transaction.value)}
                           </span>
                           <span
                             className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
