@@ -1,12 +1,14 @@
 'use client'
 
-import { ChevronDown, ChevronRight, Crown } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronRight, Crown } from 'lucide-react'
 import AvatarIcon from "./AvatarIcon";
 import Image from "next/image";
 import { useContext, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader } from './ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { AuthContext } from '@/context/AuthContext';
+import { Button } from './ui/button';
 
 
 interface UserData{
@@ -25,6 +27,7 @@ interface BadgeProps{
 
 
 export function ProfileBadgesPage({ id, name, profile_url, badges, not_obtained_badges }:UserData){
+    const router = useRouter();
     const [selectedBadge, setSelectedBadge] = useState<BadgeProps | null>(null);
     const [isObtainedOpen, setIsObtainedOpen] = useState(true);
     const [isNotObtainedOpen, setIsNotObtainedOpen] = useState(false);
@@ -45,11 +48,13 @@ export function ProfileBadgesPage({ id, name, profile_url, badges, not_obtained_
         }
 
         return (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 justify-center">
+            <div className="grid grid-cols-2 justify-center gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
                 {badgeList.map((badge, index) => (
-                    <div
+                    <button
+                        type="button"
                         onClick={() => setSelectedBadge(badge)}
-                        className="flex justify-center items-center cursor-pointer mx-2 hover:opacity-80 transition-opacity"
+                        aria-label={`Ver detalhes da medalha ${badge.name}`}
+                        className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-300 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                         key={`${badge.name}-${index}`}
                     >
                         <Image
@@ -58,9 +63,10 @@ export function ProfileBadgesPage({ id, name, profile_url, badges, not_obtained_
                             src={badge.image_url}
                             width={130}
                             height={130}
-                            className={isObtained ? '' : 'opacity-70 grayscale'}
+                            className={`h-24 w-24 object-contain sm:h-28 sm:w-28 ${isObtained ? '' : 'opacity-60 grayscale'}`}
                         />
-                    </div>
+                        <span className="line-clamp-2 text-center text-sm font-medium text-slate-700">{badge.name}</span>
+                    </button>
                 ))}
             </div>
         )
@@ -68,68 +74,94 @@ export function ProfileBadgesPage({ id, name, profile_url, badges, not_obtained_
     
     return(
         <>
-        <div className="flex flex-col items-center w-full" >
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+            <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.push(`/profile/${id}`)}
+                className="w-fit gap-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+            >
+                <ArrowLeft aria-hidden="true" />
+                Voltar ao perfil
+            </Button>
 
-            <div className="flex content-center justify-center items-center">
-                <AvatarIcon name={name} size={200} src={profile_url} className="h-[200px] w-[200px]"/>
-            </div>
-            <div className="flex justify-center items-center my-5">
-                <span className="text-3xl text-black font-bold">{ name }</span>
-            </div>
+            <section className="flex flex-col items-center gap-4 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:flex-row sm:text-left">
+                <AvatarIcon
+                    name={name}
+                    size={144}
+                    src={profile_url}
+                    className="h-28 w-28 shrink-0 border-4 border-white shadow-md sm:h-36 sm:w-36"
+                />
+                <div>
+                    <h1 className="break-words text-3xl font-bold tracking-tight text-slate-900">{name}</h1>
+                    <p className="mt-1 text-slate-500">Coleção de medalhas</p>
+                </div>
+            </section>
 
-            <div className="flex justify-center items-center my-5 pt-5">
-                <span className="text-3xl font-bold">Medalhas</span>
-            </div>
-
-            <div className="w-full max-w-5xl px-4 space-y-3">
-                <div className="rounded-xl border border-gray-200 bg-white shadow-sm ">
+            <section className="space-y-4">
+                <h2 className="text-2xl font-bold text-slate-900">Medalhas</h2>
+                <div className="space-y-3">
+                <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                     <button
                         type="button"
                         onClick={() => setIsObtainedOpen((prev) => !prev)}
-                        className="flex w-full items-center justify-between px-4 py-4 text-left cursor-pointer"
+                        aria-expanded={isObtainedOpen}
+                        className="flex w-full cursor-pointer items-center justify-between px-4 py-4 text-left transition-colors hover:bg-slate-50"
                     >
-                        <span className="text-lg font-semibold">Medalhas Obtidas</span>
+                        <span className="flex items-center gap-2 text-lg font-semibold text-slate-800">
+                            Medalhas Obtidas
+                            <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-bold text-amber-800">
+                                {badges.length}
+                            </span>
+                        </span>
                         {isObtainedOpen ? (
-                            <ChevronDown className="size-5 text-gray-600" />
+                            <ChevronDown className="size-5 text-slate-600" />
                         ) : (
-                            <ChevronRight className="size-5 text-gray-600" />
+                            <ChevronRight className="size-5 text-slate-600" />
                         )}
                     </button>
 
                     {isObtainedOpen && (
-                        <div className="border-t border-gray-100 px-4 py-4">
+                        <div className="border-t border-slate-100 p-4 sm:p-5">
                             {renderBadgeGrid(badges, true)}
                         </div>
                     )}
                 </div>
 
                 {showNotObtainedBadges && (
-                    <div className="rounded-xl border border-gray-200 bg-white shadow-sm ">
+                    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                         <button
                             type="button"
                             onClick={() => setIsNotObtainedOpen((prev) => !prev)}
-                            className="flex w-full items-center justify-between px-4 py-4 text-left cursor-pointer"
+                            aria-expanded={isNotObtainedOpen}
+                            className="flex w-full cursor-pointer items-center justify-between px-4 py-4 text-left transition-colors hover:bg-slate-50"
                         >
-                            <span className="text-lg font-semibold">Medalhas Não Obtidas</span>
+                            <span className="flex items-center gap-2 text-lg font-semibold text-slate-800">
+                                Medalhas Não Obtidas
+                                <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-sm font-bold text-slate-700">
+                                    {not_obtained_badges.length}
+                                </span>
+                            </span>
                             {isNotObtainedOpen ? (
-                                <ChevronDown className="size-5 text-gray-600" />
+                                <ChevronDown className="size-5 text-slate-600" />
                             ) : (
-                                <ChevronRight className="size-5 text-gray-600" />
+                                <ChevronRight className="size-5 text-slate-600" />
                             )}
                         </button>
 
                         {isNotObtainedOpen && (
-                            <div className="border-t border-gray-100 px-4 py-4">
+                            <div className="border-t border-slate-100 p-4 sm:p-5">
                                 {renderBadgeGrid(not_obtained_badges, false)}
                             </div>
                         )}
                     </div>
                 )}
-            </div>
+                </div>
+            </section>
         </div>
 
         <Dialog open={!!selectedBadge} onOpenChange={(open) => !open && setSelectedBadge(null)}>
-           <DialogContent className="flex flex-col items-center w-130 gap-6">
+           <DialogContent className="flex w-[calc(100vw-2rem)] max-w-md flex-col items-center gap-6">
                 {selectedBadge && (
                     <>
                         <DialogHeader>
@@ -144,6 +176,7 @@ export function ProfileBadgesPage({ id, name, profile_url, badges, not_obtained_
                             src={selectedBadge.image_url} 
                             width={200} 
                             height={200} 
+                            className="h-40 w-40 object-contain"
                         />
                         <div className="text-center">
                             <div className="flex items-center justify-center mb-3">

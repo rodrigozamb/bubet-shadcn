@@ -62,7 +62,7 @@ export default function ProfileUserPage() {
       .finally(()=>{
         setLoading(false)
       })  
-  }, [])
+  }, [id])
 
   if(loading || !profile){
     return null
@@ -74,16 +74,14 @@ export default function ProfileUserPage() {
       <title>{tit}</title>
       <meta key="profile-page" name="profile" content="Conheça essa pessoa!"/>
       
-      <div className="flex flex-col h-screen bg-gray-100">
-        <div>
-          <Header />
-        </div>
-        <div className="flex justify-center items-center h-screen ">
+      <div className="min-h-screen bg-slate-50">
+        <Header />
+        <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <ProfilePage  
             profile={profile}
             bets={user_bets}
           />
-        </div>
+        </main>
       </div>
     </>
   );
