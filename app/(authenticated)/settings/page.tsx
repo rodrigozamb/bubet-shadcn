@@ -23,24 +23,45 @@ export default function UserSettingsPage() {
   const [competitors, setCompetitors] = useState<CompetitorData[]>([])
   const [favoriteCompetitor, setFavoriteCompetitor] = useState<string | null >(null)
   const [loading, setLoading] = useState<boolean>(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
-      api.get(`/competitors`, { withCredentials: true })
-      .then((res) => {
-        setCompetitors(res.data)
-      
-        api.get(`/users/profile`, { withCredentials: true })
-        .then((res) => {
-          setFavoriteCompetitor(res.data.user.favorite_competitor.id)
-        })
-      })
-      .finally(()=>{
-        setLoading(false)
-      })  
+    let isMounted = true
+
+    const loadSettings = async () => {
+      try {
+        const [competitorsResponse, profileResponse] = await Promise.all([
+          api.get(`/competitors`, { withCredentials: true }),
+          api.get(`/users/profile`, { withCredentials: true }),
+        ])
+
+        if (!isMounted) return
+
+        setCompetitors(competitorsResponse.data)
+        setFavoriteCompetitor(
+          profileResponse.data.user?.favorite_competitor?.id ?? null
+        )
+      } catch {
+        if (isMounted) {
+          setLoadError('Não foi possível carregar as configurações.')
+        }
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    void loadSettings()
+    return () => {
+      isMounted = false
+    }
   }, [])
 
-  if(loading || !competitors){
+  if (loading) {
     return null
+  }
+
+  if (loadError) {
+    return <p role="alert" className="p-6 text-center">{loadError}</p>
   }
 
   return (

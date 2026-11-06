@@ -54,7 +54,7 @@ interface UserSettingsPageProps {
 export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:UserSettingsPageProps ){
   const { user } = useContext(AuthContext)
   const [profileImage, setProfileImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string>(user?.profile_url || '')
+  const [imagePreview, setImagePreview] = useState<string>('')
   const [isSaving, setIsSaving] = useState(false)
   const [isImageLoading, setIsImageLoading] = useState(false)
   const [competitorFilter, setCompetitorFilter] = useState('')
@@ -95,19 +95,32 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
     })
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setIsImageLoading(true)
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const result = event.target?.result as string
-        setImagePreview(result)
-        setProfileImage(file)
-        setIsImageLoading(false)
+      const file = e.target.files?.[0]
+      e.currentTarget.value = ''
+      if (file) {
+        if (!['image/png', 'image/jpeg'].includes(file.type)) {
+          toast.error('Selecione uma imagem PNG ou JPG/JPEG.')
+          return
+        }
+
+        setIsImageLoading(true)
+        const reader = new FileReader()
+
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            setImagePreview(reader.result)
+            setProfileImage(file)
+          }
+          setIsImageLoading(false)
+        }
+        reader.onerror = () => {
+          setIsImageLoading(false)
+          toast.error('Não foi possível carregar a imagem.')
+        }
+
+        reader.readAsDataURL(file)
       }
-      reader.readAsDataURL(file)
     }
-  }
 
   const clearImage = () => {
     setImagePreview('')
@@ -221,11 +234,11 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
                       {/* Avatar Preview */}
                       <Avatar className="h-32 w-32 border-2 border-border">
                         <AvatarImage
-                          src={imagePreview || user!.profile_url}
-                          alt={user!.name}
+                          src={imagePreview || user?.profile_url}
+                          alt={user?.name || 'Foto de perfil'}
                         />
                         <AvatarFallback className="text-lg">
-                          {user!.name
+                          {(user?.name || '')
                             .split(' ')
                             .map((n) => n[0])
                             .join('')
@@ -244,17 +257,18 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
                         <Input
                           id="profile-image"
                           type="file"
-                          accept="image/*"
+                          accept=".png,.jpg,.jpeg,image/png,image/jpeg"
                           className="hidden"
                           onChange={handleImageChange}
                           disabled={isImageLoading}
                         />
-                        {imagePreview && (
+                        {profileImage && (
                           <Button
                             type="button"
                             variant="outline"
                             size="icon"
                             onClick={clearImage}
+                            aria-label="Cancelar seleção de imagem"
                           >
                             <X className="h-4 w-4" />
                           </Button>
@@ -452,7 +466,7 @@ export function UserSettingsConfigPage( { competitors, favoriteCompetitor }:User
                                 <FormLabel>Senha</FormLabel>
                                 <FormControl>
                                 <Input
-                                    type="text"
+                                    type="password"
                                     placeholder="Insira sua senha"
                                     {...field}
                                 />
