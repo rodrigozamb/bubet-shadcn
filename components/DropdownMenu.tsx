@@ -22,7 +22,7 @@ import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation"
 import { Bounce, toast } from "react-toastify"
 
-export function DropdownConfig() {
+export function DropdownConfig({ trigger }: { trigger: React.ReactNode }) {
 
   const router = useRouter()
   const { user } = React.useContext(AuthContext)
@@ -179,7 +179,7 @@ export function DropdownConfig() {
   return (
     <DropdownMenu >
       <DropdownMenuTrigger asChild>
-        <div className="cursor-pointer text-gray-300" >abrir menu</div>
+        {trigger}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40">
         <DropdownMenuLabel className=" flex justify-center">Menu</DropdownMenuLabel>
