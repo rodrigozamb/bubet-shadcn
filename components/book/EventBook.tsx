@@ -45,7 +45,6 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
     setSelectedSticker(sticker)
     setIsModalOpen(true)
   }
-  console.log(items)
   return (
     <>
       <HTMLFlipBook
@@ -54,16 +53,16 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
       maxShadowOpacity={0.5}
       drawShadow={true}
       showCover={true}
-      size="fixed"
+      size="stretch"
       startPage={0}
-      minWidth={500}
+      minWidth={260}
       maxWidth={500}
-      minHeight={700}
+      minHeight={364}
       maxHeight={700}
-      className="event-book"
-      style={{ background: 'transparent' }}
+      className="event-book mx-auto"
+      style={{ background: 'transparent', margin: '0 auto' }}
       flippingTime={1000}
-      usePortrait={false}
+      usePortrait={true}
       startZIndex={0}
       autoSize={true}
       mobileScrollSupport={true}
@@ -323,7 +322,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
         setIsModalOpen(open)
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center">{selectedSticker?.name}</DialogTitle>
           <DialogDescription className="text-center">
@@ -331,7 +330,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4">
-          <div className="relative h-102 w-82 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <div className="relative h-[min(60dvh,30rem)] w-full max-w-[20rem] overflow-hidden rounded-xl border border-slate-200 bg-white">
             {selectedSticker && (
               <Image
                 unoptimized

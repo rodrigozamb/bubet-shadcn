@@ -84,20 +84,20 @@ export default function EventBookPage() {
       <title>{"Album de Figurinhas"}</title>
       <meta name="event" content="Conheça o evento!"/>
       
-      <div className="h-screen flex flex-col">
-        <div>
+      <div className="flex min-h-dvh flex-col">
+        <div className="shrink-0">
           <Header />
         </div>
 
-        <div className="flex justify-center my-5 align-center items-center mt-50 mb-20">
-          <div className="flex flex-col text-center">
-            <p className="font-bold ">Ainda não existe um Álbum de Figurinhas para este evento. Por favor tente outro evento.</p>
+        <main className="flex flex-1 flex-col items-center px-4 py-8 text-center sm:py-12">
+          <div className="flex flex-col">
+            <p className="font-bold">Ainda não existe um Álbum de Figurinhas para este evento. Por favor tente outro evento.</p>
           </div>
-        </div>
 
-        <div className="flex justify-center mt-5">
-          <Button onClick={()=>{ router.push(`/events/${id}`) }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-blue-800 to-blue-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 mr-8">Voltar ao Evento</Button>
-        </div>
+          <div className="mt-6 flex w-full max-w-xs justify-center sm:max-w-none">
+            <Button onClick={()=>{ router.push(`/events/${id}`) }} className="h-12 w-full cursor-pointer rounded-2xl bg-gradient-to-r from-blue-800 to-blue-700 px-6 py-2 text-xl font-semibold text-white shadow-lg transition-opacity duration-200 hover:opacity-90 sm:w-52">Voltar ao Evento</Button>
+          </div>
+        </main>
       </div>
     </>
     )
@@ -125,27 +125,28 @@ export default function EventBookPage() {
       <title>{tit}</title>
       <meta name="event" content="Conheça o evento!"/>
       
-      <div className="h-screen flex flex-col">
-        <div>
+      <div className="flex min-h-dvh flex-col">
+        <div className="shrink-0">
           <Header />
         </div>
 
-        <div className="flex justify-center my-5  ">
-          <div className="flex flex-col text-center">
-            <p className="text-xl font-bold" >{tit}</p>
-            <p className="text-gray-500 font-medium">{(totalCards+totalHCards)-(unknownCards+unknownHCards)}/{(totalCards+totalHCards)}</p>
+        <main className="flex flex-1 flex-col items-center px-2 pb-6 sm:px-4 sm:pb-8">
+          <div className="my-4 flex flex-col text-center sm:my-5">
+            <p className="max-w-full break-words text-lg font-bold sm:text-xl">{tit}</p>
+            <p className="font-medium text-gray-500">{(totalCards+totalHCards)-(unknownCards+unknownHCards)}/{(totalCards+totalHCards)}</p>
           </div>
-        </div>
-        
-        
-        <div className="flex justify-center align-center items-center">
-            <EventBook  albumId={album!.id} items={album?.pages || []}/>
-        </div>
 
-        <div className="flex justify-center mt-5">
-          <Button onClick={()=>{ router.push(`/events/${id}`) }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-blue-800 to-blue-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 mr-8">Voltar ao Evento</Button>
-          <Button onClick={()=>{ router.push('/figurinhas') }} className="cursor-pointer w-52 h-12 text-md bg-gradient-to-r from-green-800 to-green-700 text-white text-xl font-semibold py-2 px-6 rounded-2xl shadow-lg hover:opacity-90 transition-opacity duration-200 ">Comprar Pacotes</Button>
-        </div>
+          <div className="flex w-full flex-1 justify-center">
+            <div className="w-full max-w-[1000px]">
+              <EventBook albumId={album.id} items={album.pages || []}/>
+            </div>
+          </div>
+
+          <div className="mt-5 flex w-full max-w-xs flex-col justify-center gap-3 sm:max-w-none sm:flex-row sm:gap-4">
+            <Button onClick={()=>{ router.push(`/events/${id}`) }} className="h-12 w-full cursor-pointer rounded-2xl bg-gradient-to-r from-blue-800 to-blue-700 px-6 py-2 text-xl font-semibold text-white shadow-lg transition-opacity duration-200 hover:opacity-90 sm:w-52">Voltar ao Evento</Button>
+            <Button onClick={()=>{ router.push('/figurinhas') }} className="h-12 w-full cursor-pointer rounded-2xl bg-gradient-to-r from-green-800 to-green-700 px-6 py-2 text-xl font-semibold text-white shadow-lg transition-opacity duration-200 hover:opacity-90 sm:w-52">Comprar Pacotes</Button>
+          </div>
+        </main>
       </div>
     </>
   );
