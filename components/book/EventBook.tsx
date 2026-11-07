@@ -92,14 +92,14 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           ) : 
           item.type === "IMAGESR" ?
           (
-            <div className="page bg-cover bg-center text-black " key={idx}>
-              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+            <div className="page album-sticker-page bg-cover bg-center text-black " key={idx}>
+              <div className="page-content w-full h-full bg-cover bg-center p-[3.2cqw]" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className={`image-gallery ${item.horizontal_cards.length > 0 ? 'relative' : ''}`}>
 
                   <>
-                    <div className={`flex  ${item.horizontal_cards.length > 0 ? 'h-55 w-35 absolute -top-10 right-15' : 'w-55 h-35'} items-center justify-center bg-cover bg-center `}>
+                    <div className={`flex ${item.horizontal_cards.length > 0 ? 'absolute right-[12cqw] -top-[8cqw] h-[44cqw] w-[28cqw]' : 'h-[28cqw] w-[44cqw]'} items-center justify-center bg-cover bg-center`}>
                       <div
-                        className={`page-content rounded-md p-4 ${item.horizontal_cards.length > 0 ? 'w-35 h-55 rotate-90 cursor-pointer' : item.cards.length > 0 ? 'cursor-pointer w-full h-full' : 'w-full h-full'} bg-cover bg-center`}
+                        className={`page-content rounded-md p-[3.2cqw] ${item.horizontal_cards.length > 0 ? 'h-[44cqw] w-[28cqw] rotate-90 cursor-pointer' : item.cards.length > 0 ? 'h-full w-full cursor-pointer' : 'h-full w-full'} bg-cover bg-center`}
                         style={{
                           backgroundImage: item.horizontal_cards.length > 0
                             ? `url(${item.horizontal_cards[0].image_url})`
@@ -138,13 +138,13 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                     </div>
                     {
                       item.horizontal_cards.length > 0 && (
-                        <div className='h-35' />
+                        <div className='h-[28cqw]' />
                       )
                     }
                   </>
                   
                   
-                  <div className="grid grid-cols-3 gap-2 mt-4">
+                  <div className="mt-[3.2cqw] grid grid-cols-3 gap-[1.6cqw]">
                     {item.cards
                     .sort((a, b) => {
                         const naipeCompare = a.naipe.localeCompare(b.naipe)
@@ -155,7 +155,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                       <button
                         type="button"
                         key={`sticker-${index}`}
-                        className="rounded "
+                        className="block w-full min-w-0 overflow-hidden rounded"
                         onClick={() => openStickerModal(sticker)}
                       >
                         <Image
@@ -164,7 +164,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                           alt={sticker.name}
                           width={130}
                           height={130}
-                          className="object-contain"
+                          className="h-auto w-[26cqw] max-w-full object-contain"
                         />
                       </button>
                     ))}
@@ -175,14 +175,14 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           ) :
           item.type === "IMAGESL" ? 
           (
-            <div className="page bg-cover bg-center text-black" key={idx}>
-              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+            <div className="page album-sticker-page bg-cover bg-center text-black" key={idx}>
+              <div className="page-content w-full h-full bg-cover bg-center p-[3.2cqw]" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className={`image-gallery ${item.horizontal_cards.length > 0 ? 'relative' : ''}`}>
 
                   <>
-                    <div className={`flex  ${item.horizontal_cards.length > 0 ? 'h-55 w-35 absolute -top-10 left-10' : 'w-55 h-35'} items-center justify-center bg-cover bg-center `}>
+                    <div className={`flex ${item.horizontal_cards.length > 0 ? 'absolute left-[8cqw] -top-[8cqw] h-[44cqw] w-[28cqw]' : 'h-[28cqw] w-[44cqw]'} items-center justify-center bg-cover bg-center`}>
                       <div
-                        className={`page-content rounded-md p-4 ${item.horizontal_cards.length > 0 ? 'w-35 h-55 rotate-90 cursor-pointer' : item.cards.length > 0 ? 'cursor-pointer w-full h-full' : 'w-full h-full'} bg-cover bg-center`}
+                        className={`page-content rounded-md p-[3.2cqw] ${item.horizontal_cards.length > 0 ? 'h-[44cqw] w-[28cqw] rotate-90 cursor-pointer' : item.cards.length > 0 ? 'h-full w-full cursor-pointer' : 'h-full w-full'} bg-cover bg-center`}
                         style={{
                           backgroundImage: item.horizontal_cards.length > 0
                             ? `url(${item.horizontal_cards[0].image_url})`
@@ -221,13 +221,13 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                     </div>
                     {
                       item.horizontal_cards.length > 0 && (
-                        <div className='h-35' />
+                        <div className='h-[28cqw]' />
                       )
                     }
                   </>
                   
                   {/* Placeholder for images */}
-                  <div className="grid grid-cols-3 gap-2 mt-4">
+                  <div className="mt-[3.2cqw] grid grid-cols-3 gap-[1.6cqw]">
                     {item.cards
                     .sort((a, b) => {
                         const naipeCompare = a.naipe.localeCompare(b.naipe)
@@ -238,7 +238,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                       <button
                         type="button"
                         key={`sticker-${index}`}
-                        className="rounded "
+                        className="block w-full min-w-0 overflow-hidden rounded"
                         onClick={() => openStickerModal(sticker)}
                       >
                         <Image
@@ -247,7 +247,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                           alt={sticker.name}
                           width={130}
                           height={130}
-                          className="object-contain"
+                          className="h-auto w-[26cqw] max-w-full object-contain"
                         />
                       </button>
                     ))}
@@ -257,11 +257,11 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
             </div>
           ) :
           ( 
-            <div className="page bg-cover bg-center text-black" key={idx}>
-              <div className="page-content p-4 w-full h-full bg-cover bg-center" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
+            <div className="page album-sticker-page bg-cover bg-center text-black" key={idx}>
+              <div className="page-content w-full h-full bg-cover bg-center p-[3.2cqw]" style={{ backgroundImage: item.bg_image ? `url(${item.bg_image})` : `url(https://bubet-bucket.s3.sa-east-1.amazonaws.com/albuns/${albumId}/album-bg-1.png)` }}>
                 <div className="image-gallery">
                   {/* Placeholder for images */}
-                  <div className="grid grid-cols-3 gap-2 mt-39">
+                  <div className="mt-[31.2cqw] grid grid-cols-3 gap-[1.6cqw]">
                     {item.cards
                     .sort((a, b) => {
                         const naipeCompare = a.naipe.localeCompare(b.naipe)
@@ -272,7 +272,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                       <button
                         type="button"
                         key={`sticker-${index}`}
-                        className="rounded "
+                        className="block w-full min-w-0 overflow-hidden rounded"
                         onClick={() => openStickerModal(sticker)}
                       >
                         <Image
@@ -281,7 +281,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
                           alt={sticker.name}
                           width={130}
                           height={130}
-                          className="object-contain"
+                          className="h-auto w-[26cqw] max-w-full object-contain"
                         />
                       </button>
                     ))}
@@ -330,7 +330,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4">
-          <div className="relative h-[min(60dvh,30rem)] w-full max-w-[20rem] overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <div className="relative aspect-square w-full max-w-[18rem] overflow-hidden rounded-xl border border-slate-200 bg-white">
             {selectedSticker && (
               <Image
                 unoptimized
