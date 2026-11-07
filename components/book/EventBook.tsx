@@ -4,7 +4,8 @@
 'use client'
 
 import Image from 'next/image'
-import React, { ReactNode, useState } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import React, { ReactNode, useRef, useState } from 'react'
 import HTMLFlipBook from 'react-pageflip'
 import {
   Dialog,
@@ -35,11 +36,24 @@ interface EventBookProps {
   albumId: string
 }
 
+interface FlipBookHandle {
+  pageFlip: () => {
+    flipPrev: () => void
+    flipNext: () => void
+  } | null
+}
 
 
 export function EventBook({ items, albumId }: EventBookProps): ReactNode {
+  const flipBookRef = useRef<FlipBookHandle | null>(null)
   const [selectedSticker, setSelectedSticker] = useState<StickerCard | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageCount =
+    1 +
+    (items.length > 0 ? items.length : 1) +
+    (items.length > 0 && items.length % 2 !== 0 ? 1 : 0) +
+    1
 
   const openStickerModal = (sticker: StickerCard) => {
     setSelectedSticker(sticker)
@@ -48,6 +62,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
   return (
     <>
       <HTMLFlipBook
+      ref={flipBookRef}
       width={500}
       height={700}
       maxShadowOpacity={0.5}
@@ -67,7 +82,7 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
       autoSize={true}
       mobileScrollSupport={true}
       clickEventForward={true}
-      onFlip={() => {}}
+      onFlip={(event) => setCurrentPage(event.data)}
       onChangeOrientation={() => {}}
       onChangeState={() => {}}
       useMouseEvents={true}
@@ -314,6 +329,29 @@ export function EventBook({ items, albumId }: EventBookProps): ReactNode {
         </div>
       </div>
     </HTMLFlipBook>
+
+    <nav aria-label="Controles de páginas do álbum" className="mt-3 flex items-center justify-center gap-3">
+      <button
+        type="button"
+        aria-label="Voltar uma página"
+        title="Voltar uma página"
+        disabled={currentPage === 0}
+        onClick={() => flipBookRef.current?.pageFlip()?.flipPrev()}
+        className="flex size-10 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-slate-700 shadow-sm transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <ChevronLeft aria-hidden="true" className="size-5" />
+      </button>
+      <button
+        type="button"
+        aria-label="Avançar uma página"
+        title="Avançar uma página"
+        disabled={currentPage >= pageCount - 1}
+        onClick={() => flipBookRef.current?.pageFlip()?.flipNext()}
+        className="flex size-10 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-slate-700 shadow-sm transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <ChevronRight aria-hidden="true" className="size-5" />
+      </button>
+    </nav>
 
     <Dialog
       open={isModalOpen}
