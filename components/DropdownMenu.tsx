@@ -192,6 +192,9 @@ export function DropdownConfig({ trigger }: { trigger: React.ReactNode }) {
           <div className="p-1 cursor-pointer hover:bg-gray-100" onClick={()=>{router.push(`/settings`)}}>
           Configurações
         </div>
+        <div className="p-1 cursor-pointer hover:bg-gray-100" onClick={()=>{router.push(`/profile/${user!.id}/avatar`)}}>
+          Seu avatar
+        </div>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

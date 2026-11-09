@@ -96,12 +96,18 @@ export function ProfilePage({ profile, bets }: ProfilePageProps) {
                                 <p className="text-sm font-medium text-slate-500">Ranking</p>
                                 <p className="mt-1 text-2xl font-bold text-slate-900">{profile.position}º</p>
                             </div>
-                            <div className="col-span-2 flex items-center justify-center sm:col-span-1">
+                            <div className="col-span-2 flex flex-col gap-3 sm:col-span-1">
                                 <Button
                                     className="w-full bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 font-bold text-white transition-colors hover:from-amber-700 hover:via-amber-600 hover:to-amber-700 focus-visible:ring-amber-600/30"
                                     onClick={() => router.push(`/profile/${params.id}/badges`)}
                                 >
                                     Ver medalhas
+                                </Button>
+                                <Button
+                                    className="w-full bg-blue-950 font-bold text-white transition-colors hover:bg-blue-900 focus-visible:ring-blue-800/30"
+                                    onClick={() => router.push(`/profile/${params.id}/avatar`)}
+                                >
+                                    Meu Avatar
                                 </Button>
                             </div>
                         </div>
