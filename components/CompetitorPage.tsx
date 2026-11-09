@@ -28,6 +28,7 @@ interface EventResultData {
 }
 
 interface CompetitorPageProps {
+  competitorId: string;
   competitor: {
     name: string;
     description: string;
@@ -173,7 +174,11 @@ function getSocialUrl(type: string, value: string) {
   return null;
 }
 
-export function CompetitorPage({ competitor, stats }: CompetitorPageProps) {
+export function CompetitorPage({
+  competitorId,
+  competitor,
+  stats,
+}: CompetitorPageProps) {
   const podiumCount =
     stats.first.length + stats.second.length + stats.third.length;
 
@@ -235,9 +240,17 @@ export function CompetitorPage({ competitor, stats }: CompetitorPageProps) {
                 )}
               </div>
 
-              <div className="hidden shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 sm:block">
-                <Trophy aria-hidden="true" className="size-10 text-amber-300" />
-              </div>
+              <Link
+                href={`/competitors/${competitorId}/trofeus`}
+                aria-label={`Ver troféus de ${competitor.name}`}
+                className="inline-flex shrink-0 items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
+              >
+                <Trophy
+                  aria-hidden="true"
+                  className="size-8 text-amber-300 sm:size-10"
+                />
+                <span>Troféus</span>
+              </Link>
             </div>
           </div>
         </section>

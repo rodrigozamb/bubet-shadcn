@@ -5,6 +5,8 @@ import { Header } from "@/components/Header";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import type { Prize } from "@/components/TrophyModelGallery";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -91,6 +93,15 @@ export default function ProfilePage() {
           <Header />
         </div>
         <main className="min-h-[calc(100vh-4rem)] flex-1 overflow-y-auto bg-[#f2f0e8]">
+          <div className="mx-auto w-full max-w-6xl px-4 pt-6 sm:px-8">
+            <Link
+              href={`/competitors/${id}`}
+              className="inline-flex items-center gap-2 rounded-xl border border-[#4e3525] bg-[#64452f] px-4 py-2.5 text-sm font-semibold text-[#fffaf0] shadow-[0_3px_0_#4e3525] transition hover:-translate-y-0.5 hover:bg-[#805638] hover:shadow-[0_4px_0_#4e3525] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 active:translate-y-0 active:shadow-[0_2px_0_#4e3525]"
+            >
+              <ArrowLeft aria-hidden="true" className="size-4" />
+              Voltar
+            </Link>
+          </div>
           <CompetitorTrophyShelf competitorName={competitor.name} prizes={prizes} />
         </main>
       </div>

@@ -118,6 +118,7 @@ export default function ProfilePage() {
             </div>
           ) : (
             <CompetitorPage
+              competitorId={competitor.id}
               competitor={{
                 name: competitor.name,
                 avatar: competitor.profile_url,
